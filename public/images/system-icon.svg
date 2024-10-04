@@ -1,0 +1,24 @@
+<div class="w-12 h-12 mr-4">
+    @if (!$isSystemMessage)
+        @if (!empty($otherUser->profile_photo_path))
+            <img src="{{ asset('storage/' . $otherUser->profile_photo_path) }}" alt="{{ $otherUser->name }}" class="rounded-full w-full h-full object-cover">
+        @else
+            <img src="{{ asset('images/default-user.jpg') }}" alt="Usuário sem imagem" class="rounded-full w-full h-full object-cover">
+        @endif
+    @else
+        <!-- Ícone do sistema (Robô) -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" stroke="black" stroke-width="2" class="w-full h-full">
+            <rect x="25" y="10" width="50" height="40" rx="5" ry="5" fill="#D9EFFF" stroke="#000"/>
+            <circle cx="35" cy="25" r="5" fill="#000"/>
+            <circle cx="65" cy="25" r="5" fill="#000"/>
+            <line x1="50" y1="0" x2="50" y2="10" stroke="#000" stroke-width="2"/>
+            <circle cx="50" cy="0" r="3" fill="#FF5252"/>
+            <rect x="35" y="35" width="30" height="5" fill="#000"/>
+            <rect x="20" y="50" width="60" height="40" rx="5" ry="5" fill="#B3D4FF" stroke="#000"/>
+            <line x1="10" y1="60" x2="20" y2="60" stroke="#000" stroke-width="5"/>
+            <line x1="90" y1="60" x2="80" y2="60" stroke="#000" stroke-width="5"/>
+            <line x1="35" y1="90" x2="35" y2="100" stroke="#000" stroke-width="5"/>
+            <line x1="65" y1="90" x2="65" y2="100" stroke="#000" stroke-width="5"/>
+        </svg>
+    @endif
+</div>
