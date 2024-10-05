@@ -44,8 +44,12 @@
                     <x-input id="password" class="block mt-1 w-full pr-10" type="password" name="password" required
                         autocomplete="new-password" />
                     <x-eye-icon field-id="password" />
-
+                    <div id="password-strength" class="mt-1 text-sm"></div>
+                    <div id="password-length-warning" class="mt-1 text-sm text-red-500" style="display: none;">
+                        Senha deve ter no mínimo 8 caracteres.
+                    </div>
                 </div>
+
 
                 <!-- Confirmação de Senha -->
                 <div class="relative mt-4">
@@ -53,9 +57,7 @@
                     <x-input id="password_confirmation" class="block mt-1 w-full pr-10" type="password"
                         name="password_confirmation" required autocomplete="new-password" />
                     <x-eye-icon field-id="password_confirmation" />
-
                 </div>
-
 
                 <!-- Tutor - Campos Específicos -->
                 <div id="tutor_fields" style="display: none;">
@@ -396,6 +398,45 @@
         }
     </script>
 
+    <script>
+        // Função para verificar a força da senha em tempo real
+        document.getElementById('password').addEventListener('input', function() {
+            const password = this.value;
+            const strengthText = document.getElementById('password-strength');
+            const lengthWarning = document.getElementById('password-length-warning');
+            let strength = 0;
+
+            // Verifica se a senha possui pelo menos 8 caracteres
+            if (password.length < 8) {
+                lengthWarning.style.display = 'block';
+                strengthText.textContent = ''; // Limpa a mensagem de força enquanto a senha for curta demais
+            } else {
+                lengthWarning.style.display = 'none';
+                if (/[A-Z]/.test(password)) strength++;
+                if (/[a-z]/.test(password)) strength++;
+                if (/[0-9]/.test(password)) strength++;
+                if (/[\W_]/.test(password)) strength++;
+
+                switch (strength) {
+                    case 1:
+                    case 2:
+                        strengthText.textContent = 'Senha Fraca';
+                        strengthText.style.color = 'red';
+                        break;
+                    case 3:
+                        strengthText.textContent = 'Senha Média';
+                        strengthText.style.color = 'orange';
+                        break;
+                    case 4:
+                        strengthText.textContent = 'Senha Forte';
+                        strengthText.style.color = 'green';
+                        break;
+                    default:
+                        strengthText.textContent = '';
+                }
+            }
+        });
+    </script>
 
 
 </x-guest-layout>

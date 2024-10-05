@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <h2 class="font-semibold text-2xl text-gray-800 leading-tight">
             {{ __('Eventos') }}
         </h2>
     </x-slot>
@@ -12,15 +12,15 @@
                 <!-- Formulário de Busca -->
                 <form method="GET" action="{{ route('ong-events.index') }}" class="mb-6"
                     aria-label="Formulário de busca de eventos">
-                    <div class="flex space-x-4">
-                        <div>
+                    <div class="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
+                        <div class="w-full md:w-1/3">
                             <x-label for="search_name" value="{{ __('Nome do Evento') }}" />
                             <x-input id="search_name" type="text" name="search_name"
                                 value="{{ request('search_name') }}" class="mt-1 block w-full"
                                 placeholder="Buscar por nome do evento" />
                         </div>
 
-                        <div>
+                        <div class="w-full md:w-1/3">
                             <x-label for="search_city" value="{{ __('Cidade') }}" />
                             <x-input id="search_city" type="text" name="search_city"
                                 value="{{ request('search_city') }}" class="mt-1 block w-full"
@@ -28,37 +28,99 @@
                         </div>
 
                         <div class="self-end">
-                            <x-button type="submit" class="ml-4">
+                            <x-button type="submit" class="w-full md:w-auto">
                                 {{ __('Buscar') }}
                             </x-button>
                         </div>
                     </div>
                 </form>
 
-                <!-- Lista de Eventos -->
-                <h3 class="text-lg font-semibold">{{ __('Lista de Eventos') }}</h3>
+                <!-- Lista de Eventos Futuros -->
+                <h3 class="text-lg font-semibold mb-4">{{ __('Eventos Futuros') }}</h3>
 
-                @if ($events->isEmpty())
-                    <p>Nenhum evento encontrado.</p>
+                @if ($futureEvents->isEmpty())
+                    <p class="text-gray-600 text-center">{{ __('Nenhum evento futuro encontrado.') }}</p>
                 @else
-                    <ul class="mt-4">
-                        @foreach ($events as $event)
-                            <li class="mb-4">
-                                <h4>{{ $event->title }}</h4>
-                                <p><strong>Data:</strong>
-                                    {{ \Carbon\Carbon::parse($event->event_date)->format('d/m/Y') }}
-                                    <strong>Cidade:</strong> {{ $event->city }}</p>
-                                <a href="{{ route('ong-events.show', $event->id) }}"
-                                    class="text-indigo-600 hover:underline">Ver Evento</a>
-                            </li>
-                            <hr class="my-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+                        @foreach ($futureEvents as $event)
+                            <a href="{{ route('ong-events.show', $event->id) }}" class="block bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                                <!-- Imagem do Evento -->
+                                @if ($event->photo_path)
+                                    <img src="{{ asset('storage/' . $event->photo_path) }}" alt="{{ $event->title }}"
+                                        class="w-full h-48 object-cover">
+                                @else
+                                    <div class="w-full h-48 bg-gray-300 flex items-center justify-center">
+                                        <span class="text-gray-700 font-bold">{{ __('Imagem Indisponível') }}</span>
+                                    </div>
+                                @endif
+
+                                <!-- Detalhes do Evento -->
+                                <div class="p-4">
+                                    <h4 class="text-xl font-semibold text-gray-800">{{ $event->title }}</h4>
+                                    <p class="text-gray-600">
+                                        <strong>{{ __('Data:') }}</strong> {{ \Carbon\Carbon::parse($event->event_date)->format('d/m/Y') }}
+                                    </p>
+                                    <p class="text-gray-600">
+                                        <strong>{{ __('Cidade:') }}</strong> {{ $event->city }}
+                                    </p>
+                                    <p class="mt-2 text-indigo-600 hover:underline font-medium">
+                                        {{ __('Ver Evento') }}
+                                    </p>
+                                </div>
+                            </a>
                         @endforeach
-                    </ul>
+                    </div>
+
+                    <!-- Links de Paginação dos Eventos Futuros -->
+                    <div class="mt-6">
+                        {{ $futureEvents->links('pagination::bootstrap-4') }}
+                    </div>
                 @endif
-            </div>
-            <!-- Links de Paginação -->
-            <div class="mt-6">
-                {{ $events->links() }}
+
+                <!-- Linha de Separação -->
+                <hr class="my-12 border-t-2 border-gray-300">
+
+                <!-- Lista de Eventos Passados -->
+                <h3 class="text-lg font-semibold mt-10 mb-4">{{ __('Eventos Passados') }}</h3>
+
+                @if ($pastEvents->isEmpty())
+                    <p class="text-gray-600 text-center">{{ __('Nenhum evento passado encontrado.') }}</p>
+                @else
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        @foreach ($pastEvents as $event)
+                            <a href="{{ route('ong-events.show', $event->id) }}" class="block bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                                <!-- Imagem do Evento -->
+                                @if ($event->photo_path)
+                                    <img src="{{ asset('storage/' . $event->photo_path) }}" alt="{{ $event->title }}"
+                                        class="w-full h-48 object-cover">
+                                @else
+                                    <div class="w-full h-48 bg-gray-300 flex items-center justify-center">
+                                        <span class="text-gray-700 font-bold">{{ __('Imagem Indisponível') }}</span>
+                                    </div>
+                                @endif
+
+                                <!-- Detalhes do Evento -->
+                                <div class="p-4">
+                                    <h4 class="text-xl font-semibold text-gray-800">{{ $event->title }}</h4>
+                                    <p class="text-gray-600">
+                                        <strong>{{ __('Data:') }}</strong> {{ \Carbon\Carbon::parse($event->event_date)->format('d/m/Y') }}
+                                    </p>
+                                    <p class="text-gray-600">
+                                        <strong>{{ __('Cidade:') }}</strong> {{ $event->city }}
+                                    </p>
+                                    <p class="mt-2 text-indigo-600 hover:underline font-medium">
+                                        {{ __('Ver Evento') }}
+                                    </p>
+                                </div>
+                            </a>
+                        @endforeach
+                    </div>
+
+                    <!-- Links de Paginação dos Eventos Passados -->
+                    <div class="mt-6">
+                        {{ $pastEvents->links('pagination::bootstrap-4') }}
+                    </div>
+                @endif
             </div>
         </div>
     </div>

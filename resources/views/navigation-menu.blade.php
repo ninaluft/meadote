@@ -22,7 +22,7 @@
 
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 @auth
-                    <!-- My Pets Dropdown -->
+                    {{-- <!-- My Pets Dropdown -->
                     <div x-data="{ open: false }" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex relative">
                         <button @click="open = !open" aria-expanded="false" aria-label="Meus Pets"
                             class="inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 focus:outline-none">
@@ -52,9 +52,9 @@
                                 {{ __('Pets Favoritos') }}
                             </x-dropdown-link>
                         </div>
-                    </div>
+                    </div> --}}
 
-                    <!-- Adoption Forms Dropdown -->
+                    {{-- <!-- Adoption Forms Dropdown -->
                     <div x-data="{ open: false }" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex relative">
                         <button @click="open = !open" aria-expanded="false" aria-label="Formulários de Adoção"
                             class="inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 focus:outline-none">
@@ -82,14 +82,15 @@
                                 </span>
                             </x-dropdown-link>
                         </div>
-                    </div>
+                    </div> --}}
 
-                    <!-- All Pets -->
+                    {{-- <!-- All Pets -->
                     <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                         <x-nav-link :href="route('pets.all-pets')" :active="request()->routeIs('pets.all-pets')" aria-label="Todos os Pets">
                             {{ __('Todos os Pets') }}
                         </x-nav-link>
                     </div>
+
 
                     <!-- Visualizar Todas as ONGs -->
                     <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
@@ -103,14 +104,23 @@
                         <x-nav-link :href="route('ong-events.index')" :active="request()->routeIs('ong-events.index')" aria-label="Ver Eventos">
                             {{ __('Ver Eventos') }}
                         </x-nav-link>
-                    </div>
-
+                    </div> --}}
+                    {{--
                     <!-- Temporary Housing -->
                     <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                         <x-nav-link :href="route('temporary-housing.index')" :active="request()->routeIs('temporary-housing.index')" aria-label="Lar Temporário">
                             {{ __('Lar Temporário') }}
                         </x-nav-link>
+                    </div> --}}
+
+                    <!-- Blog -->
+                    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                        <x-nav-link :href="route('posts.index')" :active="request()->routeIs('posts.index')" aria-label="Blog">
+                            {{ __('Blog') }}
+                        </x-nav-link>
                     </div>
+
+
 
 
                     <!-- Messages Link with Notification Icon -->
@@ -137,7 +147,7 @@
                                 @if (Laravel\Jetstream\Jetstream::managesProfilePhotos())
                                     <button aria-label="Configurações da Conta"
                                         class="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition">
-                                        <img class="h-8 w-8 rounded-full object-cover"
+                                        <img class="h-10 w-10 rounded-full object-cover"
                                             src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}" />
                                     </button>
                                 @else
@@ -173,6 +183,9 @@
                                     {{ __('Suporte') }}
                                 </x-dropdown-link>
 
+                                <x-dropdown-link href="{{ route('posts.faq') }}">
+                                    {{ __('FAQs') }}
+                                </x-dropdown-link>
 
                                 <div class="border-t border-gray-200"></div>
 
@@ -188,7 +201,17 @@
                     </div>
                 @endauth
 
+
                 @guest
+
+                    <!-- Blog -->
+                    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                        <x-nav-link :href="route('posts.index')" :active="request()->routeIs('posts.index')" aria-label="Blog">
+                            {{ __('Blog') }}
+                        </x-nav-link>
+                    </div>
+
+
                     <!-- Login and Register Links for Guests -->
                     <x-nav-link href="{{ route('login') }}" :active="request()->routeIs('login')" aria-label="Fazer Login">
                         {{ __('Login') }}
@@ -197,7 +220,11 @@
                         {{ __('Registrar-se') }}
                     </x-nav-link>
                 @endguest
+
+
             </div>
+
+
 
 
 
@@ -297,41 +324,53 @@
                                 {{ __('Suporte') }}
                             </x-responsive-nav-link>
 
-                            <!-- Logout -->
-                            <form method="POST" action="{{ route('logout') }}" x-data>
-                                @csrf
-                                <x-responsive-nav-link href="{{ route('logout') }}" @click.prevent="$root.submit();"
-                                    aria-label="Sair">
-                                    {{ __('Sair') }}
+                            <!-- FAQS-->
+                            <x-responsive-nav-link href="{{ route('posts.faq') }}" :active="request()->routeIs('support.user')"
+                                aria-label="Perguntas frequentes">
+                                {{ __('FAQs') }}
+                            </x-responsive-nav-link>
+
+                            <li>
+
+
+
+
+                                <!-- Logout -->
+                                <form method="POST" action="{{ route('logout') }}" x-data>
+                                    @csrf
+                                    <x-responsive-nav-link href="{{ route('logout') }}" @click.prevent="$root.submit();"
+                                        aria-label="Sair">
+                                        {{ __('Sair') }}
+                                    </x-responsive-nav-link>
+                                </form>
+
+                                <div class="border-t border-gray-200"></div>
+
+                                <!-- Additional Responsive Links -->
+                                <x-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')"
+                                    aria-label="Painel">
+                                    {{ __('Meu Painel') }}
                                 </x-responsive-nav-link>
-                            </form>
-
-                            <div class="border-t border-gray-200"></div>
-
-                            <!-- Additional Responsive Links -->
-                            <x-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')"
-                                aria-label="Painel">
-                                {{ __('Meu Painel') }}
-                            </x-responsive-nav-link>
-                            <x-responsive-nav-link href="{{ route('pets.my-pets') }}" :active="request()->routeIs('pets.my-pets')"
-                                aria-label="Meus Pets">
-                                {{ __('Meus Pets Registrados') }}
-                            </x-responsive-nav-link>
-                            <x-responsive-nav-link href="{{ route('adoption-form.received') }}" :active="request()->routeIs('adoption-form.received')"
-                                aria-label="Formulários Recebidos">
-                                {{ __('Formulários Recebidos') }}
-                            </x-responsive-nav-link>
-                            <x-responsive-nav-link href="{{ route('pets.all-pets') }}" :active="request()->routeIs('pets.all-pets')"
-                                aria-label="Todos os Pets">
-                                {{ __('Todos os Pets') }}
-                            </x-responsive-nav-link>
-                            <x-responsive-nav-link href="{{ route('ongs.index') }}" :active="request()->routeIs('ongs.index')" aria-label="ONGs">
-                                {{ __('ONGs') }}
-                            </x-responsive-nav-link>
-                            <x-responsive-nav-link href="{{ route('temporary-housing.index') }}" :active="request()->routeIs('temporary-housing.index')"
-                                aria-label="Lar Temporário">
-                                {{ __('Lar Temporário') }}
-                            </x-responsive-nav-link>
+                                <x-responsive-nav-link href="{{ route('pets.my-pets') }}" :active="request()->routeIs('pets.my-pets')"
+                                    aria-label="Meus Pets">
+                                    {{ __('Meus Pets Registrados') }}
+                                </x-responsive-nav-link>
+                                <x-responsive-nav-link href="{{ route('adoption-form.received') }}" :active="request()->routeIs('adoption-form.received')"
+                                    aria-label="Formulários Recebidos">
+                                    {{ __('Formulários Recebidos') }}
+                                </x-responsive-nav-link>
+                                <x-responsive-nav-link href="{{ route('pets.all-pets') }}" :active="request()->routeIs('pets.all-pets')"
+                                    aria-label="Todos os Pets">
+                                    {{ __('Todos os Pets') }}
+                                </x-responsive-nav-link>
+                                <x-responsive-nav-link href="{{ route('ongs.index') }}" :active="request()->routeIs('ongs.index')"
+                                    aria-label="ONGs">
+                                    {{ __('ONGs') }}
+                                </x-responsive-nav-link>
+                                <x-responsive-nav-link href="{{ route('temporary-housing.index') }}" :active="request()->routeIs('temporary-housing.index')"
+                                    aria-label="Lar Temporário">
+                                    {{ __('Lar Temporário') }}
+                                </x-responsive-nav-link>
                         </div>
                     </div>
                 @endauth

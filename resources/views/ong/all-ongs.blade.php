@@ -1,5 +1,4 @@
 <x-app-layout>
-
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Todas as ONGs') }}
@@ -21,13 +20,13 @@
                 @if ($ongs->isNotEmpty())
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                         @foreach ($ongs as $ong)
-                            <div class="bg-white shadow-md rounded-lg overflow-hidden">
-                                <a href="{{ route('user.public-profile', $ong->user->id) }}">
-                                    <div class="h-48 bg-gray-200 flex items-center justify-center">
+                            <div class="bg-white shadow-md rounded-lg overflow-hidden flex p-4">
+                                <a href="{{ route('user.public-profile', $ong->user->id) }}" class="flex-shrink-0">
+                                    <div class="h-32 w-32 bg-gray-200 flex items-center justify-center rounded-full overflow-hidden">
                                         @if (!empty($ong->user->profile_photo_path))
-                                            <img src="{{ asset('storage/' . $ong->user->profile_photo_path) }}" alt="{{ $ong->ong_name }}" class="h-full w-full object-cover">
+                                            <img src="{{ asset('storage/' . $ong->user->profile_photo_path) }}" alt="{{ $ong->ong_name }}" class="h-32 w-32 object-cover">
                                         @else
-                                            <div class="flex items-center justify-center h-full w-full bg-gray-400">
+                                            <div class="flex items-center justify-center h-32 w-32 bg-gray-400 rounded-full">
                                                 <span class="text-4xl font-bold text-white">
                                                     {{ strtoupper(substr($ong->ong_name, 0, 1)) }}{{ strtoupper(substr($ong->ong_name, 1, 1)) }}
                                                 </span>
@@ -36,13 +35,15 @@
                                     </div>
                                 </a>
 
-                                <div class="p-4">
+                                <div class="ml-6 flex flex-col justify-center">
                                     <h2 class="text-lg font-bold mb-2">
                                         <a href="{{ route('user.public-profile', $ong->user->id) }}" class="text-blue-600 hover:underline">
                                             {{ $ong->ong_name }}
                                         </a>
                                     </h2>
-                                    <p class="text-gray-700">{{ Str::limit($ong->about_ong, 100) }}</p>
+                                    <p class="text-gray-600">
+                                        {{ $ong->user->city }}, {{ $ong->user->state }}
+                                    </p>
                                 </div>
                             </div>
                         @endforeach

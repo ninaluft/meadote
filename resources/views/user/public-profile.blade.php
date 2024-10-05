@@ -20,14 +20,21 @@
                     <div class="flex items-center space-x-4 md:space-x-6 mb-6">
                         @if (Laravel\Jetstream\Jetstream::managesProfilePhotos() && !empty($user->profile_photo_path))
                             <img src="{{ $user->profile_photo_url }}" alt="{{ $user->name }}"
-                                class="rounded-full w-16 h-16 md:w-20 md:h-20 object-cover">
+                                class="rounded-full w-40 h-40 md:w-48 md:h-48 object-cover">
                         @else
-                            <span
-                                class="inline-flex items-center justify-center h-16 w-16 md:h-20 md:w-20 rounded-full bg-gray-500">
-                                <span class="text-lg md:text-xl font-medium leading-none text-white">
-                                    {{ strtoupper(substr($user->name, 0, 1)) }}{{ strtoupper(substr($user->last_name ?? '', 0, 1)) }}
-                                </span>
-                            </span>
+                        <span
+                        class="inline-flex items-center justify-center h-16 w-16 md:h-20 md:w-20 rounded-full bg-gray-500">
+                        <span class="text-lg md:text-xl font-medium leading-none text-white">
+                            @if ($user->user_type === 'ong' || $user->user_type === 'admin')
+                                {{ strtoupper(substr($profileData->ong_name ?? 'Informação', 0, 1)) }}
+                            @elseif ($user->user_type === 'tutor')
+                                {{ strtoupper(substr($profileData->full_name ?? 'Informação', 0, 1)) }}
+                            @else
+                                {{ strtoupper(substr($user->name, 0, 1)) }}{{ strtoupper(substr($user->last_name ?? '', 0, 1)) }}
+                            @endif
+                        </span>
+                    </span>
+
                         @endif
 
                         <div>
@@ -38,7 +45,8 @@
                                     {{ $profileData ? $profileData->full_name : $user->name }}
                                 @endif
                             </h2>
-                            <p class="text-sm md:text-base">{{ $user->user_type === 'ong' || $user->user_type === 'admin' ? 'ONG' : 'Tutor' }}</p>
+                            <p class="text-sm md:text-base">
+                                {{ $user->user_type === 'ong' || $user->user_type === 'admin' ? 'ONG' : 'Tutor' }}</p>
                             <p class="text-sm text-gray-500">{{ $user->city }}, {{ $user->state }}</p>
                         </div>
                     </div>
@@ -61,10 +69,11 @@
                             @if ($profileData)
                                 <div class="space-y-3">
                                     <p><strong>Nome Completo:</strong> {{ $profileData->full_name }}</p>
-                                    <p><strong>Lar Temporário:</strong> {{ $profileData->temporary_housing ? 'Sim' : 'Não' }}</p>
+                                    <p><strong>Lar Temporário:</strong>
+                                        {{ $profileData->temporary_housing ? 'Sim' : 'Não' }}</p>
                                     <p><strong>Sobre Mim:</strong></p>
                                     <p class="mt-2 whitespace-pre-wrap">{!! nl2br(e($profileData->about_me)) !!}</p>
-                                   
+
                                 </div>
                             @else
                                 <p>Informações não disponíveis.</p>
@@ -98,6 +107,24 @@
                             </svg>
                             Enviar Mensagem
                         </a>
+                    @endif
+                </div>
+
+                <!-- Exibir os Pets cadastrados pelo usuário -->
+                <div class="border-t border-gray-200 pt-6 mt-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">Pets Cadastrados pelo usuário</h3>
+
+                    @if ($pets->isNotEmpty())
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            @foreach ($pets as $pet)
+                                <a href="{{ route('pets.show', $pet->id) }}"
+                                    class="block hover:shadow-lg transition-shadow duration-300">
+                                    <x-pet-card :pet="$pet" />
+                                </a>
+                            @endforeach
+                        </div>
+                    @else
+                        <p class="text-gray-600">O usuário não possui nenhum pet cadastrado disponível para adoção.</p>
                     @endif
                 </div>
             </div>

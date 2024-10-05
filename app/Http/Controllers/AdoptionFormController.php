@@ -86,10 +86,8 @@ class AdoptionFormController extends Controller
             'has_other_pets' => 'required|boolean',
             'other_pets_details' => 'nullable|string',
             'adoption_reason' => 'required|string|max:1000',
-            'adoption_expectations' => 'required|string|max:1000',
 
             'long_term_commitment' => ['required', 'accepted'], // Checkbox must be accepted
-            'willing_to_sign_commitment' => ['required', 'accepted'],
             'willing_to_castrate' => ['required', 'accepted'],
             'accept_future_visits' => ['required', 'accepted'],
             'declaration_of_truth' => ['required', 'accepted'],
@@ -127,10 +125,8 @@ class AdoptionFormController extends Controller
             'has_other_pets' => (bool) $request->has_other_pets, // Garantir que seja booleano
             'other_pets_details' => $request->other_pets_details,
             'adoption_reason' => $request->adoption_reason,
-            'adoption_expectations' => $request->adoption_expectations,
 
             'long_term_commitment' => (bool) $request->long_term_commitment, // Garantir que seja booleano
-            'willing_to_sign_commitment' => (bool) $request->willing_to_sign_commitment, // Garantir que seja booleano
             'willing_to_castrate' => (bool) $request->willing_to_castrate, // Garantir que seja booleano
             'accept_future_visits' => (bool) $request->accept_future_visits, // Garantir que seja booleano
             'declaration_of_truth' => (bool) $request->declaration_of_truth, // Garantir que seja booleano

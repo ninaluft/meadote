@@ -1,6 +1,5 @@
 <x-app-layout>
     <x-slot name="header">
-
         <div class="flex flex-col max-w-4xl mx-auto px-4">
             <h2 class="font-semibold text-2xl text-gray-800 leading-tight break-words break-all">
                 {{ __('pets.pet_profile') }} {{ $pet->name }}
@@ -26,9 +25,6 @@
                 </div>
             @endif
         </div>
-
-
-
     </x-slot>
 
     <div class="py-6">
@@ -40,7 +36,8 @@
                     <div class="md:w-1/3 mb-4 md:mb-0">
                         <img src="{{ $pet->photo_path ? asset('storage/' . $pet->photo_path) : asset('images/default-pet.jpg') }}"
                             alt="{{ __('pets.description') }} {{ $pet->name }}"
-                            class="rounded-lg w-full h-auto shadow-sm ">
+                            class="rounded-lg w-full h-auto shadow-sm cursor-pointer"
+                            onclick="openModal('{{ $pet->photo_path ? asset('storage/' . $pet->photo_path) : asset('images/default-pet.jpg') }}')">
                     </div>
 
                     <!-- Detalhes do Pet -->
@@ -70,25 +67,23 @@
                                 {{ $pet->special_conditions ? 'Sim' : 'Não' }}</p>
 
                             @if ($pet->special_conditions)
-                                <p><strong>{{ __('pets.special_conditions_description') }}:</strong>
-                                    {{ $pet->special_conditions_description }}</p>
+                                <p><strong>{{ __('pets.special_conditions_description') }}:</strong> {{ $pet->special_conditions_description }}</p>
                             @endif
-
 
                             <p class="mt-2"><strong>{{ __('pets.description') }}: </strong> </p>
                             <p class="mt-2 whitespace-pre-wrap">{!! nl2br(e($pet->description)) !!}</p>
-
-
                         </div>
 
                         <div class="mt-4 text-base">
                             <p><strong>{{ __('pets.registered_by') }}:</strong>
                                 <a href="{{ route('user.public-profile', $pet->user->id) }}"
                                     class="text-indigo-600 hover:underline"
-                                    aria-label="Visualizar perfil público de {{ $pet->user->name }}">
-                                    {{ $pet->user->name }}
+                                    aria-label="Visualizar perfil público de {{ $pet->user->user_type === 'ong' ? $pet->user->ong->ong_name : ($pet->user->user_type === 'tutor' ? $pet->user->tutor->full_name : $pet->user->name) }}">
+                                    {{ $pet->user->user_type === 'ong' ? $pet->user->ong->ong_name : ($pet->user->user_type === 'tutor' ? $pet->user->tutor->full_name : $pet->user->name) }}
                                 </a>
                             </p>
+
+
                             <p><strong>{{ __('pets.location') }}:</strong> {{ $pet->user->city }},
                                 {{ $pet->user->state }}</p>
                             <p><strong>{{ __('pets.status') }}:</strong> <span
@@ -145,6 +140,14 @@
                 </div>
             </div>
 
+            <!-- Modal de Imagem -->
+            <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-75 hidden z-50 flex items-center justify-center" onclick="closeModal()">
+                <div class="relative">
+                    <button onclick="closeModal()" class="absolute top-0 right-0 m-4 text-white text-3xl">&times;</button>
+                    <img id="modalImage" src="" alt="Imagem em tamanho real" class="max-w-full max-h-screen rounded-lg object-contain" onclick="event.stopPropagation()">
+                </div>
+            </div>
+
             <!-- Navegação Anterior e Próxima -->
             <div class="flex justify-between mt-6">
                 @if ($previousPet)
@@ -162,6 +165,18 @@
             </div>
         </div>
     </div>
+
+    <!-- Script para o modal de imagem -->
+    <script>
+        function openModal(imageUrl) {
+            document.getElementById('modalImage').src = imageUrl;
+            document.getElementById('imageModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('imageModal').classList.add('hidden');
+        }
+    </script>
 
     <!-- Script to share the pet's profile -->
     <script>

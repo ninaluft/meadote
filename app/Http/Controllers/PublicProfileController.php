@@ -28,8 +28,14 @@ class PublicProfileController extends Controller
             $profileData = $user->tutor;  // Usando o relacionamento tutor
         }
 
-        return view('user.public-profile', compact('user', 'profileData'));
+        // Buscar apenas os pets com status 'disponível' cadastrados pelo usuário
+        $pets = $user->pets()->where('status', 'available')->get();
+
+        return view('user.public-profile', compact('user', 'profileData', 'pets'));
     }
+
+
+
 
 
 }

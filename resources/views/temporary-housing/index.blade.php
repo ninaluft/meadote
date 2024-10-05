@@ -21,20 +21,33 @@
                 <!-- Lista de tutores -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     @forelse ($tutors as $tutor)
-                        <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200" role="article"
-                            aria-labelledby="tutor-{{ $tutor->id }}">
-                            <h2 class="text-xl font-semibold text-gray-900 mb-2" id="tutor-{{ $tutor->id }}">
-                                {{ $tutor->full_name }}</h2>
-                            <p class="text-gray-700 mb-1">{{ __('Cidade') }}: {{ $tutor->user->city }}</p>
-                            <p class="text-gray-700 mb-1">{{ __('Estado') }}: {{ $tutor->user->state }}</p>
-                            </p>
+                        <a href="{{ route('user.public-profile', $tutor->user_id) }}"
+                            class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 flex items-center space-x-6 hover:shadow-md transition-shadow duration-300"
+                            role="article" aria-labelledby="tutor-{{ $tutor->id }}">
 
-                            <a href="{{ route('user.public-profile', $tutor->user_id) }}"
-                                class="mt-4 inline-block text-indigo-600 hover:text-indigo-900 font-semibold"
-                                aria-label="{{ __('Ver perfil de ') . $tutor->full_name }}">
-                                {{ __('Ver perfil') }}
-                            </a>
-                        </div>
+                            <!-- Foto do Usuário -->
+                            <div class="flex-shrink-0">
+                                @if (!empty($tutor->user->profile_photo_path))
+                                    <img src="{{ asset('storage/' . $tutor->user->profile_photo_path) }}" alt="{{ $tutor->full_name }}"
+                                        class="h-24 w-24 rounded-full object-cover border-2 border-gray-300">
+                                @else
+                                    <div class="h-24 w-24 rounded-full bg-gray-300 flex items-center justify-center">
+                                        <span class="text-3xl font-bold text-white">
+                                            {{ strtoupper(substr($tutor->full_name, 0, 1)) }}{{ strtoupper(substr($tutor->full_name, 1, 1)) }}
+                                        </span>
+                                    </div>
+                                @endif
+                            </div>
+
+                            <!-- Detalhes do Tutor -->
+                            <div>
+                                <h2 class="text-xl font-semibold text-gray-900 mb-1" id="tutor-{{ $tutor->id }}">
+                                    {{ $tutor->full_name }}
+                                </h2>
+                                <p class="text-gray-700">{{ __('Cidade') }}: {{ $tutor->user->city }}</p>
+                                <p class="text-gray-700">{{ __('Estado') }}: {{ $tutor->user->state }}</p>
+                            </div>
+                        </a>
                     @empty
                         <p class="text-gray-500">{{ __('Nenhum tutor encontrado que oferece lar temporário.') }}</p>
                     @endforelse

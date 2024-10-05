@@ -14,14 +14,14 @@ use App\Http\Controllers\ProfileEditController;
 use App\Http\Controllers\TemporaryHousingController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\SupportRequestController;
 use App\Models\OngEvent;
 use App\Models\Message;
 use Illuminate\Http\Request;
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Authentication Routes
 Route::post('/register', [RegisterController::class, 'store'])->name('register');
@@ -60,50 +60,32 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
 
 // Rotas Protegidas - Pets (Apenas para usuários autenticados)
 Route::middleware('auth')->group(function () {
-    // Exibir o formulário para criar um novo pet
+
     Route::get('/pets/create', [PetController::class, 'create'])->name('pets.create');
-
-    // Exibir o formulário para editar um pet específico
     Route::get('/pets/{pet}/edit', [PetController::class, 'edit'])->name('pets.edit');
-
-    // Listar todos os pets do usuário autenticado (página inicial dos pets do usuário)
     Route::get('/pets', [PetController::class, 'index'])->name('pets.index');
-
-    // Armazenar os detalhes de um novo pet
     Route::post('/pets', [PetController::class, 'store'])->name('pets.store');
-
-    // Atualizar um pet específico
     Route::put('/pets/{pet}', [PetController::class, 'update'])->name('pets.update');
-
-    // Excluir um pet específico
     Route::delete('/pets/{pet}', [PetController::class, 'destroy'])->name('pets.destroy');
-
-    // Exibir os pets do usuário autenticado
     Route::get('/my-pets', [PetController::class, 'myPets'])->name('pets.my-pets');
-
-    // Favoritar/desfavoritar um pet específico
     Route::post('/pets/{id}/favorite', [PetController::class, 'favorite'])->name('pets.favorite');
-
-    // Exibir pets favoritos do usuário autenticado
     Route::get('/favorites', [PetController::class, 'favorites'])->name('pets.favorites');
-
-    // Listar pets adotados pelo usuário autenticado
     Route::get('/my-adopted-pets', [PetController::class, 'adoptedPets'])->name('pets.adopted');
 });
 
-// Rotas Públicas - Pets
-Route::get('/all-pets', [PetController::class, 'allPets'])->name('pets.all-pets'); // Página pública para listar todos os pets
-Route::get('/pets/{pet}', [PetController::class, 'show'])->name('pets.show'); // Página pública para exibir um pet específico
-
-
-
-//ROTAS PUBLICAS INICIO
+// Rotas Públicas
+Route::get('/all-pets', [PetController::class, 'allPets'])->name('pets.all-pets');
+Route::get('/pets/{pet}', [PetController::class, 'show'])->name('pets.show');
 Route::get('/ong-events', [OngEventController::class, 'index'])->name('ong-events.index');
 Route::get('/ong-events/{id}', [OngEventController::class, 'show'])->name('ong-events.show');
 Route::get('/temporary-housing', [TemporaryHousingController::class, 'index'])->name('temporary-housing.index');
 Route::get('/all-ongs', [OngController::class, 'index'])->name('ongs.index');
 Route::get('/user/public-profile/{id}', [PublicProfileController::class, 'show'])->name('user.public-profile');
-//ROTAS PUBLICAS FIM
+Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
+Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show');
+Route::get('/posts/1', [PostController::class, 'show'])->name('posts.faq');
+
+
 
 
 // Adoption Form Routes
@@ -144,37 +126,41 @@ Route::middleware('auth')->group(function () {
 });
 
 
-
-Route::middleware('auth')->group(function () {
-    // Rota para listar todas as solicitações de suporte
-    Route::get('/admin/support', [SupportRequestController::class, 'adminIndex'])->name('admin.support.index');
-
-    // Rota para exibir os detalhes de uma solicitação de suporte específica (essa é a que está faltando)
-    Route::get('/admin/support/{supportRequest}', [SupportRequestController::class, 'adminShow'])->name('admin.support.show');
-
-    // Rota para encerrar uma solicitação de suporte
-    Route::post('/admin/support/{supportRequest}/close', [SupportRequestController::class, 'close'])->name('admin.support.close');
-});
-
-
-
-
 // Routes restricted to 'admin'
 Route::middleware(['auth', 'user_type:admin'])->group(function () {
 
     Route::get('/admin/dashboard', [AdminDashboardController::class, 'adminDashboard'])->name('admin.dashboard');
+
     Route::post('/admin/update-user/{user}', [AdminDashboardController::class, 'updateUser'])->name('admin.update-user');
     Route::get('/admin/manage-users', [AdminDashboardController::class, 'manageUsers'])->name('admin.manage-users');
     Route::delete('/admin/delete-user/{user}', [AdminDashboardController::class, 'deleteUser'])->name('admin.delete-user');
+
     Route::get('/admin/manage-pets', [AdminDashboardController::class, 'managePets'])->name('admin.manage-pets');
     Route::delete('/admin/delete-pet/{pet}', [AdminDashboardController::class, 'deletePet'])->name('admin.delete-pet');
+
     Route::get('/admin/manage-events', [AdminDashboardController::class, 'manageEvents'])->name('admin.manage-events');
     Route::delete('/admin/delete-event/{event}', [AdminDashboardController::class, 'deleteEvent'])->name('admin.delete-event');
+
     Route::get('/admin/support', [SupportRequestController::class, 'adminIndex'])->name('admin.support.index'); // List all requests
+
     Route::get('/admin/support/{supportRequest}/details', [SupportRequestController::class, 'adminShow'])->name('admin.support.details');
     Route::post('/admin/support/{supportRequest}/close', [SupportRequestController::class, 'close'])->name('admin.support.close');
     Route::get('/admin/manage-forms', [AdminDashboardController::class, 'manageForms'])->name('admin.manage-forms');
+    Route::get('/admin/user-details/{id}', [AdminDashboardController::class, 'showUserDetails'])->name('admin.user-details');
+
+    Route::get('/admin/support', [SupportRequestController::class, 'adminIndex'])->name('admin.support.index');
+    Route::get('/admin/support/{supportRequest}', [SupportRequestController::class, 'adminShow'])->name('admin.support.show');
+    Route::post('/admin/support/{supportRequest}/close', [SupportRequestController::class, 'close'])->name('admin.support.close');
+
+    //POSTS DO BLOG
+    Route::get('/admin/posts/create', [PostController::class, 'create'])->name('posts.create');
+    Route::post('/admin/posts', [PostController::class, 'store'])->name('posts.store');
+    Route::get('/posts/{post}/edit', [PostController::class, 'edit'])->name('posts.edit');
+    Route::put('/posts/{post}', [PostController::class, 'update'])->name('posts.update');
+    Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
 });
+
+
 
 // Routes restricted to 'ong'
 Route::middleware(['auth', 'user_type:ong'])->group(function () {
@@ -183,8 +169,8 @@ Route::middleware(['auth', 'user_type:ong'])->group(function () {
         return view('ong.dashboard', compact('events'));
     })->name('ong.dashboard');
     Route::get('/ong-events/create', [OngEventController::class, 'create'])->name('events.create');
-
-    Route::post('/ong-events', [OngEventController::class, 'store'])->name('events.store');
+    Route::get('/events/criar', [OngEventController::class, 'criar'])->name('events.criar');
+    Route::post('/ong-events', action: [OngEventController::class, 'store'])->name('events.store');
     Route::put('/ong-events/{id}', [OngEventController::class, 'update'])->name('events.update');
     Route::get('/ong-events/{event}/edit', [OngEventController::class, 'edit'])->name('events.edit');
     Route::delete('/ong-events/{event}', [OngEventController::class, 'destroy'])->name('events.destroy');
@@ -203,29 +189,6 @@ Route::middleware(['auth', 'user_type:tutor'])->group(function () {
 // Notifications
 Route::post('/notifications/{id}/mark-as-read', [UserController::class, 'markNotificationAsRead'])->name('notifications.markAsRead');
 
-// Messages SSE
-Route::get('/messages/sse/{recipientId}', function ($recipientId) {
-    $userId = Auth::id();
-
-    return response()->stream(function () use ($userId, $recipientId) {
-        while (true) {
-            $messages = Message::where('sender_id', $recipientId)
-                ->where('recipient_id', $userId)
-                ->where('is_read', false)
-                ->get();
-            if ($messages->count() > 0) {
-                echo "data: " . json_encode($messages) . "\n\n";
-                ob_flush();
-                flush();
-                sleep(5);
-            }
-        }
-    }, 200, [
-        'Content-Type' => 'text/event-stream',
-        'Cache-Control' => 'no-cache',
-        'Connection' => 'keep-alive',
-    ]);
-})->middleware('auth');
 
 // Route to handle message reading
 Route::post('/messages/read/{messageId}', function ($messageId) {
@@ -234,6 +197,3 @@ Route::post('/messages/read/{messageId}', function ($messageId) {
     $message->save();
     return response()->json(['status' => 'success']);
 })->middleware('auth');
-
-
-Route::get('/admin/user-details/{id}', [AdminDashboardController::class, 'showUserDetails'])->name('admin.user-details');

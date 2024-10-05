@@ -6,7 +6,7 @@ return [
     'delete_button' => 'Excluir',
     'confirm_delete' => 'Tem certeza que deseja excluir este pet?',
     'adopt_button' => 'Adotar',
-    'form_sent_success' => 'Formulário de adoção já enviado.',
+    'form_sent_success' => 'Formulário de adoção enviado.',
     'share' => 'Compartilhar',
     'previous_pet' => 'Pet Anterior',
     'next_pet' => 'Próximo Pet',

@@ -8,24 +8,27 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
-                <form action="{{ route('events.store') }}" method="POST" aria-label="Formulário para criação de evento">
+                <form action="{{ route('events.store') }}" method="POST" enctype="multipart/form-data" aria-label="Formulário para criação de evento">
                     @csrf
+                    <!-- Título do Evento -->
                     <div class="mb-4">
                         <x-label for="title" value="{{ __('Título do Evento') }}" />
-                        <x-input id="title" class="block mt-1 w-full" type="text" name="title" value="{{ old('title') }}" required />
+                        <x-input id="title" class="block mt-1 w-full" type="text" name="title" value="{{ old('title') }}" required autofocus />
                         @error('title')
                             <span class="text-red-500 text-sm">{{ $message }}</span>
                         @enderror
                     </div>
 
+                    <!-- Descrição do Evento -->
                     <div class="mb-4">
                         <x-label for="description" value="{{ __('Descrição do Evento') }}" />
-                        <textarea id="description" name="description" class="block mt-1 w-full" rows="4">{{ old('description') }}</textarea>
+                        <textarea id="description" name="description" class="block mt-1 w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm" rows="4" required>{{ old('description') }}</textarea>
                         @error('description')
                             <span class="text-red-500 text-sm">{{ $message }}</span>
                         @enderror
                     </div>
 
+                    <!-- Data do Evento -->
                     <div class="mb-4">
                         <x-label for="event_date" value="{{ __('Data do Evento') }}" />
                         <x-input id="event_date" class="block mt-1 w-full" type="date" name="event_date" value="{{ old('event_date') }}" required />
@@ -59,6 +62,7 @@
                         @enderror
                     </div>
 
+                    <!-- Local do Evento -->
                     <div class="mb-4">
                         <x-label for="location" value="{{ __('Local do Evento') }}" />
                         <x-input id="location" class="block mt-1 w-full" type="text" name="location" value="{{ old('location') }}" required />
@@ -67,6 +71,16 @@
                         @enderror
                     </div>
 
+                    <!-- Foto do Evento -->
+                    <div class="mb-4">
+                        <x-label for="photo" value="{{ __('Foto do Evento') }}" />
+                        <input type="file" name="photo" id="photo" class="block mt-1 w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
+                        @error('photo')
+                            <p class="text-red-500 text-xs mt-2">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Botão Criar Evento -->
                     <x-button class="mt-4">
                         {{ __('Criar Evento') }}
                     </x-button>

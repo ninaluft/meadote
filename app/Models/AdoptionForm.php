@@ -55,9 +55,7 @@ class AdoptionForm extends Model
 
         // Adoption Motivation and Expectations
         'adoption_reason',
-        'adoption_expectations',
         'long_term_commitment',
-        'willing_to_sign_commitment',
         'willing_to_castrate',
         'accept_future_visits',
         'declaration_of_truth',

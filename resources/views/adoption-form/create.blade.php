@@ -310,17 +310,6 @@
                         @enderror
                     </div>
 
-                    <!-- Expectativas da Adoção -->
-                    <div class="mb-4">
-                        <x-label for="adoption_expectations" :value="__('Quais são suas expectativas ao adotar este pet?')" />
-                        <textarea id="adoption_expectations" name="adoption_expectations"
-                            class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
-                            required>{{ old('adoption_expectations') }}</textarea>
-                        @error('adoption_expectations')
-                            <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
-                        @enderror
-                    </div>
-
                     <!-- Termos de Aceitação -->
                     <h3 class="font-semibold text-lg mb-4">{{ __('Termos de Aceitação') }}</h3>
 
@@ -337,23 +326,6 @@
                             </label>
                         </div>
                         @error('long_term_commitment')
-                            <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <!-- Disposto a Assinar o Compromisso -->
-                    <div class="mb-4">
-                        <input type="hidden" name="willing_to_sign_commitment" value="0">
-                        <div class="flex items-center">
-                            <input type="checkbox" id="willing_to_sign_commitment" name="willing_to_sign_commitment"
-                                value="1"
-                                class="h-5 w-5 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
-                                {{ old('willing_to_sign_commitment') ? 'checked' : '' }}>
-                            <label for="willing_to_sign_commitment" class="ml-2 block text-sm text-gray-700">
-                                {{ __('Estou disposto a assinar um compromisso') }}
-                            </label>
-                        </div>
-                        @error('willing_to_sign_commitment')
                             <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
                         @enderror
                     </div>

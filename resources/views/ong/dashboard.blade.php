@@ -9,7 +9,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
 
-                
+
                 <!-- Outras seções da dashboard -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
@@ -43,7 +43,7 @@
                         <p class="text-sm text-gray-600 mb-4">
                             {{ __('Crie eventos para promover adoções e envolvimento da comunidade.') }}
                         </p>
-                        <a href="{{ route('events.create') }}"
+                        <a href="{{ route('events.criar') }}"
                             class="inline-block bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600" aria-label="Criar um novo evento">
                             {{ __('Criar Evento') }}
                         </a>

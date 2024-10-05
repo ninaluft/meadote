@@ -56,9 +56,7 @@ return new class extends Migration
 
             // Adoption Motivation and Expectations
             $table->text('adoption_reason');
-            $table->text('adoption_expectations');
             $table->boolean('long_term_commitment')->default(false);
-            $table->boolean('willing_to_sign_commitment')->default(false);
             $table->boolean('willing_to_castrate')->default(false);
             $table->boolean('accept_future_visits')->default(false);
             $table->boolean('declaration_of_truth')->default(false);

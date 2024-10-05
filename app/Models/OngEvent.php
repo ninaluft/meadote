@@ -16,7 +16,8 @@ class OngEvent extends Model
         'city',
         'state',
         'cep',
-        'location'
+        'location',
+        'photo_path'
     ];
 
     public function ong()
@@ -24,5 +25,5 @@ class OngEvent extends Model
         return $this->belongsTo(Ong::class);
     }
 
-    
+
 }

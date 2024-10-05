@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\OngEvent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class OngEventController extends Controller
 {
@@ -13,8 +14,10 @@ class OngEventController extends Controller
         return view('ong-events.create');
     }
 
-
-
+    public function criar()
+    {
+        return view('ong-events.criar');
+    }
 
 
     public function store(Request $request)
@@ -27,7 +30,13 @@ class OngEventController extends Controller
             'state' => 'nullable|string|max:255',
             'cep' => 'nullable|string|max:14',
             'location' => 'required|string|max:255',
+            'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048', // Validate image
         ]);
+
+        $photoPath = null;
+        if ($request->hasFile('photo')) {
+            $photoPath = $request->file('photo')->store('event_photos', 'public');
+        }
 
         OngEvent::create([
             'ong_id' => Auth::user()->ong->id,
@@ -38,6 +47,7 @@ class OngEventController extends Controller
             'state' => $validated['state'],
             'cep' => $validated['cep'],
             'location' => $validated['location'],
+            'photo_path' => $photoPath,
         ]);
 
         return redirect()->route('ong-events.index')->with('success', 'Event created successfully.');
@@ -56,11 +66,23 @@ class OngEventController extends Controller
             $query->where('city', 'like', '%' . $request->input('search_city') . '%');
         }
 
-        // Paginação de 9 eventos por página (ajuste o número conforme necessário)
-        $events = $query->orderBy('event_date', 'asc')->paginate(9);
+        // Clonar a consulta para reutilizar nos dois tipos de eventos
+        $futureEventsQuery = clone $query;
+        $pastEventsQuery = clone $query;
 
-        return view('ong-events.index', compact('events'));
+        // Futuros eventos
+        $futureEvents = $futureEventsQuery->where('event_date', '>=', now())
+                                          ->orderBy('event_date', 'asc')
+                                          ->paginate(9, ['*'], 'futurePage');
+
+        // Eventos passados
+        $pastEvents = $pastEventsQuery->where('event_date', '<', now())
+                                      ->orderBy('event_date', 'desc')
+                                      ->paginate(9, ['*'], 'pastPage');
+
+        return view('ong-events.index', compact('futureEvents', 'pastEvents'));
     }
+
 
 
     public function show($id)
@@ -71,7 +93,7 @@ class OngEventController extends Controller
 
 
     // Edit event
-    // Edit event
+
     public function edit(OngEvent $event)
     {
         // Check if the authenticated ONG is the owner of the event
@@ -101,13 +123,23 @@ class OngEventController extends Controller
             'state' => 'nullable|string|max:255',
             'cep' => 'nullable|string|max:14',
             'location' => 'required|string|max:255',
+            'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048', // Validate image
         ]);
+
+        if ($request->hasFile('photo')) {
+            // Delete the old photo if it exists
+            if ($event->photo_path) {
+                Storage::disk('public')->delete($event->photo_path);
+            }
+            $event->photo_path = $request->file('photo')->store('event_photos', 'public');
+        }
 
         // Update the event
         $event->update($validated);
 
         return redirect()->route('ong-events.show', $event->id)->with('success', 'Event updated successfully.');
     }
+
     // Delete event
     public function destroy(OngEvent $event)
     {

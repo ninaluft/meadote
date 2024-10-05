@@ -14,7 +14,7 @@
                     @foreach ($supportRequests as $request)
                         <li>
                             <a href="{{ route('support.show', $request) }}" class="text-indigo-600 hover:text-indigo-900">
-                                {{ $request->subject }} - Status: {{ ucfirst($request->status) }}
+                                {{ $request->subject }} - Status: {{ __('messages.status.' . $request->status) }}
                             </a>
                         </li>
                     @endforeach

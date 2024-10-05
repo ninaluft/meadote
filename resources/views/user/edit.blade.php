@@ -48,6 +48,23 @@
                         @enderror
                     </div>
 
+                    <!-- Modal para o Croppie -->
+                    <div id="cropperModal" class="fixed z-50 inset-0 overflow-y-auto hidden">
+                        <div class="flex items-center justify-center min-h-screen px-4">
+                            <div
+                                class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all max-w-3xl w-full p-6">
+                                <h2 class="text-lg font-semibold mb-4">Ajuste a Imagem de Perfil</h2>
+                                <div id="cropperContainer" class="mb-4"></div>
+                                <div class="flex justify-end mt-4">
+                                    <button type="button" id="cropButton"
+                                        class="bg-blue-500 text-white px-4 py-2 rounded-md">Cortar e Salvar</button>
+                                    <button type="button" onclick="closeCropperModal()"
+                                        class="ml-4 bg-red-500 text-white px-4 py-2 rounded-md">Cancelar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Nome -->
                     <div class="mb-6">
                         <x-label for="name" :value="__('Nome de usuário')" />
@@ -191,8 +208,7 @@
                     <!-- CEP -->
                     <div class="mb-6">
                         <x-label for="cep" :value="__('CEP')" />
-                        <x-input id="cep" type="text" name="cep" :value="old('cep', $user->cep)"
-                            class="mt-1 block w-full" required onblur="buscarCEP(this.value)" />
+                        <x-input id="cep" type="text" name="cep" :value="old('cep', $user->cep)" class="mt-1 block w-full" required onblur="buscarCEP(this.value)" />
                         @error('cep')
                             <span class="text-sm text-red-600">{{ $message }}</span>
                         @enderror
@@ -226,60 +242,102 @@
         </div>
     </div>
 
-    <!-- Script para visualizar a imagem selecionada -->
-    <script>
-        function previewImage(event) {
-            const reader = new FileReader();
-            reader.onload = function() {
-                const output = document.getElementById('photo-preview');
-                output.src = reader.result;
-            };
-            reader.readAsDataURL(event.target.files[0]);
-        }
-    </script>
 
-    <!-- Script da API ViaCEP e de validações -->
-    <script>
-        function buscarCEP(cep) {
-            cep = cep.replace(/\D/g, '');
-
-            if (cep != "") {
-                const validacep = /^[0-9]{8}$/;
-
-                if (validacep.test(cep)) {
-                    const script = document.createElement('script');
-                    script.src = `https://viacep.com.br/ws/${cep}/json/?callback=preencherEndereco`;
-                    document.body.appendChild(script);
-                } else {
-                    alert("Formato de CEP inválido.");
-                }
-            }
-        }
-
-        function preencherEndereco(dados) {
-            if (!("erro" in dados)) {
-                document.getElementById('city').value = dados.localidade;
-                document.getElementById('state').value = dados.uf;
-            } else {
-                alert("CEP não encontrado.");
-            }
-        }
-    </script>
-
+    <link rel="stylesheet" href="https://unpkg.com/croppie/croppie.css" />
+    <script src="https://unpkg.com/croppie/croppie.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 
+    <!-- Script para visualizar a imagem selecionada -->
+    <script>
+        var croppie;
+
+        document.getElementById('profile_photo').addEventListener('change', function(event) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                // Abre o modal
+                openCropperModal();
+
+                // Inicializa o Croppie
+                var el = document.getElementById('cropperContainer');
+                if (croppie) {
+                    croppie.destroy();
+                }
+                croppie = new Croppie(el, {
+                    viewport: {
+                        width: 200,
+                        height: 200,
+                        type: 'circle'
+                    }, // Define o recorte circular
+                    boundary: {
+                        width: 300,
+                        height: 300
+                    },
+                    showZoomer: true, // Mostra o controle de zoom
+                    enableOrientation: true // Permite rotação
+                });
+
+                // Carrega a imagem para o Croppie
+                croppie.bind({
+                    url: e.target.result
+                });
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        });
+
+        // Função para abrir o modal
+        function openCropperModal() {
+            document.getElementById('cropperModal').classList.remove('hidden');
+        }
+
+        // Função para fechar o modal
+        function closeCropperModal() {
+            document.getElementById('cropperModal').classList.add('hidden');
+        }
+
+        // Obtém a imagem cortada quando o botão for clicado
+        document.getElementById('cropButton').addEventListener('click', function() {
+            croppie.result({
+                type: 'blob',
+                size: {
+                    width: 200,
+                    height: 200
+                }
+            }).then(function(blob) {
+                // Atualiza o preview da imagem de perfil
+                const url = URL.createObjectURL(blob);
+                document.getElementById('photo-preview').src = url;
+
+                // Crie um novo objeto File para enviar ao backend ao submeter o formulário
+                const fileInput = document.getElementById('profile_photo');
+                const dataTransfer = new DataTransfer();
+                const file = new File([blob], 'cropped-profile-photo.png', {
+                    type: 'image/png'
+                });
+                dataTransfer.items.add(file);
+                fileInput.files = dataTransfer.files;
+
+                // Fecha o modal
+                closeCropperModal();
+            });
+        });
+    </script>
+
+
     <script>
         $(document).ready(function() {
-            // Mascara para CPF
+            // Máscara para CPF
             $('#cpf').mask('000.000.000-00', {
                 reverse: true
             });
 
-            // Mascara para CNPJ
+            // Máscara para CNPJ
             $('#cnpj').mask('00.000.000/0000-00', {
                 reverse: true
             });
+
+            // Máscara para CEP
+            $('#cep').mask('00000-000');
         });
 
         function validateForm() {
@@ -298,5 +356,34 @@
 
             return true;
         }
+    </script>
+
+    <script>
+        function buscarCEP(cep) {
+    // Remove qualquer caractere não numérico antes de continuar
+    cep = cep.replace(/\D/g, '');
+
+    if (cep !== "") {
+        const validacep = /^[0-9]{8}$/;
+
+        if (validacep.test(cep)) {
+            const script = document.createElement('script');
+            script.src = `https://viacep.com.br/ws/${cep}/json/?callback=preencherEndereco`;
+            document.body.appendChild(script);
+        } else {
+            alert("Formato de CEP inválido.");
+        }
+    }
+}
+
+function preencherEndereco(dados) {
+    if (!("erro" in dados)) {
+        document.getElementById('city').value = dados.localidade;
+        document.getElementById('state').value = dados.uf;
+    } else {
+        alert("CEP não encontrado.");
+    }
+}
+
     </script>
 </x-app-layout>
