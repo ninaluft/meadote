@@ -115,10 +115,10 @@ Para criar as tabelas no banco de dados, execute as migrações:
 php artisan migrate
 ```
 
-Para popular o banco de dados com usuários do admin e do sistema, use o seeder:
+Para popular o banco de dados:
 
 ```bash
-php artisan db:seed --class=UserSeeder
+php artisan db:seed 
 ```
 
 ---
