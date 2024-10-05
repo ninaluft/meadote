@@ -18,7 +18,7 @@ return new class extends Migration
             $table->date('date_of_birth');
             $table->boolean('temporary_housing')->default(false);
             $table->string('cpf')->unique();
-            $table->string('about_me')->nullable();
+            $table->text('about_me')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('responsible_name');
             $table->string('responsible_cpf')->unique();
             $table->string('cnpj')->unique();
-            $table->string('about_ong')->nullable();
+            $table->text('about_ong')->nullable();
             $table->timestamps();
         });
     }
