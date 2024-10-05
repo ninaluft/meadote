@@ -76,6 +76,9 @@
                 </a>
             </div>
 
+            <a href="{{ route('faqs.edit') }}" class="btn btn-secondary">Editar FAQs</a>
+
+
         </div>
     </div>
 </x-app-layout>

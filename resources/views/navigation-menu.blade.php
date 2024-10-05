@@ -183,7 +183,7 @@
                                     {{ __('Suporte') }}
                                 </x-dropdown-link>
 
-                                <x-dropdown-link href="{{ route('posts.faq') }}">
+                                <x-dropdown-link href="{{ route('faqs.show') }}">
                                     {{ __('FAQs') }}
                                 </x-dropdown-link>
 
