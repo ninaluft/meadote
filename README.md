@@ -69,8 +69,8 @@ Além disso, é recomendado ter um ambiente local para desenvolvimento PHP, como
 7. **Abra o arquivo `.env` e configure as informações do banco de dados:**
 
    ```env
-   APP_KEY=(coloque aqui a chave gerada)
    APP_URL=http://127.0.0.1:8000
+   
    DB_CONNECTION=mysql
    DB_HOST=127.0.0.1
    DB_PORT=3306
