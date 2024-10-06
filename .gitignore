@@ -1,9 +1,18 @@
-/.phpunit.cache
+# Ignorar apenas partes sensíveis ou temporárias da pasta storage
+/storage/*.key
+/storage/logs
+/storage/framework/cache
+/storage/framework/sessions
+/storage/framework/views
+
+# Versionar a pasta storage/app/public e outras necessárias
+!storage/app/public
+
+# Ignorar outras pastas e arquivos normalmente ignorados
 /node_modules
 /public/build
 /public/hot
 # /public/storage
-/storage/*.key
 /vendor
 .env
 .env.backup

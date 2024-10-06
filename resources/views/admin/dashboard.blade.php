@@ -69,14 +69,18 @@
             </div>
 
             <!-- Botão Criar Novo Post -->
-            <div class="block">
+            <div class="block space-x-4">
                 <a href="{{ route('posts.create') }}"
-                    class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-200 ease-in-out">
-                    {{ __('Criar Novo Post') }}
+                    class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-200 ease-in-out inline-block">
+                    {{ __('Criar Novo Post no Blog') }}
+                </a>
+                <a href="{{ route('faqs.edit') }}"
+                    class="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition duration-200 ease-in-out inline-block">
+                    {{ __('Editar FAQs') }}
                 </a>
             </div>
 
-            <a href="{{ route('faqs.edit') }}" class="btn btn-secondary">Editar FAQs</a>
+
 
 
         </div>
