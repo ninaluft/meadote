@@ -44,13 +44,16 @@
                             </div>
                         @endif
                         <input type="file" name="image" id="image" class="form-control" accept="image/*"
-                            onchange="previewImage(event)">
+                            onchange="handleImage(event)">
                         @error('image')
                             <span class="text-red-500 text-sm">{{ $message }}</span>
                         @enderror
                         <div class="mt-4">
                             <img id="image-preview" class="hidden w-full max-w-xs rounded-lg shadow-md"
                                 alt="Pré-visualização da Imagem">
+                        </div>
+                        <div class="mt-4 text-center">
+                            <button type="button" id="crop-button" class="hidden bg-blue-600 text-white px-4 py-2 rounded-lg">Cortar Imagem</button>
                         </div>
                     </div>
 
@@ -67,32 +70,13 @@
         </div>
     </div>
 
-    <!-- Script para pré-visualização da imagem -->
-    <script>
-        function previewImage(event) {
-            const input = event.target;
-            const preview = document.getElementById('image-preview');
-            const currentImage = document.getElementById('current-image');
-
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-
-                reader.onload = function(e) {
-                    preview.src = e.target.result;
-                    preview.classList.remove('hidden');
-                    if (currentImage) {
-                        currentImage.classList.add('hidden');
-                    }
-                };
-
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-    </script>
-
-    <!-- Script para inicializar o Quill e transferir o conteúdo para o campo de texto -->
+    <!-- Script para pré-visualização da imagem e edição -->
     <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+
+    <!-- Cropper.js CSS and JS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -117,6 +101,100 @@
             // Ao enviar o formulário, copia o conteúdo do Quill para o textarea
             document.getElementById('post-form').addEventListener('submit', function () {
                 document.getElementById('content').value = quill.root.innerHTML;
+            });
+
+            // Inicializa o Cropper.js para cortar a imagem
+            let cropper;
+            const imagePreview = document.getElementById('image-preview');
+            const cropButton = document.getElementById('crop-button');
+            const currentImage = document.getElementById('current-image');
+            let croppedBlob;  // Variável para armazenar o Blob da imagem cortada
+
+            // Função para tratar a pré-visualização e o corte da imagem
+            window.handleImage = function(event) {
+                const input = event.target;
+
+                if (input.files && input.files[0]) {
+                    const reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        imagePreview.src = e.target.result;
+                        imagePreview.classList.remove('hidden');
+                        cropButton.classList.remove('hidden');
+
+                        if (currentImage) {
+                            currentImage.classList.add('hidden');
+                        }
+
+                        // Destroy any previous cropper instance
+                        if (cropper) {
+                            cropper.destroy();
+                        }
+
+                        // Initialize a new cropper instance
+                        cropper = new Cropper(imagePreview, {
+                            aspectRatio: 3,  // Ajuste para uma proporção mais estreita (ex: 3:1)
+                            viewMode: 1,
+                            autoCropArea: 1,
+                            ready: function () {
+                                // Ajusta a área de corte para ser mais estreita
+                                const cropBoxData = cropper.getCropBoxData();
+                                cropBoxData.width = cropBoxData.width / 1.5;  // Reduz a largura da área de corte para torná-la mais estreita
+                                cropBoxData.height = cropBoxData.height; // Mantém a altura original
+                                cropper.setCropBoxData(cropBoxData);
+                            },
+                        });
+                    };
+
+                    reader.readAsDataURL(input.files[0]);
+                }
+            };
+
+            // Cortar a imagem e substituir a visualização com a versão cortada
+            cropButton.addEventListener('click', function() {
+                if (cropper) {
+                    const canvas = cropper.getCroppedCanvas();
+
+                    // Convert the cropped canvas to a Blob
+                    canvas.toBlob(function(blob) {
+                        croppedBlob = blob;
+
+                        const croppedUrl = URL.createObjectURL(blob);
+                        imagePreview.src = croppedUrl;
+
+                        // Hide the cropper and update the input to contain the cropped image
+                        cropper.destroy();
+                        cropper = null;
+                        cropButton.classList.add('hidden');
+                    });
+                }
+            });
+
+            // Enviar a imagem cortada no formulário
+            document.getElementById('post-form').addEventListener('submit', function (e) {
+                if (croppedBlob) {
+                    // Cria um novo arquivo para o Blob cortado
+                    const file = new File([croppedBlob], 'cropped_image.png', { type: 'image/png' });
+
+                    // Cria um objeto FormData e adiciona o arquivo cortado
+                    const formData = new FormData(this);
+                    formData.append('image', file);
+
+                    // Envia o formulário manualmente com o arquivo cortado
+                    e.preventDefault();
+
+                    fetch(this.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+                        }
+                    }).then(response => {
+                        if (response.ok) {
+                            window.location.href = response.url;
+                        }
+                    }).catch(error => console.error('Erro ao enviar a imagem cortada:', error));
+                }
             });
         });
     </script>

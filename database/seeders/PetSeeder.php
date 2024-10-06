@@ -194,7 +194,7 @@ class PetSeeder extends Seeder
                 'updated_at' => Carbon::now(),
             ],
             [
-                'name' => 'Nina',
+                'name' => 'Maple',
                 'species' => 'other',
                 'specify_other' => 'Coelho',
                 'gender' => 'female',
@@ -206,7 +206,7 @@ class PetSeeder extends Seeder
                 'description' => 'Coelha amorosa, precisa de um lar tranquilo e alguém que cuide de sua dieta específica.',
                 'status' => 'available',
                 'user_id' => 4, // Tutor Maria Oliveira
-                'photo_path' => 'pets/nina.jpg',
+                'photo_path' => 'pets/maple.jpg',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],

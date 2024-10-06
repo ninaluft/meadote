@@ -38,6 +38,7 @@
                             value="{{ $responsibleName }}" readonly />
                     </div>
 
+
                     <!-- Nome Completo do Solicitante -->
                     <h3 class="font-semibold text-lg mb-4">{{ __('Informações Pessoais do Solicitante') }}</h3>
                     <div class="mb-4">

@@ -15,68 +15,7 @@ class PostSeeder extends Seeder
     {
         // Posts do Admin
         DB::table('posts')->insert([
-            [
-                'user_id' => 1, // Admin
-                'title' => 'Perguntas Frequentes: Respondendo Suas Dúvidas Sobre o MeAdote!',
-                'content' => '
-                    <p>No MeAdote, sabemos que você pode ter várias perguntas sobre como funciona o nosso sistema de adoção, doação, e outras funcionalidades. Por isso, reunimos as perguntas mais frequentes para ajudá-lo a entender tudo sobre nossa plataforma e garantir uma experiência tranquila.</p>
 
-                    <h3>1. Como faço para adotar um pet no MeAdote?</h3>
-                    <p>Para adotar um pet, siga os seguintes passos:</p>
-                    <ul>
-                        <li>Navegue pela nossa lista de animais disponíveis clicando em "Buscar Pets".</li>
-                        <li>Escolha o pet que deseja adotar e clique em "Quero Adotar".</li>
-                        <li>Preencha o formulário de adoção com suas informações.</li>
-                        <li>Aguarde a aprovação do responsável pelo pet. Eles entrarão em contato para as próximas etapas.</li>
-                    </ul>
-
-                    <h3>2. Quais são os requisitos para adotar um pet?</h3>
-                    <p>Para adotar um pet, você deve:</p>
-                    <ul>
-                        <li>Ser maior de 18 anos.</li>
-                        <li>Apresentar um documento de identidade com foto.</li>
-                        <li>Ter condições de cuidar do animal e oferecer um ambiente seguro e acolhedor.</li>
-                        <li>Estar disposto a passar por uma entrevista ou visita domiciliar, caso necessário.</li>
-                    </ul>
-
-                    <h3>3. Como posso ajudar uma ONG parceira?</h3>
-                    <p>Existem várias formas de ajudar as ONGs parceiras:</p>
-                    <ul>
-                        <li><strong>Doações:</strong> Você pode doar itens de necessidade ou dinheiro diretamente para as ONGs cadastradas.</li>
-                        <li><strong>Apadrinhamento:</strong> Apadrinhe um pet enquanto ele espera por um lar definitivo, ajudando com alimentação e cuidados veterinários.</li>
-                        <li><strong>Voluntariado:</strong> Entre em contato com as ONGs para saber como pode ajudar em eventos e outras atividades.</li>
-                    </ul>
-
-                    <h3>4. Como faço para cadastrar um pet para adoção?</h3>
-                    <p>Se você é um tutor ou uma ONG:</p>
-                    <ul>
-                        <li>Faça login ou cadastre-se no MeAdote.</li>
-                        <li>Vá até a seção "Cadastrar Pets" e preencha as informações sobre o pet, incluindo fotos e detalhes como idade, porte, e condições especiais.</li>
-                        <li>Após o cadastro, seu pet estará disponível na nossa plataforma para que interessados possam encontrá-lo.</li>
-                    </ul>
-
-                    <h3>5. Posso cancelar um pedido de adoção?</h3>
-                    <p>Sim, você pode cancelar um pedido de adoção a qualquer momento:</p>
-                    <ul>
-                        <li>Vá até a seção "Minhas Adoções" e encontre o pedido que deseja cancelar.</li>
-                        <li>Clique em "Cancelar Pedido". Isso notificará o responsável pelo pet sobre sua decisão.</li>
-                    </ul>
-
-                    <h3>6. Como posso me tornar um voluntário?</h3>
-                    <p>Para se tornar um voluntário, entre em contato diretamente com as ONGs parceiras através de seus perfis. Elas informarão sobre as oportunidades de voluntariado e como você pode ajudar em eventos e cuidados com os pets.</p>
-
-                    <h3>7. Existe algum custo envolvido na adoção?</h3>
-                    <p>Algumas ONGs podem solicitar uma taxa de adoção simbólica, que ajuda a cobrir despesas veterinárias, vacinação, e castração. Essa informação estará disponível no perfil do pet ou durante a comunicação com a ONG.</p>
-
-                    <h3>8. Como faço para denunciar maus tratos a animais?</h3>
-                    <p>Se você suspeitar de maus tratos a um animal, entre em contato diretamente com as ONGs parceiras ou com as autoridades locais. O MeAdote não possui poderes legais para investigar, mas nossas ONGs podem orientá-lo sobre os próximos passos.</p>
-
-                    <p>Esperamos que essas perguntas e respostas tenham esclarecido suas dúvidas sobre o MeAdote! Se precisar de mais informações, não hesite em nos contatar.</p>
-                ',
-                'image_path' => 'posts/faq.jpg', // Caminho para a imagem do post
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-            ],
             [
                 'user_id' => 1, // Admin
                 'title' => 'Dicas para a Adaptação do Seu Novo Pet Adotado em Casa',

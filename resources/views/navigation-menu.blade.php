@@ -84,10 +84,10 @@
                         </div>
                     </div> --}}
 
-                    {{-- <!-- All Pets -->
+                    <!-- All Pets -->
                     <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                         <x-nav-link :href="route('pets.all-pets')" :active="request()->routeIs('pets.all-pets')" aria-label="Todos os Pets">
-                            {{ __('Todos os Pets') }}
+                            {{ __('Pets para adoção') }}
                         </x-nav-link>
                     </div>
 
@@ -102,16 +102,16 @@
                     <!-- View Events -->
                     <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                         <x-nav-link :href="route('ong-events.index')" :active="request()->routeIs('ong-events.index')" aria-label="Ver Eventos">
-                            {{ __('Ver Eventos') }}
+                            {{ __('Eventos') }}
                         </x-nav-link>
-                    </div> --}}
-                    {{--
+                    </div>
+
                     <!-- Temporary Housing -->
                     <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                         <x-nav-link :href="route('temporary-housing.index')" :active="request()->routeIs('temporary-housing.index')" aria-label="Lar Temporário">
                             {{ __('Lar Temporário') }}
                         </x-nav-link>
-                    </div> --}}
+                    </div>
 
                     <!-- Blog -->
                     <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
@@ -330,47 +330,36 @@
                                 {{ __('FAQs') }}
                             </x-responsive-nav-link>
 
-                            <li>
 
 
+                            <!-- Logout -->
+                            <form method="POST" action="{{ route('logout') }}" x-data>
+                                @csrf
+                                <x-responsive-nav-link href="{{ route('logout') }}" @click.prevent="$root.submit();"
+                                    aria-label="Sair">
+                                    {{ __('Sair') }}
+                                </x-responsive-nav-link>
+                            </form>
 
+                            <div class="border-t border-gray-200"></div>
 
-                                <!-- Logout -->
-                                <form method="POST" action="{{ route('logout') }}" x-data>
-                                    @csrf
-                                    <x-responsive-nav-link href="{{ route('logout') }}" @click.prevent="$root.submit();"
-                                        aria-label="Sair">
-                                        {{ __('Sair') }}
-                                    </x-responsive-nav-link>
-                                </form>
+                            <!-- Additional Responsive Links -->
+                            <x-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')"
+                                aria-label="Painel">
+                                {{ __('Meu Painel') }}
+                            </x-responsive-nav-link>
 
-                                <div class="border-t border-gray-200"></div>
-
-                                <!-- Additional Responsive Links -->
-                                <x-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')"
-                                    aria-label="Painel">
-                                    {{ __('Meu Painel') }}
-                                </x-responsive-nav-link>
-                                <x-responsive-nav-link href="{{ route('pets.my-pets') }}" :active="request()->routeIs('pets.my-pets')"
-                                    aria-label="Meus Pets">
-                                    {{ __('Meus Pets Registrados') }}
-                                </x-responsive-nav-link>
-                                <x-responsive-nav-link href="{{ route('adoption-form.received') }}" :active="request()->routeIs('adoption-form.received')"
-                                    aria-label="Formulários Recebidos">
-                                    {{ __('Formulários Recebidos') }}
-                                </x-responsive-nav-link>
-                                <x-responsive-nav-link href="{{ route('pets.all-pets') }}" :active="request()->routeIs('pets.all-pets')"
-                                    aria-label="Todos os Pets">
-                                    {{ __('Todos os Pets') }}
-                                </x-responsive-nav-link>
-                                <x-responsive-nav-link href="{{ route('ongs.index') }}" :active="request()->routeIs('ongs.index')"
-                                    aria-label="ONGs">
-                                    {{ __('ONGs') }}
-                                </x-responsive-nav-link>
-                                <x-responsive-nav-link href="{{ route('temporary-housing.index') }}" :active="request()->routeIs('temporary-housing.index')"
-                                    aria-label="Lar Temporário">
-                                    {{ __('Lar Temporário') }}
-                                </x-responsive-nav-link>
+                            <x-responsive-nav-link href="{{ route('pets.all-pets') }}" :active="request()->routeIs('pets.all-pets')"
+                                aria-label="Todos os Pets">
+                                {{ __('Pets para adoção') }}
+                            </x-responsive-nav-link>
+                            <x-responsive-nav-link href="{{ route('ongs.index') }}" :active="request()->routeIs('ongs.index')" aria-label="ONGs">
+                                {{ __('ONGs') }}
+                            </x-responsive-nav-link>
+                            <x-responsive-nav-link href="{{ route('temporary-housing.index') }}" :active="request()->routeIs('temporary-housing.index')"
+                                aria-label="Lar Temporário">
+                                {{ __('Lar Temporário') }}
+                            </x-responsive-nav-link>
                         </div>
                     </div>
                 @endauth

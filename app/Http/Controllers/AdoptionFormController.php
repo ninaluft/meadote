@@ -93,6 +93,17 @@ class AdoptionFormController extends Controller
             'declaration_of_truth' => ['required', 'accepted'],
         ]);
 
+        // Obter o nome completo do responsável pelo pet, considerando se é tutor ou ONG
+        $responsibleUser = $pet->user;
+
+        if ($responsibleUser->user_type === 'ong') {
+            $responsibleName = $responsibleUser->ong->ong_name ?? 'Nome não disponível';
+        } elseif ($responsibleUser->user_type === 'tutor') {
+            $responsibleName = $responsibleUser->tutor->full_name ?? 'Nome não disponível';
+        } else {
+            $responsibleName = 'Usuário desconhecido';
+        }
+
         // Criação do formulário de adoção
         $adoptionForm = AdoptionForm::create([
             'submitter_user_id' => Auth::id(),
@@ -101,7 +112,7 @@ class AdoptionFormController extends Controller
             'pet_name' => $pet->name,
             'species' => $pet->species == 'outro' ? $pet->species_description : $pet->species, // Adiciona a espécie do pet ou a descrição de "outro"
             'responsible_user_id' => $pet->user->id,
-            'responsible_user_name' => $pet->user->name,
+            'responsible_user_name' => $responsibleName, // Atualiza para salvar o nome completo certo
             'cpf' => $request->cpf,
             'birth_date' => $request->birth_date,
             'cep' => $request->cep,
@@ -403,6 +414,7 @@ class AdoptionFormController extends Controller
         ];
 
         // Traduzir status e outros campos enumerados para exibição
+        $adoptionForm->translated_status = __('adoption-form.' . $adoptionForm->status);
         $adoptionForm->translated_status = __('adoption-form.' . $adoptionForm->status);
         $adoptionForm->translated_residence_type = __('adoption-form.residence_type_options.' . $adoptionForm->residence_type);
         $adoptionForm->translated_residence_ownership = __('adoption-form.residence_ownership_options.' . $adoptionForm->residence_ownership);
