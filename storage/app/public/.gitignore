@@ -1,2 +1,32 @@
+# Ignorar todos os arquivos e subpastas por padrão
 *
+
+# Não ignorar o próprio .gitignore para manter a estrutura da pasta
 !.gitignore
+
+# Não ignorar as pastas específicas
+!ong-events/
+!pets/
+!posts/
+
+# Não ignorar arquivos específicos dentro das pastas
+!ong-events/adocao.jpg
+!ong-events/castracao.webp
+!ong-events/feira.webp
+!ong-events/vacinacao.webp
+
+!pets/amora.jpg
+!pets/bella.jpg
+!pets/bidu.jpg
+!pets/donatello.jpg
+!pets/luna.jpg
+!pets/maple.jpg
+!pets/max.jpg
+!pets/mia.jpg
+!pets/pedepano.jpg
+!pets/rex.jpg
+!pets/thor.jpg
+!pets/tom.jpg
+
+!posts/KtDJVvMnxlfS9VrYDZK9KzU2zE5IfS1HMXweuWL4.png
+!posts/l0597MigPXsYmc2lBu79oSmp1S2kMPZjO0svobeF.png

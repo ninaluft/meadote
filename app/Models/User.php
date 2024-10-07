@@ -144,4 +144,6 @@ class User extends Authenticatable
     {
         return $this->hasMany(AdoptionForm::class, 'responsible_user_id');
     }
+
+    
 }

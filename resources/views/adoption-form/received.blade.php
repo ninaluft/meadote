@@ -10,37 +10,39 @@
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
 
                 <!-- Seção de Formulários Pendentes -->
-                <h3 class="text-lg font-semibold mb-4">{{ __('Formulários de Adoção Pendentes') }}</h3>
+                <div class="bg-gray-200 p-4 mb-6 rounded">
+                    <h3 class="text-lg font-semibold">{{ __('Formulários de Adoção Pendentes') }}</h3>
+                </div>
                 @if($pendingForms->isEmpty())
-                    <p>Nenhum formulário de adoção pendente.</p>
+                    <p class="text-gray-600">Nenhum formulário de adoção pendente.</p>
                 @else
-                    <ul>
+                    <ul class="space-y-6">
                         @foreach($pendingForms as $form)
-                            <li class="mb-4">
-                                <h4>{{ $form->submitter_name }} aplicou para adotar {{ $form->pet->name }}</h4>
-                                <p><strong>Motivação:</strong> {{ $form->adoption_reason }}</p>
-                                <p><strong>Status:</strong> {{ ucfirst($form->status) }}</p>
-                                <a href="{{ route('adoption-form.show', $form->id) }}" class="text-indigo-600 hover:underline">Ver Formulário</a>
+                            <li class="p-4 bg-white shadow rounded-lg">
+                                <h4 class="text-md font-bold">{{ $form->submitter_name }} aplicou para adotar {{ $form->pet->name }}</h4>
+                                <p class="text-sm text-gray-600 mt-2"><strong>Motivação:</strong> {{ $form->adoption_reason }}</p>
+                                <p class="text-sm text-gray-600"><strong>Status:</strong> {{ ucfirst($form->status) }}</p>
+                                <a href="{{ route('adoption-form.show', $form->id) }}" class="text-indigo-600 hover:underline mt-2 inline-block">Ver Formulário</a>
                             </li>
-                            <hr class="my-4">
                         @endforeach
                     </ul>
                 @endif
 
                 <!-- Seção de Formulários Avaliados -->
-                <h3 class="text-lg font-semibold mt-8 mb-4">{{ __('Formulários de Adoção Avaliados') }}</h3>
+                <div class="bg-gray-200 p-4 mt-8 mb-6 rounded">
+                    <h3 class="text-lg font-semibold">{{ __('Formulários de Adoção Avaliados') }}</h3>
+                </div>
                 @if($evaluatedForms->isEmpty())
-                    <p>Nenhum formulário de adoção avaliado.</p>
+                    <p class="text-gray-600">Nenhum formulário de adoção avaliado.</p>
                 @else
-                    <ul>
+                    <ul class="space-y-6">
                         @foreach($evaluatedForms as $form)
-                            <li class="mb-4">
-                                <h4>{{ $form->submitter_name }} aplicou para adotar {{ $form->pet->name }}</h4>
-                                <p><strong>Motivação:</strong> {{ $form->adoption_reason }}</p>
-                                <p><strong>Status:</strong> {{ ucfirst($form->status) }}</p>
-                                <a href="{{ route('adoption-form.show', $form->id) }}" class="text-indigo-600 hover:underline">Ver Formulário</a>
+                            <li class="p-4 bg-white shadow rounded-lg">
+                                <h4 class="text-md font-bold">{{ $form->submitter_name }} aplicou para adotar {{ $form->pet->name }}</h4>
+                                <p class="text-sm text-gray-600 mt-2"><strong>Motivação:</strong> {{ $form->adoption_reason }}</p>
+                                <p class="text-sm text-gray-600"><strong>Status:</strong> {{ ucfirst($form->status) }}</p>
+                                <a href="{{ route('adoption-form.show', $form->id) }}" class="text-indigo-600 hover:underline mt-2 inline-block">Ver Formulário</a>
                             </li>
-                            <hr class="my-4">
                         @endforeach
                     </ul>
                 @endif

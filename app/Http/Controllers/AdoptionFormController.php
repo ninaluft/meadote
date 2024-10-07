@@ -274,7 +274,7 @@ class AdoptionFormController extends Controller
     public function notifyAdoptionApproval($userId, AdoptionForm $adoptionForm)
     {
         $user = User::find($userId);
-        $message = "Seu formulário de adoção para o pet {$adoptionForm->pet->name} foi aceito.";
+        $message = "Parabéns! Seu formulário de adoção para o pet {$adoptionForm->pet->name} foi aceito.";
 
         // Envia a notificação como mensagem do sistema (inbox)
         $this->sendSystemNotification($user->id, $message);

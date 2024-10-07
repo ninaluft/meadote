@@ -16,9 +16,28 @@ class PetController extends Controller
 
     public function myPets()
     {
-        $pets = Auth::user()->pets()->get();
-        return view('pets.my-pets', compact('pets'));
+        $user = Auth::user();
+        $availablePets = $user->pets()->where('status', 'available')->get();
+        $adoptedPets = $user->pets()->where('status', 'adopted')->get();
+
+        // Contar quantas vezes cada pet foi favoritado
+        $favoritesCount = [];
+        foreach ($user->pets as $pet) {
+            $favoritesCount[$pet->id] = $pet->favoritedBy()->count();
+        }
+
+        // Filtrar e ordenar pets favoritados por contagem de favoritos em ordem decrescente
+        $favoritedPets = $user->pets->filter(function ($pet) use ($favoritesCount) {
+            return ($favoritesCount[$pet->id] ?? 0) > 0;
+        })->sortByDesc(function ($pet) use ($favoritesCount) {
+            return $favoritesCount[$pet->id];
+        });
+
+        return view('pets.my-pets', compact('user', 'availablePets', 'adoptedPets', 'favoritesCount', 'favoritedPets'));
     }
+
+
+
 
     public function allPets(Request $request)
     {
