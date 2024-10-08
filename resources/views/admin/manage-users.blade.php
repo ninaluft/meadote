@@ -10,10 +10,12 @@
             <div class="bg-white shadow-sm sm:rounded-lg p-6">
 
                 <!-- Formulário de Pesquisa -->
-                <form method="GET" action="{{ route('admin.manage-users') }}" class="mb-4">
-                    <input type="text" name="search" placeholder="Buscar por nome ou email" value="{{ request('search') }}" class="p-2 border border-gray-300 rounded-md">
-                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded">Buscar</button>
+                <form method="GET" action="{{ route('admin.manage-users') }}" class="mb-4 flex items-center">
+                    <input type="text" name="search" placeholder="Buscar por nome ou email" value="{{ request('search') }}" class="p-2 border border-gray-300 rounded-md flex-grow">
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded ml-2">Buscar</button>
                 </form>
+
+
                 @if($users->count() > 0)
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">

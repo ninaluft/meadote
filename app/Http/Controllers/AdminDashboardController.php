@@ -139,16 +139,27 @@ class AdminDashboardController extends Controller
 
 
     // Manage Pets
+
     public function managePets(Request $request)
     {
         $sortBy = $request->get('sort_by', 'id'); // Campo de ordenação padrão
         $sortDirection = $request->get('sort_direction', 'asc'); // Direção de ordenação padrão
+        $search = $request->get('search'); // Valor da busca
 
-        // Aplicar a ordenação na consulta dos pets
-        $pets = Pet::orderBy($sortBy, $sortDirection)->paginate(20);
+        // Aplicar a busca e a ordenação na consulta dos pets
+        $pets = Pet::with('user') // Carrega o relacionamento com o responsável pelo pet
+            ->when($search, function ($query, $search) {
+                return $query->where('name', 'like', "%{$search}%")
+                    ->orWhereHas('user', function ($query) use ($search) {
+                        $query->where('name', 'like', "%{$search}%"); // Busca pelo nome do responsável
+                    });
+            })
+            ->orderBy($sortBy, $sortDirection)
+            ->paginate(20);
 
-        return view('admin.manage-pets', compact('pets', 'sortBy', 'sortDirection'));
+        return view('admin.manage-pets', compact('pets', 'sortBy', 'sortDirection', 'search'));
     }
+
 
 
     // Delete Pet
@@ -158,17 +169,35 @@ class AdminDashboardController extends Controller
         return redirect()->route('admin.manage-pets')->with('success', 'Pet deleted successfully.');
     }
 
+
+
     // Manage Events
     public function manageEvents(Request $request)
     {
         $sortBy = $request->get('sort_by', 'title'); // Campo de ordenação padrão é 'title'
         $sortDirection = $request->get('sort_direction', 'asc'); // Direção de ordenação padrão
+        $search = $request->get('search'); // Obtém o valor de busca
 
-        // Obtém eventos com ordenação e paginação
-        $events = OngEvent::orderBy($sortBy, $sortDirection)->paginate(20);
+        // Obtém eventos com busca, ordenação e paginação
+        $events = OngEvent::with('ong')
+            ->when($search, function ($query, $search) {
+                return $query->where('title', 'like', "%{$search}%")
+                    ->orWhereHas('ong', function ($query) use ($search) {
+                        $query->where('ong_name', 'like', "%{$search}%");
+                    });
+            })
+            ->when($sortBy === 'ong_name', function ($query) use ($sortDirection) {
+                return $query->join('ongs', 'ong_events.ong_id', '=', 'ongs.id')
+                    ->orderBy('ongs.ong_name', $sortDirection);
+            }, function ($query) use ($sortBy, $sortDirection) {
+                return $query->orderBy($sortBy, $sortDirection);
+            })
+            ->paginate(20);
 
-        return view('admin.manage-events', compact('events', 'sortBy', 'sortDirection'));
+        return view('admin.manage-events', compact('events', 'sortBy', 'sortDirection', 'search'));
     }
+
+
 
 
 
@@ -176,7 +205,7 @@ class AdminDashboardController extends Controller
     public function deleteEvent(OngEvent $event)
     {
         $event->delete();
-        return redirect()->route('admin.manage-events')->with('success', 'Event deleted successfully.');
+        return redirect()->route('admin.manage-events')->with('success', 'Evento deletadp com sucesso.');
     }
 
 
@@ -240,5 +269,4 @@ class AdminDashboardController extends Controller
 
         return view('admin.user-details', compact('user', 'totalPets', 'totalAdoptedPets', 'totalEvents', 'totalFormsSent', 'totalFormsReceived'));
     }
-
 }

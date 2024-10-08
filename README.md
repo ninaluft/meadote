@@ -70,6 +70,8 @@ Além disso, é recomendado ter um ambiente local para desenvolvimento PHP, como
 
    ```env
    APP_URL=http://127.0.0.1:8000
+
+   APP_LOCALE=pt_BR
    
    DB_CONNECTION=mysql
    DB_HOST=127.0.0.1
