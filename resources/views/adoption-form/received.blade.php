@@ -10,8 +10,10 @@
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
 
                 <!-- Seção de Formulários Pendentes -->
-                <div class="bg-gray-200 p-4 mb-6 rounded">
-                    <h3 class="text-lg font-semibold">{{ __('Formulários de Adoção Pendentes') }}</h3>
+                <div class="bg-gray-200 p-2 mb-6 rounded">
+                    <h3 class="text-lg font-semibold">
+                        {{ __('Formulários de Adoção Pendentes') }} ({{ $pendingForms->count() }})
+                    </h3>
                 </div>
                 @if($pendingForms->isEmpty())
                     <p class="text-gray-600">Nenhum formulário de adoção pendente.</p>
@@ -29,8 +31,10 @@
                 @endif
 
                 <!-- Seção de Formulários Avaliados -->
-                <div class="bg-gray-200 p-4 mt-8 mb-6 rounded">
-                    <h3 class="text-lg font-semibold">{{ __('Formulários de Adoção Avaliados') }}</h3>
+                <div class="bg-gray-200 p-2 mt-8 mb-6 rounded">
+                    <h3 class="text-lg font-semibold">
+                        {{ __('Formulários de Adoção Avaliados') }} ({{ $evaluatedForms->count() }})
+                    </h3>
                 </div>
                 @if($evaluatedForms->isEmpty())
                     <p class="text-gray-600">Nenhum formulário de adoção avaliado.</p>

@@ -20,7 +20,8 @@
                             {{ __('Adicione um novo pet ao sistema e facilite sua adoção.') }}
                         </p>
                         <a href="{{ route('pets.create') }}"
-                            class="inline-block bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600" aria-label="Registrar um novo pet">
+                            class="inline-block bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600"
+                            aria-label="Registrar um novo pet">
                             {{ __('Registrar Pet') }}
                         </a>
                     </div>
@@ -32,7 +33,8 @@
                             {{ __('Veja e gerencie todos os pets que você cadastrou.') }}
                         </p>
                         <a href="{{ route('pets.my-pets') }}"
-                            class="inline-block bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600" aria-label="Ver e gerenciar seus pets">
+                            class="inline-block bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600"
+                            aria-label="Ver e gerenciar seus pets">
                             {{ __('Ver Pets') }}
                         </a>
                     </div>
@@ -44,7 +46,8 @@
                             {{ __('Crie eventos para promover adoções e envolvimento da comunidade.') }}
                         </p>
                         <a href="{{ route('events.criar') }}"
-                            class="inline-block bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600" aria-label="Criar um novo evento">
+                            class="inline-block bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600"
+                            aria-label="Criar um novo evento">
                             {{ __('Criar Evento') }}
                         </a>
                     </div>
@@ -56,7 +59,8 @@
                             {{ __('Veja os eventos já criados pela sua ONG.') }}
                         </p>
                         <a href="{{ route('ong-events.index') }}"
-                            class="inline-block bg-yellow-500 text-white py-2 px-4 rounded-lg hover:bg-yellow-600" aria-label="Ver eventos criados pela ONG">
+                            class="inline-block bg-yellow-500 text-white py-2 px-4 rounded-lg hover:bg-yellow-600"
+                            aria-label="Ver eventos criados pela ONG">
                             {{ __('Ver Eventos') }}
                         </a>
                     </div>
@@ -68,20 +72,24 @@
                             {{ __('Gerencie os formulários de adoção recebidos.') }}
                         </p>
                         <a href="{{ route('adoption-form.received') }}"
-                            class="inline-block bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600" aria-label="Ver formulários de adoção recebidos">
+                            class="inline-block bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600"
+                            aria-label="Ver formulários de adoção recebidos">
                             {{ __('Ver Formulários') }}
                         </a>
                     </div>
 
-                    <!-- Mensagens -->
+
+
+                    <!-- Lar Temporário -->
                     <div class="bg-indigo-100 p-4 rounded-lg shadow-md">
-                        <h3 class="text-lg font-semibold mb-2">{{ __('Mensagens') }}</h3>
+                        <h3 class="text-lg font-semibold mb-2">{{ __('Lar Temporário') }}</h3>
                         <p class="text-sm text-gray-600 mb-4">
-                            {{ __('Veja e responda mensagens enviadas por usuários interessados.') }}
+                            {{ __('Procure por usuaários que oferecem lar temporário perto de você.') }}
                         </p>
-                        <a href="{{ route('messages.inbox') }}"
-                            class="inline-block bg-indigo-500 text-white py-2 px-4 rounded-lg hover:bg-indigo-600" aria-label="Ver mensagens recebidas">
-                            {{ __('Ver Mensagens') }}
+                        <a href="{{ route('temporary-housing.index') }}"
+                            class="inline-block bg-indigo-500 text-white py-2 px-4 rounded-lg hover:bg-indigo-600"
+                            aria-label="Procurar lar temporário">
+                            {{ __('Procurar Lar Temporário') }}
                         </a>
                     </div>
 

@@ -13,29 +13,25 @@ class PublicProfileController extends Controller
      */
     public function show($id)
     {
-        // Buscar o usuário cujo perfil será exibido
+        // Fetch the user whose profile will be displayed
         $user = User::findOrFail($id);
 
-        // Inicializa a variável $profileData
+        // Initialize the $profileData variable
         $profileData = null;
 
-        // Verifique o tipo de perfil (ONG ou Tutor)
+        // Check the profile type (ONG or Tutor)
         if ($user->user_type === 'ong') {
-            // Se for ONG, buscar os dados da ONG relacionados ao usuário
             $profileData = Ong::where('user_id', $user->id)->firstOrFail();
         } elseif ($user->user_type === 'tutor') {
-            // Se for tutor, buscar os dados do tutor
-            $profileData = $user->tutor;  // Usando o relacionamento tutor
+            $profileData = $user->tutor;
         }
 
-        // Buscar apenas os pets com status 'disponível' cadastrados pelo usuário
+        // Retrieve available pets registered by the user
         $pets = $user->pets()->where('status', 'available')->get();
 
-        return view('user.public-profile', compact('user', 'profileData', 'pets'));
+        // Fetch social networks related to the user
+        $socialNetworks = $user->socialNetworks;
+
+        return view('user.public-profile', compact('user', 'profileData', 'pets', 'socialNetworks'));
     }
-
-
-
-
-
 }

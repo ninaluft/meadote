@@ -9,7 +9,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
 
-                
+
 
                 <!-- Seção de Ações -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -66,16 +66,16 @@
                         </a>
                     </div>
 
-                    <!-- Mensagens -->
+                    <!-- Lar Temporário -->
                     <div class="bg-red-100 p-4 rounded-lg shadow-md">
-                        <h3 class="text-lg font-semibold mb-2">{{ __('Mensagens') }}</h3>
+                        <h3 class="text-lg font-semibold mb-2">{{ __('Lar Temporário') }}</h3>
                         <p class="text-sm text-gray-600 mb-4">
-                            {{ __('Veja suas mensagens ou entre em contato com outros usuários.') }}
+                            {{ __('Procure por usuaários que oferecem lar temporário perto de você.') }}
                         </p>
-                        <a href="{{ route('messages.inbox') }}"
+                        <a href="{{ route('temporary-housing.index') }}"
                             class="inline-block bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600"
-                            aria-label="Ver suas mensagens">
-                            {{ __('Ver Mensagens') }}
+                            aria-label="Procurar lar temporário">
+                            {{ __('Procurar Lar Temporário') }}
                         </a>
                     </div>
 

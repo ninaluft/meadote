@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css">
     <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
 
-    <div class="py-8 bg-gradient-to-b from-blue-50 via-white to-gray-100 min-h-screen">
+    <div class="py-8 bg-[#e7edee] min-h-screen">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-2xl p-10">
 
@@ -83,7 +83,7 @@
                     </p>
                     <div class="flex justify-center space-x-6">
                         <a href="{{ route('register') }}"
-                            class="bg-purple-600 text-white px-6 py-3 rounded-full hover:bg-purple-700 transition shadow-lg hover:shadow-xl">
+                            class="bg-red-400 text-white px-6 py-3 rounded-full hover:bg-red-500 transition shadow-lg hover:shadow-xl">
                             {{ __('Cadastrar-se') }}
                         </a>
                         <a href="{{ route('login') }}"

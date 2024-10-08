@@ -29,6 +29,7 @@ class User extends Authenticatable
         'cep',
         'city',
         'state',
+
     ];
 
     /**
@@ -145,5 +146,8 @@ class User extends Authenticatable
         return $this->hasMany(AdoptionForm::class, 'responsible_user_id');
     }
 
-    
+    public function socialNetworks()
+    {
+        return $this->hasMany(SocialNetwork::class);
+    }
 }

@@ -7,7 +7,7 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-[#d4e2e4] overflow-hidden shadow-xl sm:rounded-lg p-6">
+            <div class="bg-[#e7edee] overflow-hidden shadow-xl sm:rounded-lg p-6">
 
                 @if (Auth::check() && Auth::user()->user_type === 'admin')
                     <a href="{{ route('posts.create') }}"

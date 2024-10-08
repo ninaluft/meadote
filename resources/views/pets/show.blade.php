@@ -1,12 +1,14 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex flex-col max-w-4xl mx-auto px-4">
+        <div class="flex justify-between items-center max-w-4xl mx-auto px-4">
+            <!-- Título -->
             <h2 class="font-semibold text-2xl text-gray-800 leading-tight break-words break-all">
                 {{ __('pets.pet_profile') }} {{ $pet->name }}
             </h2>
 
+            <!-- Botões Editar e Excluir -->
             @if (Auth::check() && Auth::id() === $pet->user_id)
-                <div class="flex space-x-2 mt-4 self-end">
+                <div class="flex space-x-2">
                     <a href="{{ route('pets.edit', $pet->id) }}"
                         class="bg-yellow-300 hover:bg-yellow-400 text-black font-semibold py-1 px-3 rounded-lg text-lg"
                         aria-label="{{ __('pets.edit_button') }} {{ $pet->name }}">

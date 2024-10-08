@@ -12,77 +12,20 @@
 
                 @if (Auth::check())
                     <!-- Navigation Links -->
-                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <div class="space-x-8 sm:-my-px sm:ms-10 sm:flex mt-6 ml-2 mr-4 ">
                         <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')" aria-label="Painel">
                             {{ __('Meu Painel') }}
                         </x-nav-link>
                     </div>
                 @endif
+
             </div>
 
-            <div class="hidden sm:flex sm:items-center sm:ms-6">
+
+
+            <div class="hidden sm:flex sm:items-center sm:ms-4">
                 @auth
-                    {{-- <!-- My Pets Dropdown -->
-                    <div x-data="{ open: false }" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex relative">
-                        <button @click="open = !open" aria-expanded="false" aria-label="Meus Pets"
-                            class="inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 focus:outline-none">
-                            <span :class="{ 'border-b-2 border-blue-600': @json(request()->routeIs('pets.create') || request()->routeIs('pets.my-pets') || request()->routeIs('pets.favorites')) }">
-                                {{ __('Meus Pets') }}
-                            </span>
 
-                            <svg class="ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                            </svg>
-                        </button>
-
-                        <div x-show="open" @click.away="open = false"
-                            class="absolute bg-white shadow-md rounded-md mt-2 w-48 z-10 transition duration-150 ease-in-out">
-                            <x-dropdown-link :href="route('pets.create')" :active="request()->routeIs('pets.create')">
-                                {{ __('Registrar Pets') }}
-                            </x-dropdown-link>
-                            <x-dropdown-link :href="route('pets.my-pets')" :active="request()->routeIs('pets.my-pets')">
-                                {{ __('Meus Pets Registrados') }}
-                            </x-dropdown-link>
-
-                            <x-dropdown-link :href="route('pets.adopted')" :active="request()->routeIs('pets.adopted')">
-                                {{ __('Meus Animais Adotados') }}
-                            </x-dropdown-link>
-                            <x-dropdown-link :href="route('pets.favorites')" :active="request()->routeIs('pets.favorites')">
-                                {{ __('Pets Favoritos') }}
-                            </x-dropdown-link>
-                        </div>
-                    </div> --}}
-
-                    {{-- <!-- Adoption Forms Dropdown -->
-                    <div x-data="{ open: false }" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex relative">
-                        <button @click="open = !open" aria-expanded="false" aria-label="Formulários de Adoção"
-                            class="inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 focus:outline-none">
-                            <span :class="{ 'border-b-2 border-blue-600': @json(request()->routeIs('adoption-form.received') || request()->routeIs('adoption-form.submitted')) }">
-                                {{ __('Formulários de Adoção') }}
-                            </span>
-
-                            <svg class="ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                            </svg>
-                        </button>
-
-                        <div x-show="open" @click.away="open = false"
-                            class="absolute bg-white shadow-md rounded-md mt-2 w-48 z-10 transition duration-150 ease-in-out">
-                            <x-dropdown-link :href="route('adoption-form.received')" :active="request()->routeIs('adoption-form.received')">
-                                <span :class="{ 'border-b-2 border-blue-600': @json(request()->routeIs('adoption-form.received')) }">
-                                    {{ __('Formulários Recebidos') }}
-                                </span>
-                            </x-dropdown-link>
-
-                            <x-dropdown-link :href="route('adoption-form.submitted')" :active="request()->routeIs('adoption-form.submitted')">
-                                <span :class="{ 'border-b-2 border-blue-600': @json(request()->routeIs('adoption-form.submitted')) }">
-                                    {{ __('Formulários Enviados') }}
-                                </span>
-                            </x-dropdown-link>
-                        </div>
-                    </div> --}}
 
                     <!-- All Pets -->
                     <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
@@ -106,14 +49,6 @@
                         </x-nav-link>
                     </div>
 
-                    <!-- Temporary Housing -->
-                    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                        <x-nav-link :href="route('temporary-housing.index')" :active="request()->routeIs('temporary-housing.index')" aria-label="Lar Temporário">
-                            {{ __('Lar Temporário') }}
-                        </x-nav-link>
-                    </div>
-
-                    <!-- Blog -->
                     <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                         <x-nav-link :href="route('posts.index')" :active="request()->routeIs('posts.index')" aria-label="Blog">
                             {{ __('Blog') }}
@@ -121,17 +56,16 @@
                     </div>
 
 
-
-
                     <!-- Messages Link with Notification Icon -->
                     <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex items-center">
                         <x-nav-link :href="route('messages.inbox')" :active="request()->routeIs('messages.inbox')" aria-label="Mensagens">
                             <svg xmlns="http://www.w3.org/2000/svg"
-                                class="h-6 w-6 text-gray-500 hover:text-gray-700 transition duration-150 ease-in-out"
+                                class="h-6 w-6 text-teal-600 hover:text-teal-700 transition duration-150 ease-in-out"
                                 fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                             </svg>
+
                             @if (auth()->user()->unreadMessages()->count() > 0)
                                 <span class="ml-1 inline-block bg-red-600 text-white text-xs rounded-full px-2 py-1">
                                     {{ auth()->user()->unreadMessages()->count() }}
@@ -155,25 +89,31 @@
                                         <button type="button"
                                             class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none focus:bg-gray-50 active:bg-gray-50 transition ease-in-out duration-150">
                                             {{ Auth::user()->name }}
-                                            <svg class="ms-2 -me-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg"
-                                                fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                            <svg class="ms-2 -me-0.5 h-4 w-4 stroke-teal-600"
+                                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                stroke-width="1.5" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round"
                                                     d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                                             </svg>
+
                                         </button>
                                     </span>
                                 @endif
                             </x-slot>
 
                             <x-slot name="content">
-                                <!-- Account Management -->
+                                {{-- <!-- Account Management -->
                                 <div class="block px-4 py-2 text-xs text-gray-400">
                                     {{ __('Gerenciar Conta') }}
-                                </div>
+                                </div> --}}
 
-                                <x-dropdown-link href="{{ route('profile.edit') }}">
-                                    {{ __('Editar Perfil') }}
+                                <x-dropdown-link href="{{ route('user.public-profile', Auth::id()) }}">
+                                    {{ __('Meu perfil') }}
                                 </x-dropdown-link>
+
+                                {{-- <x-dropdown-link href="{{ route('profile.edit') }}">
+                                    {{ __('Editar Perfil') }}
+                                </x-dropdown-link> --}}
 
                                 <x-dropdown-link href="{{ route('profile.show') }}">
                                     {{ __('Configurações de conta') }}
@@ -233,13 +173,16 @@
 
                 <!-- Add Messages Icon for Mobile -->
                 @auth
+
+
                     <x-nav-link :href="route('messages.inbox')" :active="request()->routeIs('messages.inbox')" aria-label="Mensagens">
                         <svg xmlns="http://www.w3.org/2000/svg"
-                            class="h-6 w-6 text-gray-400 hover:text-gray-700 transition duration-150 ease-in-out"
+                            class="h-6 w-6 text-teal-600 hover:text-teal-700 transition duration-150 ease-in-out"
                             fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                         </svg>
+
                         @if (auth()->user()->unreadMessages()->count() > 0)
                             <span class="ml-1 inline-block bg-red-600 text-white text-xs rounded-full px-2 py-1">
                                 {{ auth()->user()->unreadMessages()->count() }}
@@ -253,13 +196,15 @@
 
                 <button @click="open = ! open" aria-expanded="false" aria-label="Abrir Menu"
                     class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
-                    <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                    <svg class="h-6 w-6 stroke-teal-600 hover:stroke-teal-700 transition duration-150 ease-in-out"
+                        fill="none" viewBox="0 0 24 24">
                         <path :class="{ 'hidden': open, 'inline-flex': !open }" class="inline-flex"
                             stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M4 6h16M4 12h16M4 18h16" />
                         <path :class="{ 'hidden': !open, 'inline-flex': open }" class="hidden" stroke-linecap="round"
                             stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
+
                 </button>
             </div>
         </div>
@@ -267,10 +212,13 @@
 
 
 
+
+
     <!-- Responsive Navigation Menu -->
     <div :class="{ 'block': open, 'hidden': !open }"
         class="hidden sm:hidden fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 z-40"
         aria-label="Menu Responsivo">
+
 
         <!-- Conteúdo do Menu -->
         <div
@@ -308,10 +256,6 @@
 
                         <div class="mt-3 space-y-1">
                             <!-- Account Management -->
-                            <x-responsive-nav-link href="{{ route('profile.edit') }}" :active="request()->routeIs('profile.edit')"
-                                aria-label="Editar Perfil">
-                                {{ __('Editar Perfil') }}
-                            </x-responsive-nav-link>
 
                             <x-responsive-nav-link href="{{ route('profile.show') }}" :active="request()->routeIs('profile.show')"
                                 aria-label="Perfil">
@@ -344,10 +288,7 @@
                             <div class="border-t border-gray-200"></div>
 
                             <!-- Additional Responsive Links -->
-                            <x-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')"
-                                aria-label="Painel">
-                                {{ __('Meu Painel') }}
-                            </x-responsive-nav-link>
+
 
                             <x-responsive-nav-link href="{{ route('pets.all-pets') }}" :active="request()->routeIs('pets.all-pets')"
                                 aria-label="Todos os Pets">
@@ -360,6 +301,15 @@
                                 aria-label="Lar Temporário">
                                 {{ __('Lar Temporário') }}
                             </x-responsive-nav-link>
+                            <x-responsive-nav-link href="{{ route('ong-events.index') }}" :active="request()->routeIs('ong-events.index')"
+                                aria-label="Eventos">
+                                {{ __('Eventos') }}
+                            </x-responsive-nav-link>
+                            <x-responsive-nav-link href="{{ route('posts.index') }}" :active="request()->routeIs('posts.index')"
+                                aria-label="Blog">
+                                {{ __('Blog') }}
+                            </x-responsive-nav-link>
+
                         </div>
                     </div>
                 @endauth

@@ -208,7 +208,8 @@
                     <!-- CEP -->
                     <div class="mb-6">
                         <x-label for="cep" :value="__('CEP')" />
-                        <x-input id="cep" type="text" name="cep" :value="old('cep', $user->cep)" class="mt-1 block w-full" required onblur="buscarCEP(this.value)" />
+                        <x-input id="cep" type="text" name="cep" :value="old('cep', $user->cep)"
+                            class="mt-1 block w-full" required onblur="buscarCEP(this.value)" />
                         @error('cep')
                             <span class="text-sm text-red-600">{{ $message }}</span>
                         @enderror
@@ -233,10 +234,34 @@
                             <span class="text-sm text-red-600">{{ $message }}</span>
                         @enderror
                     </div>
+                    <!-- Campo para adicionar links de redes sociais -->
+                    <div class="mb-6">
+                        <x-label for="social_links" :value="__('Links de Redes Sociais')" />
+                        <div id="social-links-container" class="space-y-2">
+                            <!-- Exibir links já salvos no banco de dados -->
+                            @foreach ($socialNetworks as $social)
+                                <div class="flex items-center space-x-2">
+                                    <x-input type="url" name="social_links[{{ $social->id }}]"
+                                        value="{{ $social->profile_url }}" class="w-full"
+                                        placeholder="Cole o link da rede social aqui" />
+                                    <button type="button"
+                                        onclick="removeExistingSocialLink({{ $social->id }}, this)"
+                                        class="bg-red-500 text-white px-2 rounded">X</button>
+                                </div>
+                            @endforeach
+                        </div>
+                        <button type="button" onclick="addNewSocialLink()"
+                            class="mt-2 bg-blue-500 text-white px-4 py-2 rounded">+ Adicionar Rede Social</button>
+                    </div>
+
+
 
                     <div class="flex items-center justify-end mt-4">
                         <x-button class="ml-4">{{ __('Atualizar Perfil') }}</x-button>
                     </div>
+
+
+
                 </form>
             </div>
         </div>
@@ -360,30 +385,62 @@
 
     <script>
         function buscarCEP(cep) {
-    // Remove qualquer caractere não numérico antes de continuar
-    cep = cep.replace(/\D/g, '');
+            // Remove qualquer caractere não numérico antes de continuar
+            cep = cep.replace(/\D/g, '');
 
-    if (cep !== "") {
-        const validacep = /^[0-9]{8}$/;
+            if (cep !== "") {
+                const validacep = /^[0-9]{8}$/;
 
-        if (validacep.test(cep)) {
-            const script = document.createElement('script');
-            script.src = `https://viacep.com.br/ws/${cep}/json/?callback=preencherEndereco`;
-            document.body.appendChild(script);
-        } else {
-            alert("Formato de CEP inválido.");
+                if (validacep.test(cep)) {
+                    const script = document.createElement('script');
+                    script.src = `https://viacep.com.br/ws/${cep}/json/?callback=preencherEndereco`;
+                    document.body.appendChild(script);
+                } else {
+                    alert("Formato de CEP inválido.");
+                }
+            }
         }
-    }
-}
 
-function preencherEndereco(dados) {
-    if (!("erro" in dados)) {
-        document.getElementById('city').value = dados.localidade;
-        document.getElementById('state').value = dados.uf;
-    } else {
-        alert("CEP não encontrado.");
-    }
-}
-
+        function preencherEndereco(dados) {
+            if (!("erro" in dados)) {
+                document.getElementById('city').value = dados.localidade;
+                document.getElementById('state').value = dados.uf;
+            } else {
+                alert("CEP não encontrado.");
+            }
+        }
     </script>
+
+
+    <!-- Scripts -->
+    <script>
+        function addNewSocialLink() {
+            const container = document.getElementById('social-links-container');
+            const inputDiv = document.createElement('div');
+            inputDiv.className = 'flex items-center space-x-2';
+            inputDiv.innerHTML = `
+            <x-input type="url" name="new_social_links[]" class="w-full" placeholder="Cole o link da rede social aqui" />
+            <button type="button" onclick="removeNewSocialLink(this)" class="bg-red-500 text-white px-2 rounded">X</button>
+        `;
+            container.appendChild(inputDiv);
+        }
+
+        function removeNewSocialLink(button) {
+            const inputDiv = button.parentNode;
+            inputDiv.remove();
+        }
+
+        function removeExistingSocialLink(id, button) {
+            const inputDiv = button.parentNode;
+            // Adiciona um campo oculto para marcar o link como excluído ao submeter o formulário
+            const hiddenInput = document.createElement('input');
+            hiddenInput.type = 'hidden';
+            hiddenInput.name = 'deleted_social_links[]';
+            hiddenInput.value = id;
+            inputDiv.appendChild(hiddenInput);
+            // Esconde o campo visualmente
+            inputDiv.style.display = 'none';
+        }
+    </script>
+
 </x-app-layout>

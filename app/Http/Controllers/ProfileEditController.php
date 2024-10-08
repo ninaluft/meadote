@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\SocialNetwork;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
@@ -18,7 +19,9 @@ class ProfileEditController extends Controller
     {
         // Retrieve the authenticated user
         $user = Auth::user();
-        return view('user.edit', compact('user'));
+        // Retrieve user's social networks
+        $socialNetworks = SocialNetwork::where('user_id', $user->id)->get();
+        return view('user.edit', compact('user', 'socialNetworks'));
     }
 
     /**
@@ -36,11 +39,12 @@ class ProfileEditController extends Controller
             'cep' => ['nullable', 'string', 'max:14'],
             'city' => ['nullable', 'string', 'max:255'],
             'state' => ['nullable', 'string', 'max:255'],
+            'social_links.*' => ['nullable', 'url'], // Validação dos links existentes
+            'new_social_links.*' => ['nullable', 'url'], // Validação dos novos links
         ];
 
         // Conditionally add validation rules based on user type
         if ($user->user_type === 'tutor') {
-            // Additional validation for Tutor
             $rules = array_merge($rules, [
                 'full_name' => ['required', 'string', 'max:255'],
                 'date_of_birth' => ['required', 'date'],
@@ -60,7 +64,6 @@ class ProfileEditController extends Controller
                 'about_me' => ['nullable', 'string', 'max:1000'],
             ]);
         } elseif ($user->user_type === 'ong') {
-            // Additional validation for ONG
             $rules = array_merge($rules, [
                 'ong_name' => ['required', 'string', 'max:255'],
                 'phone' => ['required', 'string', 'max:20'],
@@ -137,6 +140,60 @@ class ProfileEditController extends Controller
             ]);
         }
 
+        // Update existing social links
+        if ($request->has('social_links')) {
+            foreach ($request->input('social_links') as $id => $url) {
+                if ($url) {
+                    $socialNetwork = SocialNetwork::find($id);
+                    if ($socialNetwork && $socialNetwork->user_id == $user->id) {
+                        $socialNetwork->update(['profile_url' => $url]);
+                    }
+                }
+            }
+        }
+
+        // Add new social links
+        if ($request->has('new_social_links')) {
+            foreach ($request->input('new_social_links') as $url) {
+                if ($url) {
+                    SocialNetwork::create([
+                        'user_id' => $user->id,
+                        'profile_url' => $url,
+                        'platform_name' => $this->getPlatformName($url), // Método para identificar a plataforma
+                    ]);
+                }
+            }
+        }
+
+        // Remove deleted social links
+        if ($request->has('deleted_social_links')) {
+            SocialNetwork::whereIn('id', $request->input('deleted_social_links'))
+                ->where('user_id', $user->id)
+                ->delete();
+        }
+
         return redirect()->route('profile.edit')->with('status', 'Perfil atualizado com sucesso!');
     }
+
+    /**
+     * Detect the platform name based on the given URL.
+     *
+     * @param  string  $url
+     * @return string
+     */
+    private function getPlatformName($url)
+    {
+        if (str_contains($url, 'facebook.com')) {
+            return 'Facebook';
+        } elseif (str_contains($url, 'twitter.com')) {
+            return 'Twitter';
+        } elseif (str_contains($url, 'instagram.com')) {
+            return 'Instagram';
+        } elseif (str_contains($url, 'linkedin.com')) {
+            return 'LinkedIn';
+        } else {
+            return 'Outros';
+        }
+    }
+
 }

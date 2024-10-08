@@ -55,7 +55,7 @@ class OngEventController extends Controller
 
     public function index(Request $request)
     {
-        $query = OngEvent::query();
+        $query = OngEvent::query()->with('ong');
 
         // Aplicar filtros se parâmetros de busca forem fornecidos
         if ($request->filled('search_name')) {
@@ -66,22 +66,29 @@ class OngEventController extends Controller
             $query->where('city', 'like', '%' . $request->input('search_city') . '%');
         }
 
+        if ($request->filled('search_organizer')) {
+            $query->whereHas('ong', function ($q) use ($request) {
+                $q->where('ong_name', 'like', '%' . $request->input('search_organizer') . '%');
+            });
+        }
+
         // Clonar a consulta para reutilizar nos dois tipos de eventos
         $futureEventsQuery = clone $query;
         $pastEventsQuery = clone $query;
 
         // Futuros eventos
         $futureEvents = $futureEventsQuery->where('event_date', '>=', now())
-                                          ->orderBy('event_date', 'asc')
-                                          ->paginate(9, ['*'], 'futurePage');
+            ->orderBy('event_date', 'asc')
+            ->paginate(9, ['*'], 'futurePage');
 
         // Eventos passados
         $pastEvents = $pastEventsQuery->where('event_date', '<', now())
-                                      ->orderBy('event_date', 'desc')
-                                      ->paginate(9, ['*'], 'pastPage');
+            ->orderBy('event_date', 'desc')
+            ->paginate(9, ['*'], 'pastPage');
 
         return view('ong-events.index', compact('futureEvents', 'pastEvents'));
     }
+
 
 
 

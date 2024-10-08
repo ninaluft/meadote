@@ -13,18 +13,25 @@
                 <form method="GET" action="{{ route('ong-events.index') }}" class="mb-6"
                     aria-label="Formulário de busca de eventos">
                     <div class="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
-                        <div class="w-full md:w-1/3">
+                        <div class="w-full md:w-1/4">
                             <x-label for="search_name" value="{{ __('Nome do Evento') }}" />
                             <x-input id="search_name" type="text" name="search_name"
                                 value="{{ request('search_name') }}" class="mt-1 block w-full"
                                 placeholder="Buscar por nome do evento" />
                         </div>
 
-                        <div class="w-full md:w-1/3">
+                        <div class="w-full md:w-1/4">
                             <x-label for="search_city" value="{{ __('Cidade') }}" />
                             <x-input id="search_city" type="text" name="search_city"
                                 value="{{ request('search_city') }}" class="mt-1 block w-full"
                                 placeholder="Buscar por cidade" />
+                        </div>
+
+                        <div class="w-full md:w-1/4">
+                            <x-label for="search_organizer" value="{{ __('Organizador') }}" />
+                            <x-input id="search_organizer" type="text" name="search_organizer"
+                                value="{{ request('search_organizer') }}" class="mt-1 block w-full"
+                                placeholder="Buscar por organizador" />
                         </div>
 
                         <div class="self-end">
@@ -35,6 +42,7 @@
                     </div>
                 </form>
 
+
                 <!-- Lista de Eventos Futuros -->
                 <h3 class="text-lg font-semibold mb-4">{{ __('Eventos Futuros') }}</h3>
 
@@ -43,7 +51,8 @@
                 @else
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
                         @foreach ($futureEvents as $event)
-                            <a href="{{ route('ong-events.show', $event->id) }}" class="block bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                            <a href="{{ route('ong-events.show', $event->id) }}"
+                                class="block bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300">
                                 <!-- Imagem do Evento -->
                                 @if ($event->photo_path)
                                     <img src="{{ asset('storage/' . $event->photo_path) }}" alt="{{ $event->title }}"
@@ -58,10 +67,14 @@
                                 <div class="p-4">
                                     <h4 class="text-xl font-semibold text-gray-800">{{ $event->title }}</h4>
                                     <p class="text-gray-600">
-                                        <strong>{{ __('Data:') }}</strong> {{ \Carbon\Carbon::parse($event->event_date)->format('d/m/Y') }}
+                                        <strong>{{ __('Data:') }}</strong>
+                                        {{ \Carbon\Carbon::parse($event->event_date)->format('d/m/Y') }}
                                     </p>
                                     <p class="text-gray-600">
                                         <strong>{{ __('Cidade:') }}</strong> {{ $event->city }}
+                                    </p>
+                                    <p class="text-gray-600">
+                                        <strong>{{ __('Organizador:') }}</strong> {{ $event->ong->ong_name }}
                                     </p>
                                     <p class="mt-2 text-indigo-600 hover:underline font-medium">
                                         {{ __('Ver Evento') }}
@@ -88,7 +101,8 @@
                 @else
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         @foreach ($pastEvents as $event)
-                            <a href="{{ route('ong-events.show', $event->id) }}" class="block bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                            <a href="{{ route('ong-events.show', $event->id) }}"
+                                class="block bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300">
                                 <!-- Imagem do Evento -->
                                 @if ($event->photo_path)
                                     <img src="{{ asset('storage/' . $event->photo_path) }}" alt="{{ $event->title }}"
@@ -103,7 +117,8 @@
                                 <div class="p-4">
                                     <h4 class="text-xl font-semibold text-gray-800">{{ $event->title }}</h4>
                                     <p class="text-gray-600">
-                                        <strong>{{ __('Data:') }}</strong> {{ \Carbon\Carbon::parse($event->event_date)->format('d/m/Y') }}
+                                        <strong>{{ __('Data:') }}</strong>
+                                        {{ \Carbon\Carbon::parse($event->event_date)->format('d/m/Y') }}
                                     </p>
                                     <p class="text-gray-600">
                                         <strong>{{ __('Cidade:') }}</strong> {{ $event->city }}
