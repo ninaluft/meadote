@@ -203,3 +203,16 @@ Route::post('/messages/read/{messageId}', function ($messageId) {
     $message->save();
     return response()->json(['status' => 'success']);
 })->middleware('auth');
+
+
+use App\Http\Controllers\CommentController;
+
+// Rotas para posts
+Route::resource('posts', PostController::class);
+
+// Rota para adicionar comentários (usuário logado)
+Route::post('posts/{post}/comments', [CommentController::class, 'store'])->middleware('auth')->name('comments.store');
+
+
+// Rota para excluir comentários (autorizada para o autor ou admin)
+Route::delete('comments/{comment}', [CommentController::class, 'destroy'])->middleware('auth')->name('comments.destroy');

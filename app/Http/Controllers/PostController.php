@@ -11,11 +11,31 @@ use HTMLPurifier_Config;
 
 class PostController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $posts = Post::orderBy('created_at', 'desc')->paginate(5); // Busca os posts ordenados pela data de criação
-        return view('posts.index', compact('posts')); // Retorna a view com a variável $posts
+        // Pega os parâmetros de busca e ordenação
+        $search = $request->input('search');
+        $sort = $request->input('sort', 'desc'); // O valor padrão será 'desc' (Mais Novo)
+
+        // Consulta base de posts
+        $query = Post::query();
+
+        // Se a busca por título existir, filtra pelos títulos que contenham a palavra
+        if ($search) {
+            $query->where('title', 'like', '%' . $search . '%');
+        }
+
+        // Aplica a ordenação (mais novo ou mais antigo)
+        $query->orderBy('created_at', $sort);
+
+        // Paginação dos resultados
+        $posts = $query->paginate(9); // Mostra 9 posts por página
+
+        // Retorna a view com os posts filtrados e ordenados
+        return view('posts.index', compact('posts'));
     }
+
+
 
 
     // Mostrar o formulário de criação de post
