@@ -14,7 +14,7 @@
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
+
 
     <link rel="icon" href="{{ asset('images/favicon.png') }}" type="image/png">
 
@@ -89,6 +89,16 @@
             </header>
         @endif
 
+
+        @if (session('success'))
+            <div id="alert"
+                class="fixed top-30 left-0 w-full bg-green-500 bg-opacity-90 text-white p-2 shadow-lg transition-opacity duration-300 text-center z-50">
+                {{ session('success') }}
+            </div>
+        @endif
+
+
+
         <!-- Page Content -->
         <main>
             {{ $slot }}
@@ -109,6 +119,23 @@
             loadingScreen.style.display = "none";
         });
     </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // O alerta desaparecerá após 3 segundos
+            setTimeout(function() {
+                var alert = document.getElementById('alert');
+                alert.classList.add('opacity-0'); // Adiciona a opacidade 0 para esconder
+            }, 1000); // 3000ms = 3 segundos
+
+            // Remove completamente o alerta da tela após a transição de opacidade
+            setTimeout(function() {
+                var alert = document.getElementById('alert');
+                alert.style.display = 'none'; // Remove o alerta da tela
+            }, 2500); // 500ms extra para a transição
+        });
+    </script>
+
 
 </body>
 

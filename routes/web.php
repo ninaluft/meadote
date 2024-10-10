@@ -23,14 +23,17 @@ use App\Models\OngEvent;
 use App\Models\Message;
 use Illuminate\Http\Request;
 
+use App\Http\Controllers\CommentController;
+
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Authentication Routes
 Route::post('/register', [RegisterController::class, 'store'])->name('register');
 Route::get('/login', function (Request $request) {
-    $redirectTo = $request->query('redirectTo', null);
-    return Auth::check() ? redirect()->route(Auth::user()->user_type . '.dashboard') : view('auth.login', compact('redirectTo'));
+    $redirectTo = $request->query('redirectTo');
+    return Auth::check() ? redirect()->route(Auth::user()->user_type . '.dashboard') : view('auth.login', ['redirectTo' => $redirectTo]);
 })->name('login');
+
 
 Route::post('/login', [AuthenticatedSessionController::class, 'store']);
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
@@ -43,20 +46,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 // Route Group for Authenticated Users
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
-    Route::get('/dashboard', function () {
-        switch (Auth::user()->user_type) {
-            case 'tutor':
-                return redirect()->route('tutor.dashboard');
-            case 'ong':
-                return redirect()->route('ong.dashboard');
-            case 'admin':
-                return redirect()->route('admin.dashboard');
-            default:
-                return view('dashboard');
-        }
-    })->name('dashboard');
+    Route::get('/dashboard', [UserController::class, 'redirectToDashboard'])->name('dashboard');
 });
-
 
 
 
@@ -109,6 +100,17 @@ Route::middleware('auth')->group(function () {
     Route::get('/messages/conversation/{user}', [MessageController::class, 'conversation'])->name('messages.conversation');
     Route::post('/messages/send/{user}', [MessageController::class, 'send'])->name('messages.send');
     Route::post('/messages/{user}', [MessageController::class, 'store'])->name('messages.store');
+    // Notifications
+    Route::post('/notifications/{id}/mark-as-read', [UserController::class, 'markNotificationAsRead'])->name('notifications.markAsRead');
+
+
+    // Route to handle message reading
+    Route::post('/messages/read/{messageId}', function ($messageId) {
+        $message = Message::find($messageId);
+        $message->is_read = true;
+        $message->save();
+        return response()->json(['status' => 'success']);
+    })->middleware('auth');
 });
 
 // Profile Editing Routes
@@ -163,9 +165,17 @@ Route::middleware(['auth', 'user_type:admin'])->group(function () {
 
     Route::get('/admin/faqs/edit', [FaqController::class, 'edit'])->name('faqs.edit');
     Route::post('/admin/faqs/update', [FaqController::class, 'update'])->name('faqs.update');
-
 });
 
+
+//Comentarios do blog
+Route::middleware('auth')->group(function () {
+    // Rota para adicionar comentários (usuário logado)
+    Route::post('posts/{post}/comments', [CommentController::class, 'store'])->middleware('auth')->name('comments.store');
+
+    // Rota para excluir comentários (autorizada para o autor ou admin)
+    Route::delete('comments/{comment}', [CommentController::class, 'destroy'])->middleware('auth')->name('comments.destroy');
+});
 
 
 // Routes restricted to 'ong'
@@ -190,29 +200,3 @@ Route::middleware(['auth', 'user_type:tutor'])->group(function () {
         return view('tutor.dashboard');
     })->name('tutor.dashboard');
 });
-
-
-// Notifications
-Route::post('/notifications/{id}/mark-as-read', [UserController::class, 'markNotificationAsRead'])->name('notifications.markAsRead');
-
-
-// Route to handle message reading
-Route::post('/messages/read/{messageId}', function ($messageId) {
-    $message = Message::find($messageId);
-    $message->is_read = true;
-    $message->save();
-    return response()->json(['status' => 'success']);
-})->middleware('auth');
-
-
-use App\Http\Controllers\CommentController;
-
-// Rotas para posts
-Route::resource('posts', PostController::class);
-
-// Rota para adicionar comentários (usuário logado)
-Route::post('posts/{post}/comments', [CommentController::class, 'store'])->middleware('auth')->name('comments.store');
-
-
-// Rota para excluir comentários (autorizada para o autor ou admin)
-Route::delete('comments/{comment}', [CommentController::class, 'destroy'])->middleware('auth')->name('comments.destroy');

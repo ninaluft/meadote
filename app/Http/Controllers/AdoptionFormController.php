@@ -150,7 +150,7 @@ class AdoptionFormController extends Controller
         // Send notification to the pet's owner
         $this->notifyAdoptionRequest($pet->user->id, $adoptionForm);
 
-        return redirect()->route('pets.show', $pet->id)->with('success', 'Your adoption form has been submitted.');
+        return redirect()->route('pets.show', $pet->id)->with('success', 'Seu formulário de adoção foi enviado.');
     }
 
     public function notifyAdoptionRequest($userId, AdoptionForm $adoptionForm)
@@ -206,7 +206,6 @@ class AdoptionFormController extends Controller
 
         return view('messages.inbox', compact('conversations', 'notifications'));
     }
-
 
 
     public function index()
@@ -284,7 +283,6 @@ class AdoptionFormController extends Controller
     }
 
 
-
     public function notifyAdoptionRejection($userId, AdoptionForm $adoptionForm)
     {
         $user = User::find($userId);
@@ -296,9 +294,6 @@ class AdoptionFormController extends Controller
         // Envia notificação por email
         $user->notify(new AdoptionFormRejected($adoptionForm));
     }
-
-
-
 
 
     public function received()
@@ -341,7 +336,6 @@ class AdoptionFormController extends Controller
 
         return view('adoption-form.submitted', compact('adoptionForms', 'translations'));
     }
-
 
 
     public function show(AdoptionForm $adoptionForm)
@@ -425,9 +419,6 @@ class AdoptionFormController extends Controller
     }
 
 
-
-
-
     public function cancel(AdoptionForm $adoptionForm)
     {
         // Verifica se o usuário que está cancelando é o que enviou o formulário
@@ -448,7 +439,7 @@ class AdoptionFormController extends Controller
         // Exclui o formulário de adoção
         $adoptionForm->delete();
 
-        return redirect()->route('adoption-form.submitted')->with('success', 'Adoption request has been canceled.');
+        return redirect()->route('adoption-form.submitted')->with('success', 'O formulário de adoção foi cancelado.');
     }
 
 

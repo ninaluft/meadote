@@ -20,7 +20,7 @@ class MessageController extends Controller
             'content' => $request->content,
         ]);
 
-        return redirect()->route('messages.conversation', $user->id)->with('success', 'Message sent.');
+        return redirect()->route('messages.conversation', $user->id);
     }
 
     public function store(Request $request, User $user)
@@ -38,7 +38,7 @@ class MessageController extends Controller
 
         // Handle any post-save actions, such as broadcasting an event
 
-        return redirect()->route('messages.conversation', $user->id)->with('success', 'Message sent.');
+        return redirect()->route('messages.conversation', $user->id);
     }
 
 

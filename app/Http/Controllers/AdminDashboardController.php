@@ -113,7 +113,7 @@ class AdminDashboardController extends Controller
     public function deleteUser(User $user)
     {
         $user->delete();
-        return redirect()->route('admin.manage-users')->with('success', 'User deleted successfully.');
+        return redirect()->route('admin.manage-users')->with('success', 'Usuário deletado com sucesso.');
     }
 
     public function editUser(User $user)
@@ -166,7 +166,7 @@ class AdminDashboardController extends Controller
     public function deletePet(Pet $pet)
     {
         $pet->delete();
-        return redirect()->route('admin.manage-pets')->with('success', 'Pet deleted successfully.');
+        return redirect()->route('admin.manage-pets')->with('success', 'Pet deletedo com sucesso.');
     }
 
 
@@ -205,7 +205,7 @@ class AdminDashboardController extends Controller
     public function deleteEvent(OngEvent $event)
     {
         $event->delete();
-        return redirect()->route('admin.manage-events')->with('success', 'Evento deletadp com sucesso.');
+        return redirect()->route('admin.manage-events')->with('success', 'Evento deletado com sucesso.');
     }
 
 
