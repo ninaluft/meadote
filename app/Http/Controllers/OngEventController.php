@@ -50,7 +50,7 @@ class OngEventController extends Controller
             'photo_path' => $photoPath,
         ]);
 
-        return redirect()->route('ong-events.index')->with('success', 'Event created successfully.');
+        return redirect()->route('ong-events.index')->with('success', 'Evento criado com sucesso.');
     }
 
     public function index(Request $request)
@@ -157,6 +157,6 @@ class OngEventController extends Controller
 
         $event->delete();
 
-        return redirect()->route('ong-events.index')->with('success', 'Event deleted successfully.');
+        return redirect()->route('ong-events.index')->with('success', 'Evento deletado com sucesso.');
     }
 }

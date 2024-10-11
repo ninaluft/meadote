@@ -267,8 +267,13 @@ class AdoptionFormController extends Controller
             $this->notifyAdoptionRejection($adoptionForm->submitter->id, $adoptionForm);
         }
 
-        return redirect()->back()->with('success', 'Adoption form has been ' . $status . '.');
+        // Traduz o status para exibição na mensagem
+        $statusTranslation = __('adoption-form.' . $status);
+
+        return redirect()->back()->with('success', 'O formulário de adoção foi ' . $statusTranslation . '.');
     }
+
+
 
     public function notifyAdoptionApproval($userId, AdoptionForm $adoptionForm)
     {

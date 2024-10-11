@@ -122,17 +122,19 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // O alerta desaparecerá após 3 segundos
             setTimeout(function() {
                 var alert = document.getElementById('alert');
-                alert.classList.add('opacity-0'); // Adiciona a opacidade 0 para esconder
-            }, 1000); // 3000ms = 3 segundos
+                if (alert) { // Verifica se o alerta existe
+                    alert.classList.add('opacity-0');
+                }
+            }, 1000);
 
-            // Remove completamente o alerta da tela após a transição de opacidade
             setTimeout(function() {
                 var alert = document.getElementById('alert');
-                alert.style.display = 'none'; // Remove o alerta da tela
-            }, 2500); // 500ms extra para a transição
+                if (alert) { // Verifica se o alerta existe
+                    alert.style.display = 'none';
+                }
+            }, 2500);
         });
     </script>
 

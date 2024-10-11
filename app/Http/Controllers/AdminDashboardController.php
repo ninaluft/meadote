@@ -85,8 +85,6 @@ class AdminDashboardController extends Controller
 
 
 
-
-
     // Manage Users
     public function manageUsers(Request $request)
     {
@@ -97,16 +95,29 @@ class AdminDashboardController extends Controller
         // Filtro de busca por nome ou email
         $searchQuery = $request->get('search');
 
-        // Query para listar usuários com filtro de busca e ordenação
+        // Filtro por tipo de usuário
+        $userTypeFilter = $request->get('user_type');
+
+        // Contagem de usuários por tipo
+        $userTypeCounts = User::selectRaw('user_type, COUNT(*) as count')
+            ->groupBy('user_type')
+            ->pluck('count', 'user_type')
+            ->toArray();
+
+        // Query para listar usuários com filtro de busca, tipo e ordenação
         $users = User::when($searchQuery, function ($query, $searchQuery) {
             return $query->where('name', 'like', "%{$searchQuery}%")
                 ->orWhere('email', 'like', "%{$searchQuery}%");
         })
+            ->when($userTypeFilter, function ($query, $userTypeFilter) {
+                return $query->where('user_type', $userTypeFilter);
+            })
             ->orderBy($sortBy, $sortDirection)
-            ->paginate(20); // Paginação, altere o número de itens por página conforme necessário
+            ->paginate(20); // Paginação
 
-        return view('admin.manage-users', compact('users', 'sortBy', 'sortDirection', 'searchQuery'));
+        return view('admin.manage-users', compact('users', 'sortBy', 'sortDirection', 'searchQuery', 'userTypeFilter', 'userTypeCounts'));
     }
+
 
 
     // Delete User
@@ -145,8 +156,15 @@ class AdminDashboardController extends Controller
         $sortBy = $request->get('sort_by', 'id'); // Campo de ordenação padrão
         $sortDirection = $request->get('sort_direction', 'asc'); // Direção de ordenação padrão
         $search = $request->get('search'); // Valor da busca
+        $statusFilter = $request->get('status'); // Filtro de status
 
-        // Aplicar a busca e a ordenação na consulta dos pets
+        // Contagem de pets por status
+        $statusCounts = Pet::selectRaw('status, COUNT(*) as count')
+            ->groupBy('status')
+            ->pluck('count', 'status')
+            ->toArray();
+
+        // Aplicar a busca e o filtro de status na consulta dos pets
         $pets = Pet::with('user') // Carrega o relacionamento com o responsável pelo pet
             ->when($search, function ($query, $search) {
                 return $query->where('name', 'like', "%{$search}%")
@@ -154,11 +172,15 @@ class AdminDashboardController extends Controller
                         $query->where('name', 'like', "%{$search}%"); // Busca pelo nome do responsável
                     });
             })
+            ->when($statusFilter, function ($query, $statusFilter) {
+                return $query->where('status', $statusFilter);
+            })
             ->orderBy($sortBy, $sortDirection)
             ->paginate(20);
 
-        return view('admin.manage-pets', compact('pets', 'sortBy', 'sortDirection', 'search'));
+        return view('admin.manage-pets', compact('pets', 'sortBy', 'sortDirection', 'search', 'statusCounts', 'statusFilter'));
     }
+
 
 
 
@@ -177,14 +199,25 @@ class AdminDashboardController extends Controller
         $sortBy = $request->get('sort_by', 'title'); // Campo de ordenação padrão é 'title'
         $sortDirection = $request->get('sort_direction', 'asc'); // Direção de ordenação padrão
         $search = $request->get('search'); // Obtém o valor de busca
+        $eventFilter = $request->get('event_filter', 'all'); // Filtro de eventos (todos, futuros, passados)
 
-        // Obtém eventos com busca, ordenação e paginação
+        // Contagem de eventos futuros e passados
+        $futureEventsCount = OngEvent::where('event_date', '>', now())->count();
+        $pastEventsCount = OngEvent::where('event_date', '<', now())->count();
+
+        // Filtra os eventos com base no filtro de eventos (futuros, passados)
         $events = OngEvent::with('ong')
             ->when($search, function ($query, $search) {
                 return $query->where('title', 'like', "%{$search}%")
                     ->orWhereHas('ong', function ($query) use ($search) {
                         $query->where('ong_name', 'like', "%{$search}%");
                     });
+            })
+            ->when($eventFilter === 'future', function ($query) {
+                return $query->where('event_date', '>', now());
+            })
+            ->when($eventFilter === 'past', function ($query) {
+                return $query->where('event_date', '<', now());
             })
             ->when($sortBy === 'ong_name', function ($query) use ($sortDirection) {
                 return $query->join('ongs', 'ong_events.ong_id', '=', 'ongs.id')
@@ -194,9 +227,8 @@ class AdminDashboardController extends Controller
             })
             ->paginate(20);
 
-        return view('admin.manage-events', compact('events', 'sortBy', 'sortDirection', 'search'));
+        return view('admin.manage-events', compact('events', 'sortBy', 'sortDirection', 'search', 'eventFilter', 'futureEventsCount', 'pastEventsCount'));
     }
-
 
 
 
@@ -241,19 +273,41 @@ class AdminDashboardController extends Controller
     {
         $sortBy = $request->get('sort_by', 'id'); // Campo de ordenação padrão é 'id'
         $sortDirection = $request->get('sort_direction', 'asc'); // Direção de ordenação padrão
+        $search = $request->get('search'); // Campo de busca
+        $status = $request->get('form_status'); // Filtro de status
 
-        $query = AdoptionForm::query();
+        // Consulta base para os formulários
+        $query = AdoptionForm::with(['pet', 'submitter']);
 
         // Aplicar o filtro de status, se houver
-        if ($request->has('form_status') && !empty($request->form_status)) {
-            $query->where('status', $request->form_status);
+        if ($status) {
+            $query->where('status', $status);
+        }
+
+        // Aplicar a busca por nome de pet ou nome do enviador
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('pet', function ($query) use ($search) {
+                    $query->where('name', 'like', '%' . $search . '%');
+                })->orWhereHas('submitter', function ($query) use ($search) {
+                    $query->where('name', 'like', '%' . $search . '%');
+                });
+            });
         }
 
         // Aplicar ordenação e paginar os formulários
-        $forms = $query->with(['pet', 'submitter'])->orderBy($sortBy, $sortDirection)->paginate(10);
+        $forms = $query->orderBy($sortBy, $sortDirection)->paginate(10);
 
-        return view('admin.manage-forms', compact('forms', 'sortBy', 'sortDirection'));
+        // Contagem de formulários por status
+        $statusCounts = AdoptionForm::selectRaw('status, COUNT(*) as count')
+            ->groupBy('status')
+            ->pluck('count', 'status')
+            ->toArray();
+
+        return view('admin.manage-forms', compact('forms', 'sortBy', 'sortDirection', 'statusCounts'));
     }
+
+
 
     // AdminDashboardController.php
     public function showUserDetails($id)

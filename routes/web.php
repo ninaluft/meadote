@@ -51,7 +51,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
 
 
 
-// Rotas Protegidas - Pets (Apenas para usuários autenticados)
+// Pets (Only Authenticated Users)
 Route::middleware('auth')->group(function () {
 
     Route::get('/pets/create', [PetController::class, 'create'])->name('pets.create');
@@ -66,7 +66,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/my-adopted-pets', [PetController::class, 'adoptedPets'])->name('pets.adopted');
 });
 
-// Rotas Públicas
+// Public Routes
 Route::get('/all-pets', [PetController::class, 'allPets'])->name('pets.all-pets');
 Route::get('/pets/{pet}', [PetController::class, 'show'])->name('pets.show');
 Route::get('/ong-events', [OngEventController::class, 'index'])->name('ong-events.index');
@@ -94,6 +94,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/adoption-forms', [AdoptionFormController::class, 'index'])->name('adoption-forms.index');
 });
 
+
 // Message Routes
 Route::middleware('auth')->group(function () {
     Route::get('/messages/inbox', [MessageController::class, 'inbox'])->name('messages.inbox');
@@ -112,6 +113,7 @@ Route::middleware('auth')->group(function () {
         return response()->json(['status' => 'success']);
     })->middleware('auth');
 });
+
 
 // Profile Editing Routes
 Route::middleware('auth')->group(function () {
@@ -156,7 +158,7 @@ Route::middleware(['auth', 'user_type:admin'])->group(function () {
     Route::get('/admin/support/{supportRequest}', [SupportRequestController::class, 'adminShow'])->name('admin.support.show');
     Route::post('/admin/support/{supportRequest}/close', [SupportRequestController::class, 'close'])->name('admin.support.close');
 
-    //POSTS DO BLOG
+    //Blog Posts
     Route::get('/admin/posts/create', [PostController::class, 'create'])->name('posts.create');
     Route::post('/admin/posts', [PostController::class, 'store'])->name('posts.store');
     Route::get('/posts/{post}/edit', [PostController::class, 'edit'])->name('posts.edit');
@@ -168,7 +170,7 @@ Route::middleware(['auth', 'user_type:admin'])->group(function () {
 });
 
 
-//Comentarios do blog
+//Blog comments
 Route::middleware('auth')->group(function () {
     // Rota para adicionar comentários (usuário logado)
     Route::post('posts/{post}/comments', [CommentController::class, 'store'])->middleware('auth')->name('comments.store');
