@@ -13,65 +13,70 @@ class OngEventSeeder extends Seeder
      */
     public function run(): void
     {
-        // Eventos para a ONG Admin
+        // Atribua os IDs das ONGs criados no UserSeeder
+        $ong1_id = DB::table('ongs')->where('ong_name', 'ONG Patinhas do bem')->value('id');
+        $ong2_id = DB::table('ongs')->where('ong_name', 'Resgate Felino')->value('id');
+        $ong3_id = DB::table('ongs')->where('ong_name', 'Cuidadores de Patas')->value('id');
+
+        // Eventos para a ONG Patinhas do bem
         DB::table('ong_events')->insert([
             [
-                'ong_id' => 3,
+                'ong_id' => $ong1_id, // ONG Patinhas do bem
                 'title' => 'Feira de Adoção de Animais',
                 'description' => 'Venha conhecer e adotar um novo amigo! Teremos vários cães e gatos esperando por um lar amoroso.',
                 'event_date' => '2023-10-15',
                 'event_time' => '10:00:00',
                 'city' => 'Não-Me-Toque',
                 'state' => 'RS',
-                'cep' => '99470-000', // CEP válido de Não-Me-Toque, RS
+                'cep' => '99470-000',
                 'location' => 'Praça Central, Não-Me-Toque - RS',
-                'photo_path' => 'ong-events/feira.webp', // Caminho para a foto do evento
+                'photo_path' => 'ong-events/feira.webp',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
             [
-                'ong_id' => 3,
+                'ong_id' => $ong1_id, // ONG Patinhas do bem
                 'title' => 'Campanha de Vacinação Gratuita',
                 'description' => 'Traga seu pet para uma campanha de vacinação gratuita! Todos os cães e gatos são bem-vindos.',
                 'event_date' => '2024-11-01',
                 'event_time' => '09:00:00',
                 'city' => 'Não-Me-Toque',
                 'state' => 'RS',
-                'cep' => '99470-000', // CEP válido de Não-Me-Toque, RS
+                'cep' => '99470-000',
                 'location' => 'Parque Municipal, Não-Me-Toque - RS',
-                'photo_path' => 'ong-events/vacinacao.webp', // Caminho para a foto do evento
+                'photo_path' => 'ong-events/vacinacao.webp',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ]
         ]);
 
-        // Eventos para a ONG Sistema
+        // Eventos para a ONG Resgate Felino
         DB::table('ong_events')->insert([
             [
-                'ong_id' => 3, // ONG Sistema
+                'ong_id' => $ong2_id, // Resgate Felino
                 'title' => 'Encontro de Adoção com Palestras',
                 'description' => 'Encontro especial com palestras sobre cuidados com pets e adoção responsável. Não perca!',
                 'event_date' => '2024-12-05',
                 'event_time' => '14:00:00',
-                'city' => 'Passo Fundo',
-                'state' => 'RS',
-                'cep' => '99010-000', // CEP válido de Passo Fundo, RS
-                'location' => 'Auditório Municipal, Passo Fundo - RS',
-                'photo_path' => 'ong-events/adocao.jpg', // Caminho para a foto do evento
+                'city' => 'Curitiba',
+                'state' => 'PR',
+                'cep' => '80010-000',
+                'location' => 'Auditório Municipal, Curitiba - PR',
+                'photo_path' => 'ong-events/adocao.jpg',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
             [
-                'ong_id' => 3, // ONG Sistema
+                'ong_id' => $ong3_id, // Cuidadores de Patas
                 'title' => 'Mutirão de Castração',
                 'description' => 'Mutirão para castração de cães e gatos, com preços populares ou gratuitos para famílias de baixa renda.',
                 'event_date' => '2023-12-12',
                 'event_time' => '08:00:00',
-                'city' => 'Carazinho',
-                'state' => 'RS',
-                'cep' => '99500-000', // CEP válido de Carazinho, RS
-                'location' => 'Centro de Zoonoses, Carazinho - RS',
-                'photo_path' => 'ong-events/mutirao_castracao.jpeg', // Caminho para a foto do evento
+                'city' => 'Florianópolis',
+                'state' => 'SC',
+                'cep' => '88010-001',
+                'location' => 'Centro de Zoonoses, Florianópolis - SC',
+                'photo_path' => 'ong-events/mutirao_castracao.jpeg',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ]

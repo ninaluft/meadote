@@ -9,23 +9,27 @@
             <!-- Botões Editar e Excluir -->
             @if (Auth::check() && Auth::id() === $pet->user_id)
                 <div class="flex space-x-2">
-                    <a href="{{ route('pets.edit', $pet->id) }}"
-                        class="bg-yellow-300 hover:bg-yellow-400 text-black font-semibold py-1 px-3 rounded-lg text-lg"
-                        aria-label="{{ __('pets.edit_button') }} {{ $pet->name }}">
-                        {{ __('pets.edit_button') }}
-                    </a>
+
+                    <x-button-edit href="{{ route('pets.edit', $pet->id) }}" ariaLabel="Editar pet">
+                        {{ __('Editar') }}
+                    </x-button-edit>
+
+
+                    <!-- Botão de Excluir com ícone -->
                     <form action="{{ route('pets.destroy', $pet->id) }}" method="POST" class="inline-block"
                         onsubmit="return confirm('{{ __('pets.confirm_delete') }}');">
                         @csrf
                         @method('DELETE')
-                        <button type="submit"
-                            class="bg-red-600 hover:bg-red-700 text-white font-semibold py-1 px-3 rounded-lg text-lg"
-                            aria-label="{{ __('pets.delete_button') }} {{ $pet->name }}">
-                            {{ __('pets.delete_button') }}
-                        </button>
+                        <x-button-delete :action="route('pets.destroy', $pet->id)"
+                            confirmMessage="{{ __('Tem certeza de que deseja excluir este pet?') }}"
+                            ariaLabel="Excluir pet">
+                            Excluir
+                        </x-button-delete>
+
                     </form>
                 </div>
             @endif
+
         </div>
     </x-slot>
 
@@ -45,7 +49,8 @@
                     <!-- Detalhes do Pet -->
                     <div class="md:w-2/3 md:ml-4">
                         <div class="flex items-center justify-between mb-2">
-                            <h2 class="text-3xl font-semibold text-gray-800 break-words break-all">{{ $pet->name }}</h2>
+                            <h2 class="text-3xl font-semibold text-gray-800 break-words break-all">{{ $pet->name }}
+                            </h2>
 
                             <!-- Botão de Favorito -->
                             <x-favorite-button :petId="$pet->id" :isFavorited="Auth::check() ? Auth::user()->hasFavorited($pet) : false"
@@ -69,7 +74,8 @@
                                 {{ $pet->special_conditions ? 'Sim' : 'Não' }}</p>
 
                             @if ($pet->special_conditions)
-                                <p><strong>{{ __('pets.special_conditions_description') }}:</strong> {{ $pet->special_conditions_description }}</p>
+                                <p><strong>{{ __('pets.special_conditions_description') }}:</strong>
+                                    {{ $pet->special_conditions_description }}</p>
                             @endif
 
                             <p class="mt-2"><strong>{{ __('pets.description') }}: </strong> </p>
@@ -108,11 +114,10 @@
                                     @else
                                         <form action="{{ route('adoption-form.create', $pet->id) }}" method="GET">
                                             @csrf
-                                            <button type="submit"
-                                                class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg text-lg"
-                                                aria-label="{{ __('pets.adopt_button') }} {{ $pet->name }}">
+                                            <x-button icon="fas fa-house" color="green" size="sm"
+                                                ariaLabel="{{ __('pets.adopt_button') }} {{ $pet->name }}">
                                                 {{ __('pets.adopt_button') }}
-                                            </button>
+                                            </x-button>
                                         </form>
                                     @endif
                                 @else
@@ -123,30 +128,31 @@
                                         {{ __('pets.adopt_button') }}
                                     </a>
                                 @endauth
-
-                                <!-- Botão de Compartilhar -->
-                                <button type="button"
-                                    class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg flex items-center text-lg"
-                                    id="shareButton">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                        stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-2">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z" />
-                                    </svg>
-                                    {{ __('pets.share') }}
-                                </button>
                             @endif
+
+                            <x-button-share id="sharePetButton" title="Pet: {{ $pet->name }}"
+                                text="Adote o {{ $pet->name }}! Veja mais informações no perfil do pet."
+                                url="{{ route('pets.show', $pet->id) }}" ariaLabel="Compartilhar perfil do pet">
+                                {{ __('Compartilhar Pet') }}
+                            </x-button-share>
+
+
                         </div>
+
 
                     </div>
                 </div>
             </div>
 
             <!-- Modal de Imagem -->
-            <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-75 hidden z-50 flex items-center justify-center" onclick="closeModal()">
+            <div id="imageModal"
+                class="fixed inset-0 bg-black bg-opacity-75 hidden z-50 flex items-center justify-center"
+                onclick="closeModal()">
                 <div class="relative">
-                    <button onclick="closeModal()" class="absolute top-0 right-0 m-4 text-white text-3xl">&times;</button>
-                    <img id="modalImage" src="" alt="Imagem em tamanho real" class="max-w-full max-h-screen rounded-lg object-contain" onclick="event.stopPropagation()">
+                    <button onclick="closeModal()"
+                        class="absolute top-0 right-0 m-4 text-white text-3xl">&times;</button>
+                    <img id="modalImage" src="" alt="Imagem em tamanho real"
+                        class="max-w-full max-h-screen rounded-lg object-contain" onclick="event.stopPropagation()">
                 </div>
             </div>
 
@@ -182,7 +188,7 @@
 
     <!-- Script to share the pet's profile -->
     <script>
-        document.getElementById('shareButton').addEventListener('click', function() {
+        function sharePet() {
             const shareData = {
                 title: '{{ __('pets.pet_profile') }} {{ $pet->name }}',
                 text: 'Veja este adorável pet disponível para adoção: {{ $pet->name }}.',
@@ -194,11 +200,10 @@
                     .then(() => console.log('Pet profile shared successfully'))
                     .catch((error) => console.log('Error sharing:', error));
             } else {
-                // Fallback if Web Share API is not supported
                 navigator.clipboard.writeText(shareData.url)
                     .then(() => alert('Link copiado para a área de transferência!'))
                     .catch(err => console.error('Erro ao copiar link: ', err));
             }
-        });
+        }
     </script>
 </x-app-layout>

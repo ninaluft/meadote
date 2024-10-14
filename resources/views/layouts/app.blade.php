@@ -127,14 +127,14 @@
                 if (alert) { // Verifica se o alerta existe
                     alert.classList.add('opacity-0');
                 }
-            }, 1000);
+            }, 2000);
 
             setTimeout(function() {
                 var alert = document.getElementById('alert');
                 if (alert) { // Verifica se o alerta existe
                     alert.style.display = 'none';
                 }
-            }, 2500);
+            }, 3500);
         });
     </script>
 

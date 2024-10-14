@@ -4,7 +4,7 @@
         <h3 class="text-xl font-semibold">Pets Disponíveis para Adoção ({{ $availablePets->total() }})</h3>
 
         <a href="{{ route('pets.create') }}"
-            class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-300">
+            class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition duration-300">
             + Adicionar Pet
         </a>
     </div>
@@ -35,7 +35,7 @@
             </div>
             <div>
                 <button wire:click="applyFilters"
-                    class="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-300">
+                    class="w-full bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded  transition duration-300">
                     Buscar
                 </button>
             </div>

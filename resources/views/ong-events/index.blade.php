@@ -34,10 +34,9 @@
                                 placeholder="Buscar por organizador" />
                         </div>
 
-                        <div class="self-end">
-                            <x-button type="submit" class="w-full md:w-auto">
-                                {{ __('Buscar') }}
-                            </x-button>
+                        <!-- Botão de busca -->
+                        <div class="flex items-end">
+                            <x-button class="w-full sm:w-auto h-10">{{ __('Buscar') }}</x-button>
                         </div>
                     </div>
                 </form>

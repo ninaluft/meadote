@@ -189,6 +189,7 @@ Route::middleware(['auth', 'user_type:ong'])->group(function () {
     Route::get('/ong-events/create', [OngEventController::class, 'create'])->name('events.create');
     Route::get('/events/criar', [OngEventController::class, 'criar'])->name('events.criar');
     Route::post('/ong-events', action: [OngEventController::class, 'store'])->name('events.store');
+    Route::get('/my-events', [OngEventController::class, 'myEvents'])->name('ong-events.my-events');
     Route::put('/ong-events/{id}', [OngEventController::class, 'update'])->name('events.update');
     Route::get('/ong-events/{event}/edit', [OngEventController::class, 'edit'])->name('events.edit');
     Route::delete('/ong-events/{event}', [OngEventController::class, 'destroy'])->name('events.destroy');

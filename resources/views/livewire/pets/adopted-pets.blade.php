@@ -30,7 +30,7 @@
             </div>
             <div>
                 <button wire:click="applyFilters"
-                    class="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-300">
+                    class="w-full bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded  transition duration-300">
                     Buscar
                 </button>
             </div>

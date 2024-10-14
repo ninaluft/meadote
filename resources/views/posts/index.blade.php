@@ -24,22 +24,23 @@
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <!-- Busca por título -->
                         <div>
-                            <input type="text" name="search" value="{{ request('search') }}" placeholder="Buscar por título"
-                                   class="w-full border-gray-300 rounded-lg p-2">
+                            <input type="text" name="search" value="{{ request('search') }}"
+                                placeholder="Buscar por título" class="w-full border-gray-300 rounded-lg p-2">
                         </div>
                         <!-- Ordenação -->
                         <div>
                             <select name="sort" class="w-full border-gray-300 rounded-lg p-2">
-                                <option value="desc" {{ request('sort') == 'desc' ? 'selected' : '' }}>Mais Novo</option>
-                                <option value="asc" {{ request('sort') == 'asc' ? 'selected' : '' }}>Mais Antigo</option>
+                                <option value="desc" {{ request('sort') == 'desc' ? 'selected' : '' }}>Mais Novo
+                                </option>
+                                <option value="asc" {{ request('sort') == 'asc' ? 'selected' : '' }}>Mais Antigo
+                                </option>
                             </select>
                         </div>
                         <!-- Botão de busca -->
-                        <div >
-                            <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg">
-                                Buscar
-                            </button>
+                        <div>
+                            <x-button class="w-full sm:w-auto h-full">{{ __('Buscar') }}</x-button>
                         </div>
+
                     </div>
                 </form>
 

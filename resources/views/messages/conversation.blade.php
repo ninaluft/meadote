@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Notificações de ') }} {{ $user->email === 'sistema@meadote.com' ? 'Sistema' : $user->name }}
+            {{ __('Mensagens de ') }} {{ $user->email === 'sistema@meadote.com' ? 'Sistema' : $user->name }}
         </h2>
     </x-slot>
 

@@ -14,7 +14,6 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-
         // Create admin users as ONG
         $admin1 = DB::table('users')->insertGetId([
             'user_type' => 'admin',
@@ -40,7 +39,7 @@ class UserSeeder extends Seeder
             'updated_at' => Carbon::now(),
         ]);
 
-        $ong = DB::table('users')->insertGetId([
+        $ong1 = DB::table('users')->insertGetId([
             'user_type' => 'ong',
             'name' => 'ongpatinhas',
             'email' => 'ongpatinhas@ong.com',
@@ -48,6 +47,30 @@ class UserSeeder extends Seeder
             'city' => 'Carazinho',
             'state' => 'RS',
             'cep' => '99500-000', // CEP válido de Carazinho, RS
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
+
+        $ong2 = DB::table('users')->insertGetId([
+            'user_type' => 'ong',
+            'name' => 'Resgate Felino',
+            'email' => 'resgatefelino@ong.com',
+            'password' => Hash::make('12345678'),
+            'city' => 'Curitiba',
+            'state' => 'PR',
+            'cep' => '80010-000', // CEP válido de Curitiba, PR
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
+
+        $ong3 = DB::table('users')->insertGetId([
+            'user_type' => 'ong',
+            'name' => 'Cuidadores de Patas',
+            'email' => 'cuidadorespatas@ong.com',
+            'password' => Hash::make('87654321'),
+            'city' => 'Florianópolis',
+            'state' => 'SC',
+            'cep' => '88010-001', // CEP válido de Florianópolis, SC
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);
@@ -77,13 +100,35 @@ class UserSeeder extends Seeder
                 'updated_at' => Carbon::now(),
             ],
             [
-                'user_id' => $ong,
+                'user_id' => $ong1,
                 'ong_name' => 'ONG Patinhas do bem',
                 'phone' => '5499887766',
                 'responsible_name' => 'Marina Luft',
-                'responsible_cpf' => '222.222.222-22',
-                'cnpj' => '22.222.222/2222-22',
-                'about_ong' => 'Somos a Patinhas do Bem, uma ONG formada por voluntários apaixonados por animais. Nosso trabalho é resgatar, reabilitar e encontrar lares seguros e amorosos para cães e gatos em situação de vulnerabilidade. Além disso, realizamos campanhas de castração e ações de conscientização, visando reduzir o abandono e promover uma convivência harmoniosa entre pessoas e pets. Acreditamos que cada animal merece respeito e cuidado, e lutamos todos os dias para garantir isso. Junte-se a nós e ajude a salvar vidas!',
+                'responsible_cpf' => '952.201.300-56',
+                'cnpj' => '30.416.418/0001-45',
+                'about_ong' => 'ONG Patinhas do Bem dedicada ao resgate de animais.',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'user_id' => $ong2,
+                'ong_name' => 'Resgate Felino',
+                'phone' => '41999887766',
+                'responsible_name' => 'Carlos Menezes',
+                'responsible_cpf' => '4576.189.490-42',
+                'cnpj' => '87.314.279/0001-66',
+                'about_ong' => 'ONG especializada no resgate de felinos em Curitiba.',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'user_id' => $ong3,
+                'ong_name' => 'Cuidadores de Patas',
+                'phone' => '4899887766',
+                'responsible_name' => 'Ana Costa',
+                'responsible_cpf' => '532.426.050-98',
+                'cnpj' => '49.767.426/0001-64',
+                'about_ong' => 'ONG que oferece abrigo e cuidados para animais resgatados em Florianópolis.',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
@@ -94,7 +139,7 @@ class UserSeeder extends Seeder
             'user_type' => 'tutor',
             'name' => 'João da Silva',
             'email' => 'joao.silva@meadote.com',
-            'password' => Hash::make('12345678'),
+            'password' => Hash::make('00000000'),
             'city' => 'Não-Me-Toque',
             'state' => 'RS',
             'cep' => '99470-000', // CEP válido de Não-Me-Toque, RS
@@ -114,6 +159,30 @@ class UserSeeder extends Seeder
             'updated_at' => Carbon::now(),
         ]);
 
+        $tutor3 = DB::table('users')->insertGetId([
+            'user_type' => 'tutor',
+            'name' => 'Paula Souza',
+            'email' => 'paula.souza@meadote.com',
+            'password' => Hash::make('00000000'),
+            'city' => 'Rio de Janeiro',
+            'state' => 'RJ',
+            'cep' => '20010-000', // CEP válido de Rio de Janeiro, RJ
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
+
+        $tutor4 = DB::table('users')->insertGetId([
+            'user_type' => 'tutor',
+            'name' => 'Carlos Dias',
+            'email' => 'carlos.dias@meadote.com',
+            'password' => Hash::make('00000000'),
+            'city' => 'Belo Horizonte',
+            'state' => 'MG',
+            'cep' => '30110-001', // CEP válido de Belo Horizonte, MG
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
+
         // Create Tutor records for the users created above
         DB::table('tutors')->insert([
             [
@@ -121,7 +190,7 @@ class UserSeeder extends Seeder
                 'full_name' => 'João da Silva',
                 'date_of_birth' => '1990-05-15',
                 'temporary_housing' => true,
-                'cpf' => '222.222.222-22',
+                'cpf' => '467.932.690-54',
                 'about_me' => 'Amante dos animais e tutor dedicado.',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
@@ -131,8 +200,28 @@ class UserSeeder extends Seeder
                 'full_name' => 'Marina Luft',
                 'date_of_birth' => '1989-11-14',
                 'temporary_housing' => false,
-                'cpf' => '333.333.333-33',
+                'cpf' => '374.472.860-95',
                 'about_me' => 'Tenho experiência com cães e gatos e adoro ajudar.',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'user_id' => $tutor3,
+                'full_name' => 'Paula Souza',
+                'date_of_birth' => '1991-08-22',
+                'temporary_housing' => true,
+                'cpf' => '492.525.600-92',
+                'about_me' => 'Adoro cuidar de animais e oferecer lar temporário.',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'user_id' => $tutor4,
+                'full_name' => 'Carlos Dias',
+                'date_of_birth' => '1987-02-10',
+                'temporary_housing' => false,
+                'cpf' => '547.374.050-27',
+                'about_me' => 'Pai de dois cães resgatados, sempre disposto a ajudar.',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],

@@ -98,6 +98,27 @@ class OngEventController extends Controller
         return view('ong-events.show', compact('event'));
     }
 
+    public function myEvents()
+    {
+        $ongId = Auth::user()->ong->id;
+
+        // Query para eventos futuros
+        $futureEvents = OngEvent::where('ong_id', $ongId)
+                                ->where('event_date', '>=', now())
+                                ->orderBy('event_date', 'asc')
+                                ->get();
+
+        // Query para eventos passados
+        $pastEvents = OngEvent::where('ong_id', $ongId)
+                              ->where('event_date', '<', now())
+                              ->orderBy('event_date', 'desc')
+                              ->get();
+
+        return view('ong-events.my-events', compact('futureEvents', 'pastEvents'));
+    }
+
+
+
 
     // Edit event
 

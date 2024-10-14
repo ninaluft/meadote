@@ -4,27 +4,21 @@
         <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-10">
 
-                <!-- Botões de Ação (Editar, Excluir e Compartilhar) -->
-                <div class="flex justify-between mb-4">
+                <!-- Botões de Ação (Editar e Excluir) -->
+                <div class="flex justify-end mb-4 space-x-4">
                     @if (Auth::check() && Auth::user()->user_type === 'admin')
-                        <div class="flex space-x-4"> <!-- Alinhar os botões à esquerda acima do título -->
-                            <!-- Botão de Editar -->
-                            <a href="{{ route('posts.edit', $post->id) }}"
-                                class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md">
-                                {{ __('Editar') }}
-                            </a>
+                        <!-- Botão de Editar -->
+                        <x-button-edit href="{{ route('posts.edit', $post->id) }}"
+                            aria-label="Editar o post {{ $post->title }}"> <!-- 'aria-label' para acessibilidade -->
+                            {{ __('Editar') }}
+                        </x-button-edit>
 
-                            <!-- Botão de Excluir -->
-                            <form action="{{ route('posts.destroy', $post->id) }}" method="POST"
-                                onsubmit="return confirm('Tem certeza de que deseja excluir este post?');">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit"
-                                    class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-md">
-                                    {{ __('Excluir') }}
-                                </button>
-                            </form>
-                        </div>
+                        <!-- Botão de Excluir -->
+                        <x-button-delete action="{{ route('posts.destroy', $post->id) }}"
+                            confirmMessage="Tem certeza de que deseja excluir este post?"
+                            aria-label="Excluir o post {{ $post->title }}"> <!-- 'aria-label' para acessibilidade -->
+                            {{ __('Excluir') }}
+                        </x-button-delete>
                     @endif
                 </div>
 
@@ -38,21 +32,24 @@
                 <!-- Imagem do Post -->
                 @if ($post->image_path)
                     <img src="{{ asset('storage/' . $post->image_path) }}" alt="{{ $post->title }}"
-                        class="w-full h-auto rounded-lg mb-4">
+                        class="w-full h-auto rounded-lg">
                 @endif
 
                 <!-- Renderizando o conteúdo HTML do Quill -->
-                <div class="ql-editor text-lg text-gray-800 leading-relaxed"> <!-- Adicionei 'ql-editor' para estilo -->
+                <div class="ql-editor text-lg text-gray-800 leading-relaxed">
                     {!! $post->content !!}
                 </div>
 
                 <!-- Botão de Compartilhar -->
                 <div class="mt-6">
-                    <x-share-button :title="$post->title" :url="url()->current()" :description="Illuminate\Support\Str::limit(strip_tags($post->content), 150)" :image="asset('storage/' . $post->image_path)" />
+                    <x-button-share id="sharePostButton" title="{{ json_encode($post->title) }}"
+                        text="{{ json_encode(Illuminate\Support\Str::limit(strip_tags($post->content), 150)) }}"
+                        url="{{ json_encode(url()->current()) }}" aria-label="Compartilhar o post {{ $post->title }}">
+                        {{ __('Compartilhar') }}
+                    </x-button-share>
                 </div>
 
                 <div class="py-12">
-
                     <!-- Sessão de Comentários -->
                     <div class="mt-8">
                         <h3 class="text-xl font-bold">Comentários</h3>
@@ -74,8 +71,9 @@
                                             class="absolute top-4 right-4">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="text-red-600 hover:text-red-800">
-                                                Excluir
+                                            <button type="submit" class="text-red-600 hover:text-red-800"
+                                                title="Excluir comentário" aria-label="Excluir comentário"> <!-- Tooltip e aria-label para acessibilidade -->
+                                                <i class="fas fa-trash"></i> <!-- Ícone de lixeira do Font Awesome -->
                                             </button>
                                         </form>
                                     @endif
@@ -86,13 +84,13 @@
                         <!-- Formulário para adicionar novo comentário (somente usuários logados) -->
                         @auth
                             <div class="mt-6">
-                                <h4 class="text-lg font-semibold">Deixe seu comentário</h4>
-                                <form action="{{ route('comments.store', $post->id) }}" method="POST" class="mt-4">
+                                <h4 class="text-lg font-semibold" id="leaveCommentLabel">Deixe seu comentário</h4>
+                                <form action="{{ route('comments.store', $post->id) }}" method="POST" class="mt-4" aria-labelledby="leaveCommentLabel">
                                     @csrf
                                     <textarea name="content" rows="3" class="w-full border-gray-300 rounded-lg p-2"
-                                        placeholder="Escreva seu comentário..."></textarea>
+                                        placeholder="Escreva seu comentário..." aria-describedby="commentHelper"></textarea>
                                     @error('content')
-                                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                                        <p class="text-red-500 text-sm mt-1" id="commentHelper">{{ $message }}</p>
                                     @enderror
                                     <button type="submit"
                                         class="mt-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">Comentar</button>
@@ -102,11 +100,9 @@
                             <p class="mt-4 text-gray-500">Você precisa <a href="{{ route('login') }}"
                                     class="text-blue-500">fazer login</a> para comentar.</p>
                         @endauth
-
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 

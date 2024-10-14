@@ -18,7 +18,7 @@ class PetSeeder extends Seeder
             [
                 'name' => 'Rex',
                 'species' => 'dog',
-                'specify_other' => null, // Adicionando specify_other como null
+                'specify_other' => null,
                 'gender' => 'male',
                 'age' => 'adult',
                 'size' => 'medium',
@@ -35,7 +35,7 @@ class PetSeeder extends Seeder
             [
                 'name' => 'Mia',
                 'species' => 'cat',
-                'specify_other' => null, // Adicionando specify_other como null
+                'specify_other' => null,
                 'gender' => 'female',
                 'age' => 'senior',
                 'size' => 'small',
@@ -52,7 +52,7 @@ class PetSeeder extends Seeder
             [
                 'name' => 'Bidu',
                 'species' => 'dog',
-                'specify_other' => null, // Adicionando specify_other como null
+                'specify_other' => null,
                 'gender' => 'male',
                 'age' => 'puppy',
                 'size' => 'small',
@@ -69,14 +69,14 @@ class PetSeeder extends Seeder
             [
                 'name' => 'Pé de Pano',
                 'species' => 'other',
-                'specify_other' => 'Cavalo', // Especificando a espécie como "Cavalo"
+                'specify_other' => 'Cavalo',
                 'gender' => 'male',
                 'age' => 'adult',
                 'size' => 'large',
                 'is_neutered' => false,
                 'special_conditions' => false,
                 'special_conditions_description' => null,
-                'description' => 'Este é o Pé de Pano, um cavalo gentil que passou boa parte de sua vida como puxador de carroça, enfrentando jornadas exaustivas. Após ser resgatado, Valente finalmente recebeu o cuidado e o carinho que sempre mereceu. Hoje, ele está livre do trabalho pesado e precisa de um lar tranquilo onde possa viver o resto de seus dias em paz. Valente é dócil e adora interagir com pessoas, mas devido às condições de seus resgates e idade, ele já não pode mais realizar trabalhos físicos. Ele é perfeito para quem quer oferecer um ambiente seguro e amoroso, onde ele possa descansar e ser feliz.',
+                'description' => 'Cavalo gentil resgatado, precisa de um lar tranquilo.',
                 'status' => 'available',
                 'user_id' => 5,
                 'photo_path' => 'pets/pedepano.jpg',
@@ -90,7 +90,7 @@ class PetSeeder extends Seeder
             [
                 'name' => 'Thor',
                 'species' => 'dog',
-                'specify_other' => null, // Adicionando specify_other como null
+                'specify_other' => null,
                 'gender' => 'male',
                 'age' => 'adult',
                 'size' => 'large',
@@ -107,7 +107,7 @@ class PetSeeder extends Seeder
             [
                 'name' => 'Luna',
                 'species' => 'cat',
-                'specify_other' => null, // Adicionando specify_other como null
+                'specify_other' => null,
                 'gender' => 'female',
                 'age' => 'puppy',
                 'size' => 'small',
@@ -128,7 +128,7 @@ class PetSeeder extends Seeder
             [
                 'name' => 'Max',
                 'species' => 'dog',
-                'specify_other' => null, // Adicionando specify_other como null
+                'specify_other' => null,
                 'gender' => 'male',
                 'age' => 'senior',
                 'size' => 'medium',
@@ -145,7 +145,7 @@ class PetSeeder extends Seeder
             [
                 'name' => 'Bella',
                 'species' => 'cat',
-                'specify_other' => null, // Adicionando specify_other como null
+                'specify_other' => null,
                 'gender' => 'female',
                 'age' => 'adult',
                 'size' => 'small',
@@ -160,40 +160,6 @@ class PetSeeder extends Seeder
                 'updated_at' => Carbon::now(),
             ],
             [
-                'name' => 'Amora',
-                'species' => 'dog',
-                'specify_other' => null,
-                'gender' => 'female',
-                'age' => 'puppy',
-                'size' => 'medium',
-                'is_neutered' => false,
-                'special_conditions' => false,
-                'special_conditions_description' => null,
-                'description' => 'Filhote alegre e cheia de energia, ideal para uma família ativa.',
-                'status' => 'available',
-                'user_id' => 3, // ONG Patinhas do bem
-                'photo_path' => 'pets/amora.jpg',
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-            ],
-            [
-                'name' => 'Tom',
-                'species' => 'cat',
-                'specify_other' => null,
-                'gender' => 'male',
-                'age' => 'adult',
-                'size' => 'small',
-                'is_neutered' => true,
-                'special_conditions' => false,
-                'special_conditions_description' => null,
-                'description' => 'Gato tranquilo, gosta de ficar em locais calmos e adora receber carinho.',
-                'status' => 'available',
-                'user_id' => 5, // Tutor João da Silva
-                'photo_path' => 'pets/tom.jpg',
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-            ],
-            [
                 'name' => 'Maple',
                 'species' => 'other',
                 'specify_other' => 'Coelho',
@@ -203,13 +169,51 @@ class PetSeeder extends Seeder
                 'is_neutered' => false,
                 'special_conditions' => true,
                 'special_conditions_description' => 'Precisa de cuidados especiais com a dieta.',
-                'description' => 'Coelha amorosa, precisa de um lar tranquilo e alguém que cuide de sua dieta específica.',
+                'description' => 'Coelha amorosa, precisa de um lar tranquilo e cuidados com a dieta.',
                 'status' => 'available',
-                'user_id' => 4, // Tutor Maria Oliveira
+                'user_id' => 4,
                 'photo_path' => 'pets/maple.jpg',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
+            ]
+        ]);
+
+        // Pets for ONG Amigos dos Animais
+        DB::table('pets')->insert([
+            [
+                'name' => 'Lucky',
+                'species' => 'dog',
+                'specify_other' => null,
+                'gender' => 'male',
+                'age' => 'adult',
+                'size' => 'medium',
+                'is_neutered' => true,
+                'special_conditions' => false,
+                'special_conditions_description' => null,
+                'description' => 'Cão resgatado, muito leal e cheio de energia.',
+                'status' => 'available',
+                'user_id' => 6,
+                'photo_path' => 'pets/lucky.jpg',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ],
+            [
+                'name' => 'Simba',
+                'species' => 'cat',
+                'specify_other' => null,
+                'gender' => 'male',
+                'age' => 'adult',
+                'size' => 'small',
+                'is_neutered' => true,
+                'special_conditions' => false,
+                'special_conditions_description' => null,
+                'description' => 'Gato independente e curioso, gosta de explorar.',
+                'status' => 'available',
+                'user_id' => 6,
+                'photo_path' => 'pets/simba.jpg',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ]
         ]);
 
         // Pet "Donatello"
@@ -217,7 +221,7 @@ class PetSeeder extends Seeder
             [
                 'name' => 'Donatello',
                 'species' => 'other',
-                'specify_other' => 'Tartaruga', // Especificando a espécie como "Tartaruga"
+                'specify_other' => 'Tartaruga',
                 'gender' => 'male',
                 'age' => 'adult',
                 'size' => 'medium',

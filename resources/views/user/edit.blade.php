@@ -138,7 +138,14 @@
                         <!-- Sobre Mim (Tutor) -->
                         <div class="mb-6">
                             <x-label for="about_me" :value="__('Sobre Mim')" />
-                            <textarea id="about_me" name="about_me" class="form-input rounded-md shadow-sm mt-1 block w-full">{{ old('about_me', $user->tutor->about_me) }}</textarea>
+
+                            <!-- Limite de caracteres -->
+                            <textarea id="about_me" name="about_me" rows="6" maxlength="900"
+                                class="form-input rounded-md shadow-sm mt-1 block w-full" oninput="updateCharacterCount()">{{ old('about_me', $user->tutor->about_me) }}</textarea>
+
+                            <!-- Exibição da contagem de caracteres -->
+                            <small id="charCount" class="text-gray-600">900 caracteres restantes</small>
+
                             @error('about_me')
                                 <span class="text-sm text-red-600">{{ $message }}</span>
                             @enderror
@@ -198,7 +205,14 @@
                         <!-- Sobre a ONG -->
                         <div class="mb-6">
                             <x-label for="about_ong" :value="__('Sobre a ONG')" />
-                            <textarea id="about_ong" name="about_ong" class="form-input rounded-md shadow-sm mt-1 block w-full">{{ old('about_ong', $user->ong->about_ong) }}</textarea>
+
+                            <!-- Limite de caracteres -->
+                            <textarea id="about_ong" name="about_ong" rows="6" maxlength="900"
+                                class="form-input rounded-md shadow-sm mt-1 block w-full" oninput="updateOngCharacterCount()">{{ old('about_ong', $user->ong->about_ong) }}</textarea>
+
+                            <!-- Exibição da contagem de caracteres -->
+                            <small id="ongCharCount" class="text-gray-600">900 caracteres restantes</small>
+
                             @error('about_ong')
                                 <span class="text-sm text-red-600">{{ $message }}</span>
                             @enderror
@@ -251,7 +265,7 @@
                             @endforeach
                         </div>
                         <button type="button" onclick="addNewSocialLink()"
-                            class="mt-2 bg-blue-500 text-white px-4 py-2 rounded">+ Adicionar Rede Social</button>
+                            class="mt-2 bg-blue-500 text-white px-2 py-2 rounded">+ Adicionar Rede Social</button>
                     </div>
 
 
@@ -441,6 +455,54 @@
             // Esconde o campo visualmente
             inputDiv.style.display = 'none';
         }
+    </script>
+
+    <!-- Script para atualizar a contagem de caracteres -->
+    <script>
+        function updateCharacterCount() {
+            const textarea = document.getElementById('about_me');
+
+            // Verifica se o campo existe antes de tentar acessar suas propriedades
+            if (textarea) {
+                const charCountDisplay = document.getElementById('charCount');
+                const maxLength = textarea.getAttribute('maxlength');
+                const currentLength = textarea.value.length;
+
+                charCountDisplay.textContent = `${maxLength - currentLength} caracteres restantes`;
+            }
+        }
+
+        // Inicializa a contagem de caracteres ao carregar a página, apenas se o campo existir
+        document.addEventListener('DOMContentLoaded', function() {
+            const textarea = document.getElementById('about_me');
+            if (textarea) {
+                updateCharacterCount();
+            }
+        });
+    </script>
+
+    <!-- Script para atualizar a contagem de caracteres -->
+    <script>
+        function updateOngCharacterCount() {
+            const textarea = document.getElementById('about_ong');
+
+            // Verifica se o campo existe antes de tentar acessar suas propriedades
+            if (textarea) {
+                const charCountDisplay = document.getElementById('ongCharCount');
+                const maxLength = textarea.getAttribute('maxlength');
+                const currentLength = textarea.value.length;
+
+                charCountDisplay.textContent = `${maxLength - currentLength} caracteres restantes`;
+            }
+        }
+
+        // Inicializa a contagem de caracteres ao carregar a página, apenas se o campo existir
+        document.addEventListener('DOMContentLoaded', function() {
+            const textarea = document.getElementById('about_ong');
+            if (textarea) {
+                updateOngCharacterCount();
+            }
+        });
     </script>
 
 </x-app-layout>

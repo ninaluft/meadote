@@ -62,6 +62,21 @@ class PostSeeder extends Seeder
             ],
             [
                 'user_id' => 1, // Admin
+                'title' => 'Importância da Castração para o Controle Populacional de Animais',
+                'content' => '
+                    <p>A castração é uma das principais ferramentas no controle populacional de cães e gatos...</p>
+                    <h3>1. Benefícios da Castração</h3>
+                    <p>A castração evita a reprodução descontrolada e ajuda a prevenir problemas de saúde...</p>
+                    <h3>2. Redução do Abandono</h3>
+                    <p>A castração contribui para a redução do abandono de animais nas ruas...</p>
+                    <p>Adotar medidas de controle populacional, como a castração, é uma responsabilidade de todos os tutores de animais...</p>
+                ',
+                'image_path' => 'posts/castration_benefits.jpg', // Caminho para a imagem do post
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'user_id' => 1, // Admin
                 'title' => 'Cuidados Essenciais para Manter seu Pet Feliz e Saudável',
                 'content' => '
                     <p>Ter um pet é uma grande responsabilidade, mas também uma fonte imensa de alegria e companheirismo. Para garantir que seu amigo de quatro patas viva uma vida longa e saudável, é importante seguir alguns cuidados essenciais. Confira as principais dicas para cuidar bem do seu pet:</p>

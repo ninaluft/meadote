@@ -39,8 +39,8 @@ class ProfileEditController extends Controller
             'cep' => ['nullable', 'string', 'max:14'],
             'city' => ['nullable', 'string', 'max:255'],
             'state' => ['nullable', 'string', 'max:255'],
-            'social_links.*' => ['nullable', 'url'], // Validação dos links existentes
-            'new_social_links.*' => ['nullable', 'url'], // Validação dos novos links
+            'social_links.*' => ['nullable', 'url', 'max:255'], // Validação dos links existentes
+            'new_social_links.*' => ['nullable', 'url', 'max:255'], // Validação dos novos links
         ];
 
         // Conditionally add validation rules based on user type
@@ -172,7 +172,8 @@ class ProfileEditController extends Controller
                 ->delete();
         }
 
-        return redirect()->route('profile.edit')->with('status', 'Perfil atualizado com sucesso!');
+        return redirect()->route('user.public-profile', ['id' => Auth::id()])->with('success', 'Perfil atualizado com sucesso!');
+
     }
 
     /**

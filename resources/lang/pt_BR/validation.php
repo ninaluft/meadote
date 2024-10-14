@@ -143,14 +143,19 @@ return [
         'attribute-name' => [
             'rule-name' => 'mensagem-personalizada',
             'date_of_birth' => [
-            'before' => 'O campo :attribute deve conter uma data anterior à :date.',
-            'after' => 'O campo :attribute deve conter uma data posterior à :date.',
+                'before' => 'O campo :attribute deve conter uma data anterior à :date.',
+                'after' => 'O campo :attribute deve conter uma data posterior à :date.',
+
+            ],
+
 
         ],
-
-
+        'event_date' => [
+            'after_or_equal' => 'A data do evento deve ser hoje ou uma data futura.',
         ],
+
     ],
+
 
     /*
     |--------------------------------------------------------------------------

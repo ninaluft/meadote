@@ -91,12 +91,12 @@
                             </select>
                         </div>
 
-                        <!-- Botão de Busca -->
-                        <div class="flex items-center mt-4">
-                            <x-button class="ml-4">
-                                {{ __('Buscar') }}
-                            </x-button>
+                        <!-- Botão de busca -->
+                        <div class="flex items-end">
+                            <x-button class="w-full sm:w-auto h-10">{{ __('Buscar') }}</x-button>
                         </div>
+
+
                     </div>
                 </form>
 

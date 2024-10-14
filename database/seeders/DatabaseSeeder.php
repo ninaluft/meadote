@@ -9,14 +9,17 @@ class DatabaseSeeder extends Seeder
     /**
      * Seed the application's database.
      */
-    public function run(): void
+    public function run()
     {
-        // Chamando os seeders criados
         $this->call([
             UserSeeder::class,
             PetSeeder::class,
             OngEventSeeder::class,
             PostSeeder::class,
+            SupportRequestSeeder::class,  // Executar antes das mensagens
+            FavoriteSeeder::class,
+            MessageSeeder::class,
         ]);
     }
+
 }

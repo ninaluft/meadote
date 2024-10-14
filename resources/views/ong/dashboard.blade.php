@@ -65,7 +65,7 @@
                                 {{ __('Veja os eventos já criados pela sua ONG.') }}
                             </p>
                         </div>
-                        <a href="{{ route('ong-events.index') }}"
+                        <a href="{{ route('ong-events.my-events') }}"
                             class="inline-block bg-yellow-500 text-white py-2 px-4 rounded-lg hover:bg-yellow-600 mt-auto text-center"
                             aria-label="Ver eventos criados pela ONG">
                             {{ __('Ver Eventos') }}

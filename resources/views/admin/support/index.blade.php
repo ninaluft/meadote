@@ -48,7 +48,7 @@
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200">
                                     @foreach($supportRequests as $supportRequest)
-                                        <tr class="hover:bg-gray-50 transition">
+                                        <tr class="hover:bg-gray-100 transition">
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $supportRequest->id }}</td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $supportRequest->user->name }}</td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $supportRequest->subject }}</td>
