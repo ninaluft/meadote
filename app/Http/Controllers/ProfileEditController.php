@@ -6,9 +6,6 @@ use App\Models\SocialNetwork;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
-use App\Models\User;
-use Bissolli\ValidadorCpfCnpj\CPF;
-use Bissolli\ValidadorCpfCnpj\CNPJ;
 
 class ProfileEditController extends Controller
 {
@@ -17,9 +14,7 @@ class ProfileEditController extends Controller
      */
     public function edit()
     {
-        // Retrieve the authenticated user
         $user = Auth::user();
-        // Retrieve user's social networks
         $socialNetworks = SocialNetwork::where('user_id', $user->id)->get();
         return view('user.edit', compact('user', 'socialNetworks'));
     }
@@ -39,8 +34,8 @@ class ProfileEditController extends Controller
             'cep' => ['nullable', 'string', 'max:14'],
             'city' => ['nullable', 'string', 'max:255'],
             'state' => ['nullable', 'string', 'max:255'],
-            'social_links.*' => ['nullable', 'url', 'max:255'], // Validação dos links existentes
-            'new_social_links.*' => ['nullable', 'url', 'max:255'], // Validação dos novos links
+            'social_links.*' => ['nullable', 'url', 'max:255'], // Existing social links validation
+            'new_social_links.*' => ['nullable', 'url', 'max:255'], // New social links validation
         ];
 
         // Conditionally add validation rules based on user type
@@ -51,14 +46,8 @@ class ProfileEditController extends Controller
                 'cpf' => [
                     'required',
                     'string',
-                    'max:14',
+                    'cpf',
                     Rule::unique('tutors', 'cpf')->ignore($user->tutor->id),
-                    function($attribute, $value, $fail) {
-                        $cpf = new CPF($value);
-                        if (!$cpf->isValid()) {
-                            $fail('O CPF fornecido não é válido.');
-                        }
-                    },
                 ],
                 'temporary_housing' => ['boolean'],
                 'about_me' => ['nullable', 'string', 'max:1000'],
@@ -71,26 +60,14 @@ class ProfileEditController extends Controller
                 'responsible_cpf' => [
                     'required',
                     'string',
-                    'max:14',
+                    'cpf',
                     Rule::unique('ongs', 'responsible_cpf')->ignore($user->ong->id),
-                    function($attribute, $value, $fail) {
-                        $cpf = new CPF($value);
-                        if (!$cpf->isValid()) {
-                            $fail('O CPF do responsável fornecido não é válido.');
-                        }
-                    },
                 ],
                 'cnpj' => [
                     'required',
                     'string',
-                    'max:18',
+                    'cnpj',
                     Rule::unique('ongs', 'cnpj')->ignore($user->ong->id),
-                    function($attribute, $value, $fail) {
-                        $cnpj = new CNPJ($value);
-                        if (!$cnpj->isValid()) {
-                            $fail('O CNPJ fornecido não é válido.');
-                        }
-                    },
                 ],
                 'about_ong' => ['nullable', 'string', 'max:1000'],
             ]);
@@ -101,12 +78,12 @@ class ProfileEditController extends Controller
 
         // Handle profile photo removal
         if ($request->has('remove_photo') && $request->input('remove_photo') == 1) {
-            $user->deleteProfilePhoto(); // Jetstream method to remove the photo
+            $user->deleteProfilePhoto();
         }
 
         // Handle profile photo upload
         if ($request->hasFile('profile_photo')) {
-            $user->updateProfilePhoto($request->file('profile_photo')); // Jetstream's update method
+            $user->updateProfilePhoto($request->file('profile_photo'));
         }
 
         // Update base user profile fields
@@ -120,7 +97,6 @@ class ProfileEditController extends Controller
 
         // Update additional fields based on user type
         if ($user->user_type === 'tutor') {
-            // Update Tutor-specific fields
             $user->tutor->update([
                 'full_name' => $request->input('full_name'),
                 'date_of_birth' => $request->input('date_of_birth'),
@@ -129,7 +105,6 @@ class ProfileEditController extends Controller
                 'about_me' => $request->input('about_me'),
             ]);
         } elseif ($user->user_type === 'ong') {
-            // Update ONG-specific fields
             $user->ong->update([
                 'ong_name' => $request->input('ong_name'),
                 'phone' => $request->input('phone'),
@@ -140,7 +115,7 @@ class ProfileEditController extends Controller
             ]);
         }
 
-        // Update existing social links
+        // Handle social links update
         if ($request->has('social_links')) {
             foreach ($request->input('social_links') as $id => $url) {
                 if ($url) {
@@ -159,7 +134,7 @@ class ProfileEditController extends Controller
                     SocialNetwork::create([
                         'user_id' => $user->id,
                         'profile_url' => $url,
-                        'platform_name' => $this->getPlatformName($url), // Método para identificar a plataforma
+                        'platform_name' => $this->getPlatformName($url),
                     ]);
                 }
             }
@@ -173,15 +148,8 @@ class ProfileEditController extends Controller
         }
 
         return redirect()->route('user.public-profile', ['id' => Auth::id()])->with('success', 'Perfil atualizado com sucesso!');
-
     }
 
-    /**
-     * Detect the platform name based on the given URL.
-     *
-     * @param  string  $url
-     * @return string
-     */
     private function getPlatformName($url)
     {
         if (str_contains($url, 'facebook.com')) {
@@ -196,5 +164,4 @@ class ProfileEditController extends Controller
             return 'Outros';
         }
     }
-
 }

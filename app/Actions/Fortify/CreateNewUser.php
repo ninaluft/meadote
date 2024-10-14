@@ -10,8 +10,6 @@ use Illuminate\Support\Facades\Validator;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
 use Laravel\Jetstream\Jetstream;
 use Illuminate\Support\Facades\Auth;
-use Bissolli\ValidadorCpfCnpj\CPF;
-use Bissolli\ValidadorCpfCnpj\CNPJ;
 use Carbon\Carbon;
 
 class CreateNewUser implements CreatesNewUsers
@@ -25,9 +23,9 @@ class CreateNewUser implements CreatesNewUsers
      */
     public function create(array $input): User
     {
-        // Validação comum para todos os usuários
+        // Common validation for all users
         Validator::make($input, [
-            'name' => ['required', 'string', 'max:255'], // Nome de usuário
+            'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => $this->passwordRules(),
             'user_type' => ['required', 'in:tutor,ong'],
@@ -37,29 +35,22 @@ class CreateNewUser implements CreatesNewUsers
             'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : '',
         ])->validate();
 
-        // Validação específica por tipo de usuário
+        // User-specific validation based on type
         if ($input['user_type'] === 'tutor') {
             Validator::make($input, [
-                'full_name' => ['required', 'string', 'max:255'], // Nome completo
+                'full_name' => ['required', 'string', 'max:255'],
                 'date_of_birth' => ['required', 'date'],
                 'cpf' => [
                     'required',
                     'string',
-                    'max:14',
+                    'cpf',
                     'unique:tutors,cpf',
-                    function ($attribute, $value, $fail) {
-                        $cpf = new CPF($value);
-                        if (!$cpf->isValid()) {
-                            $fail('O CPF fornecido não é válido.');
-                        }
-                    }
                 ],
                 'temporary_housing' => ['required', 'boolean'],
                 'about_me' => ['nullable', 'string', 'max:500'],
             ])->validate();
 
             $input['date_of_birth'] = Carbon::parse($input['date_of_birth'])->format('Y-m-d');
-
 
         } elseif ($input['user_type'] === 'ong') {
             Validator::make($input, [
@@ -68,52 +59,40 @@ class CreateNewUser implements CreatesNewUsers
                 'responsible_cpf' => [
                     'required',
                     'string',
-                    'max:14',
+                    'cpf',
                     'unique:ongs,responsible_cpf',
-                    function ($attribute, $value, $fail) {
-                        $cpf = new CPF($value);
-                        if (!$cpf->isValid()) {
-                            $fail('O CPF do responsável fornecido não é válido.');
-                        }
-                    }
                 ],
                 'cnpj' => [
                     'required',
                     'string',
-                    'max:18',
+                    'cnpj',
                     'unique:ongs,cnpj',
-                    function ($attribute, $value, $fail) {
-                        $cnpj = new CNPJ($value);
-                        if (!$cnpj->isValid()) {
-                            $fail('O CNPJ fornecido não é válido.');
-                        }
-                    }
                 ],
                 'phone' => ['required', 'string', 'max:20'],
                 'about_ong' => ['nullable', 'string', 'max:500'],
             ])->validate();
         }
 
-        // Criar o usuário com todos os campos necessários
+        // Create the user
         $user = User::create([
-            'name' => $input['name'], // Nome de usuário
+            'name' => $input['name'],
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
             'user_type' => $input['user_type'],
-            'cep' => $input['cep'], // Adiciona o CEP
-            'city' => $input['city'], // Adiciona a cidade
-            'state' => $input['state'], // Adiciona o estado
+            'cep' => $input['cep'],
+            'city' => $input['city'],
+            'state' => $input['state'],
         ]);
 
-        // Criar registro adicional baseado no tipo de usuário
+        // Create additional record based on user type
         if ($input['user_type'] === 'tutor') {
             Tutor::create([
                 'user_id' => $user->id,
-                'full_name' => $input['full_name'], // Nome completo
+                'full_name' => $input['full_name'],
                 'date_of_birth' => $input['date_of_birth'],
                 'cpf' => $input['cpf'],
                 'temporary_housing' => $input['temporary_housing'],
-                'about_me' => $input['about_me'] ?? null, // Opcional
+                'about_me' => $input['about_me'] ?? null,
             ]);
         } elseif ($input['user_type'] === 'ong') {
             Ong::create([
@@ -123,14 +102,13 @@ class CreateNewUser implements CreatesNewUsers
                 'responsible_cpf' => $input['responsible_cpf'],
                 'cnpj' => $input['cnpj'],
                 'phone' => $input['phone'],
-                'about_ong' => $input['about_ong'] ?? null, // Opcional
+                'about_ong' => $input['about_ong'] ?? null,
             ]);
         }
 
-        // Autenticar o usuário após o registro
+        // Authenticate the user after registration
         Auth::login($user);
 
-        // Retornar o objeto do usuário recém-criado
         return $user;
     }
 }

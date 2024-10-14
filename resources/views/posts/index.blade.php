@@ -21,9 +21,9 @@
 
                 <!-- Formulário de busca e ordenação -->
                 <form method="GET" action="{{ route('posts.index') }}" class="mb-6">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <!-- Busca por título -->
-                        <div>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                        <!-- Busca por título com col-span-2 para aumentar a largura -->
+                        <div class="md:col-span-2">
                             <input type="text" name="search" value="{{ request('search') }}"
                                 placeholder="Buscar por título" class="w-full border-gray-300 rounded-lg p-2">
                         </div>
@@ -40,9 +40,10 @@
                         <div>
                             <x-button class="w-full sm:w-auto h-full">{{ __('Buscar') }}</x-button>
                         </div>
-
                     </div>
                 </form>
+
+
 
                 @if ($posts->isEmpty())
                     <p>Nenhum post encontrado.</p>
