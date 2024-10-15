@@ -1,13 +1,21 @@
-// public/service-worker.js
 self.addEventListener('install', (event) => {
     event.waitUntil(
-        caches.open('static-v1').then((cache) => {
+        caches.open('static-cache-v1').then((cache) => {
             return cache.addAll([
                 '/',
+                '/offline.html',
+                '/build/assets/app-B3LQTCW7.css',  
+                '/build/assets/app-GypJqDPw.js',
+                '/images/icons/icon-192x192.png',
+                '/images/icons/icon-512x512.png',
+                '/manifest.json',
             ]);
         })
     );
 });
+
+
+
 
 
 self.addEventListener('fetch', (event) => {

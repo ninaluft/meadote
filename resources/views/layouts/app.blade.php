@@ -8,7 +8,7 @@
 
     <title>{{ config('app.name', 'MeAdote') }}</title>
 
-    <link rel="manifest" href="manifest.json">
+    <link rel="manifest" href="{{ asset('manifest.json') }}">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -17,10 +17,6 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-
-    <link rel="icon" href="{{ asset('images/favicon.png') }}" type="image/png">
-
-    <script src="https://unpkg.com/heroicons@1.0.6"></script>
 
     <!-- ios support -->
     <link rel="apple-touch-icon" href="images/icons/icon-72x72.png" />
