@@ -8,8 +8,6 @@
 
     <title>{{ config('app.name', 'MeAdote') }}</title>
 
-    <link rel="manifest" href="{{ asset('manifest.json') }}">
-
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
@@ -17,6 +15,7 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
+    <link rel="manifest" href="{{ asset('manifest.json') }}">
 
     <!-- ios support -->
     <link rel="apple-touch-icon" href="images/icons/icon-72x72.png" />
@@ -39,11 +38,8 @@
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-
-
     <!-- Styles -->
     @livewireStyles
-
 
     <style>
         /* CSS para o efeito de carregamento */
@@ -96,7 +92,6 @@
         @endif
 
 
-
         <!-- Page Content -->
         <main>
             {{ $slot }}
@@ -135,7 +130,6 @@
             }, 3500);
         });
     </script>
-
 
 </body>
 

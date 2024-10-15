@@ -1,5 +1,5 @@
 import './bootstrap';
-//import './chat';  // This includes the chat.js file
+
 
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {

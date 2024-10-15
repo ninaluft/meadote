@@ -238,8 +238,15 @@
                         <div class="mt-3 space-y-1">
                             <!-- Account Management -->
 
-                            <x-responsive-nav-link href="{{ route('profile.show') }}" :active="request()->routeIs('profile.show')"
+                            <x-responsive-nav-link href="{{ route('user.public-profile', Auth::id()) }}" :active="request()->routeIs('user.public-profile')"
                                 aria-label="Perfil">
+                                {{ __('Meu perfil') }}
+                            </x-responsive-nav-link>
+
+
+
+                            <x-responsive-nav-link href="{{ route('profile.show') }}" :active="request()->routeIs('profile.show')"
+                                aria-label="Configurações de conta">
                                 {{ __('Configurações de Conta') }}
                             </x-responsive-nav-link>
 
