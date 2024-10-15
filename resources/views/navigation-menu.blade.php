@@ -10,6 +10,7 @@
                     </a>
                 </div>
 
+
                 @if (Auth::check())
                     <!-- Navigation Links -->
                     <div class="space-x-8 sm:-my-px sm:ms-10 sm:flex mt-6 ml-2 mr-4 sm:items-center ">

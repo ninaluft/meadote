@@ -28,12 +28,16 @@
 
                 <!-- Botão do Administrador para Encerrar Solicitação -->
                 @if($supportRequest->status !== 'closed')
-                    <form method="POST" action="{{ route('admin.support.close', $supportRequest) }}">
+                    <form method="POST" action="{{ route('admin.support.close', $supportRequest) }}" onsubmit="return confirm('{{ __('Tem certeza que deseja encerrar esta solicitação?') }}');">
                         @csrf
                         <x-button class="bg-red-500">{{ __('Encerrar Solicitação') }}</x-button>
                     </form>
                 @endif
+
+
             </div>
         </div>
     </div>
 </x-app-layout>
+
+
