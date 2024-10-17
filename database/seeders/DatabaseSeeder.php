@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             SupportRequestSeeder::class,  // Executar antes das mensagens
             FavoriteSeeder::class,
             MessageSeeder::class,
+            FaqSeeder::class,
         ]);
     }
 
