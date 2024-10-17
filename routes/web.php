@@ -1,6 +1,5 @@
 <?php
 
-
 use App\Http\Controllers\AdoptionFormController;
 use App\Http\Controllers\OngController;
 use App\Http\Controllers\PublicProfileController;
@@ -76,7 +75,6 @@ Route::get('/all-ongs', [OngController::class, 'index'])->name('ongs.index');
 Route::get('/user/public-profile/{id}', [PublicProfileController::class, 'show'])->name('user.public-profile');
 Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
 Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show');
-Route::get('/posts/1', [PostController::class, 'show'])->name('posts.faq');
 Route::get('/faqs', [FaqController::class, 'show'])->name('faqs.show');
 
 
@@ -165,7 +163,9 @@ Route::middleware(['auth', 'user_type:admin'])->group(function () {
     Route::put('/posts/{post}', [PostController::class, 'update'])->name('posts.update');
     Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
 
+
     Route::get('/admin/faqs/edit', [FaqController::class, 'edit'])->name('faqs.edit');
+    Route::post('/admin/faqs/store', [FaqController::class, 'store'])->name('faqs.store');
     Route::post('/admin/faqs/update', [FaqController::class, 'update'])->name('faqs.update');
 });
 
@@ -203,3 +203,5 @@ Route::middleware(['auth', 'user_type:tutor'])->group(function () {
         return view('tutor.dashboard');
     })->name('tutor.dashboard');
 });
+
+

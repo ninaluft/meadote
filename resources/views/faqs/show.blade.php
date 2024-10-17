@@ -1,17 +1,15 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Perguntas Frequentes (FAQs)') }}
+        <h2 class="font-semibold text-2xl text-gray-800 leading-tight">
+            Perguntas Frequentes (FAQs)
         </h2>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
-                <h1 class="text-3xl font-bold mb-6">Perguntas Frequentes (FAQs)</h1>
-                <div class="faq-content text-gray-700 leading-relaxed">
-                    {!! $faq ? $faq->content : '<p>Nenhum conteúdo disponível no momento.</p>' !!}
-                </div>
+    <div class="py-8">
+        <div class="max-w-4xl mx-auto sm:px-4 lg:px-6">
+            <div class="bg-white shadow-md rounded-lg p-6">
+                <!-- Renderiza o conteúdo das FAQs -->
+                {!! $faqContent !!}
             </div>
         </div>
     </div>

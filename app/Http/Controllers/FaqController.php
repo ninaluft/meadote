@@ -7,34 +7,61 @@ use App\Models\Faq;
 
 class FaqController extends Controller
 {
+    /**
+     * Exibe as FAQs publicamente.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function show()
     {
-        $faq = Faq::first(); // Pega o primeiro registro (só temos um)
-        return view('faqs.show', compact('faq'));
+        // Recupera o conteúdo das FAQs
+        $faq = Faq::first();
+        $faqContent = $faq ? $faq->content : ''; // Caso não haja conteúdo, exibe vazio
+
+        return view('faqs.show', compact('faqContent'));
     }
 
-    // Método para exibir a página de edição
+    /**
+     * Exibe a página de edição de FAQs (somente para admins).
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function edit()
     {
-        $faq = Faq::first(); // Pega o primeiro registro (só temos um)
-        return view('admin.faq_edit', compact('faq'));
+        // Recupera o conteúdo das FAQs
+        $faq = Faq::first();
+        $faqContent = $faq ? $faq->content : '';
+
+        return view('admin.faq-edit', compact('faqContent'));
     }
 
-    // Método para atualizar o conteúdo das FAQs
-    public function update(Request $request)
+    /**
+     * Armazena o conteúdo das FAQs no banco de dados.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
     {
+        // Validação do conteúdo
         $request->validate([
-            'content' => 'required',
+            'faq_content' => 'required|string',
         ]);
 
-        $faq = Faq::first(); // Pega o primeiro registro
-        if (!$faq) {
-            $faq = new Faq();
+        // Salvar ou atualizar o conteúdo das FAQs
+        $faq = Faq::first();
+        if ($faq) {
+            // Atualiza o conteúdo existente
+            $faq->content = $request->faq_content;
+            $faq->save();
+        } else {
+            // Cria um novo registro de FAQ
+            Faq::create([
+                'content' => $request->faq_content,
+            ]);
         }
 
-        $faq->content = $request->content;
-        $faq->save();
-
-        return redirect()->route('faqs.edit')->with('success', 'FAQ atualizada com sucesso!');
+        // Redireciona de volta com uma mensagem de sucesso
+        return redirect()->route('faqs.edit')->with('success', 'FAQs salvas com sucesso!');
     }
 }

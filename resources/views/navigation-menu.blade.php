@@ -10,17 +10,12 @@
                     </a>
                 </div>
 
-
                 @if (Auth::check())
                     <!-- Navigation Links -->
-                    <div class="space-x-8 sm:-my-px sm:ms-10 sm:flex mt-6 ml-2 mr-4 sm:items-center ">
-                        <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard') ||
-                            request()->routeIs('tutor.dashboard') ||
-                            request()->routeIs('ong.dashboard') ||
-                            request()->routeIs('admin.dashboard')" aria-label="Painel">
+                    <div class="space-x-8 sm:-my-px sm:ms-10 sm:flex mt-6 ml-2 mr-4 ">
+                        <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')" aria-label="Painel">
                             {{ __('Meu Painel') }}
                         </x-nav-link>
-
                     </div>
                 @endif
 
@@ -28,10 +23,12 @@
 
 
 
-            <div class="hidden sm:flex sm:items-center sm:ms-4  ">
+            <div class="hidden sm:flex sm:items-center sm:ms-4">
                 @auth
+
+
                     <!-- All Pets -->
-                    <div class="hidden space-x-8 sm:-my-px sm:ml-5 sm:flex">
+                    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                         <x-nav-link :href="route('pets.all-pets')" :active="request()->routeIs('pets.all-pets')" aria-label="Todos os Pets">
                             {{ __('Pets para adoção') }}
                         </x-nav-link>
@@ -39,20 +36,20 @@
 
 
                     <!-- Visualizar Todas as ONGs -->
-                    <div class="hidden space-x-8 sm:-my-px sm:ml-5 sm:flex">
+                    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                         <x-nav-link :href="route('ongs.index')" :active="request()->routeIs('ongs.index')" aria-label="ONGs">
                             {{ __('ONGs') }}
                         </x-nav-link>
                     </div>
 
                     <!-- View Events -->
-                    <div class="hidden space-x-8 sm:-my-px sm:ml-5 sm:flex">
+                    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                         <x-nav-link :href="route('ong-events.index')" :active="request()->routeIs('ong-events.index')" aria-label="Ver Eventos">
                             {{ __('Eventos') }}
                         </x-nav-link>
                     </div>
 
-                    <div class="hidden space-x-8 sm:-my-px sm:ml-5 sm:flex">
+                    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                         <x-nav-link :href="route('posts.index')" :active="request()->routeIs('posts.index')" aria-label="Blog">
                             {{ __('Blog') }}
                         </x-nav-link>
@@ -60,7 +57,7 @@
 
 
                     <!-- Messages Link with Notification Icon -->
-                    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex items-center ">
+                    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex items-center">
                         <x-nav-link :href="route('messages.inbox')" :active="request()->routeIs('messages.inbox')" aria-label="Mensagens">
                             <svg xmlns="http://www.w3.org/2000/svg"
                                 class="h-6 w-6 text-teal-600 hover:text-teal-700 transition duration-150 ease-in-out"
@@ -105,9 +102,18 @@
                             </x-slot>
 
                             <x-slot name="content">
+                                {{-- <!-- Account Management -->
+                                <div class="block px-4 py-2 text-xs text-gray-400">
+                                    {{ __('Gerenciar Conta') }}
+                                </div> --}}
+
                                 <x-dropdown-link href="{{ route('user.public-profile', Auth::id()) }}">
                                     {{ __('Meu perfil') }}
                                 </x-dropdown-link>
+
+                                {{-- <x-dropdown-link href="{{ route('profile.edit') }}">
+                                    {{ __('Editar Perfil') }}
+                                </x-dropdown-link> --}}
 
                                 <x-dropdown-link href="{{ route('profile.show') }}">
                                     {{ __('Configurações de conta') }}
@@ -135,13 +141,16 @@
                     </div>
                 @endauth
 
+
                 @guest
+
                     <!-- Blog -->
-                    <div class="hidden space-x-8 sm:-my-px sm:ml-10  sm:flex">
+                    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                         <x-nav-link :href="route('posts.index')" :active="request()->routeIs('posts.index')" aria-label="Blog">
                             {{ __('Blog') }}
                         </x-nav-link>
                     </div>
+
 
                     <!-- Login and Register Links for Guests -->
                     <x-nav-link href="{{ route('login') }}" :active="request()->routeIs('login')" aria-label="Fazer Login">
@@ -152,7 +161,11 @@
                     </x-nav-link>
                 @endguest
 
+
             </div>
+
+
+
 
 
             <!-- Hamburger -->
@@ -160,6 +173,7 @@
 
                 <!-- Add Messages Icon for Mobile -->
                 @auth
+
 
                     <x-nav-link :href="route('messages.inbox')" :active="request()->routeIs('messages.inbox')" aria-label="Mensagens">
                         <svg xmlns="http://www.w3.org/2000/svg"
@@ -175,6 +189,8 @@
                             </span>
                         @endif
                     </x-nav-link>
+
+
 
                 @endauth
 
@@ -193,6 +209,9 @@
             </div>
         </div>
     </div>
+
+
+
 
 
     <!-- Responsive Navigation Menu -->
@@ -238,15 +257,8 @@
                         <div class="mt-3 space-y-1">
                             <!-- Account Management -->
 
-                            <x-responsive-nav-link href="{{ route('user.public-profile', Auth::id()) }}" :active="request()->routeIs('user.public-profile')"
-                                aria-label="Perfil">
-                                {{ __('Meu perfil') }}
-                            </x-responsive-nav-link>
-
-
-
                             <x-responsive-nav-link href="{{ route('profile.show') }}" :active="request()->routeIs('profile.show')"
-                                aria-label="Configurações de conta">
+                                aria-label="Perfil">
                                 {{ __('Configurações de Conta') }}
                             </x-responsive-nav-link>
 
@@ -257,7 +269,7 @@
                             </x-responsive-nav-link>
 
                             <!-- FAQS-->
-                            <x-responsive-nav-link href="{{ route('posts.faq') }}" :active="request()->routeIs('support.user')"
+                            <x-responsive-nav-link href="{{ route('faqs.show') }}" :active="request()->routeIs('support.user')"
                                 aria-label="Perguntas frequentes">
                                 {{ __('FAQs') }}
                             </x-responsive-nav-link>
@@ -275,8 +287,8 @@
 
                             <div class="border-t border-gray-200"></div>
 
-
                             <!-- Additional Responsive Links -->
+
 
                             <x-responsive-nav-link href="{{ route('pets.all-pets') }}" :active="request()->routeIs('pets.all-pets')"
                                 aria-label="Todos os Pets">

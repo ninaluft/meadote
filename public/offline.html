@@ -1,16 +1,65 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Offline - MeAdote</title>
-    <link rel="stylesheet" href="/css/app.css"> <!-- Link to your app's CSS -->
+    <link rel="stylesheet" href="/css/app.css"> <!-- Link para o CSS da sua aplicação -->
+    <style>
+        body {
+            font-family: 'Figtree', sans-serif;
+            background-color: #f7f7f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            text-align: center;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #ff6b6b;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .button {
+            padding: 12px 24px;
+            background-color: #3b82f6;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: #2563eb;
+        }
+    </style>
 </head>
+
 <body>
     <div class="container">
-        <h1>Oops! You’re Offline</h1>
-        <p>It looks like you are not connected to the internet. Please check your connection and try again.</p>
-        <a href="/" class="button">Back to Home</a>
+        <h1>Oops! Você está offline</h1>
+        <p>Parece que você perdeu a conexão com a internet. Verifique sua conexão e tente novamente.</p>
+        <a href="/" class="button">Voltar à Página Inicial</a>
     </div>
 </body>
+
 </html>
+
