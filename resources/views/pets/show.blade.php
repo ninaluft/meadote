@@ -40,10 +40,10 @@
 
                     <!-- Foto do Pet -->
                     <div class="md:w-1/3 mb-4 md:mb-0">
-                        <img src="{{ $pet->photo_path ? asset('storage/' . $pet->photo_path) : asset('images/default-pet.jpg') }}"
-                            alt="{{ __('pets.description') }} {{ $pet->name }}"
+                        <img src="{{ $pet->photo_path }}" alt="{{ __('pets.description') }} {{ $pet->name }}"
                             class="rounded-lg w-full h-auto shadow-sm cursor-pointer"
-                            onclick="openModal('{{ $pet->photo_path ? asset('storage/' . $pet->photo_path) : asset('images/default-pet.jpg') }}')">
+                            onclick="openModal('{{ $pet->photo_path }}')">
+
                     </div>
 
                     <!-- Detalhes do Pet -->

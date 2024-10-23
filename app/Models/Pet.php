@@ -17,6 +17,7 @@ class Pet extends Model
     protected $fillable = [
         'name',
         'photo_path',
+        'photo_public_id',
         'species',
         'specify_other',
         'gender',

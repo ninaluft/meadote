@@ -22,19 +22,19 @@
                     <h3 class="font-bold text-3xl text-gray-800 mb-6">{{ __('Explore Nossa Plataforma:') }}</h3>
                     <div class="flex flex-wrap justify-center gap-6 mt-4">
                         <a href="{{ route('pets.all-pets') }}"
-                            class="bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700 transition shadow-lg hover:shadow-xl w-full sm:w-auto">
+                            class="bg-blue-500 text-white px-6 py-3 rounded-full hover:bg-blue-700 transition shadow-lg hover:shadow-xl w-full sm:w-auto">
                             {{ __('Buscar Pets') }}
                         </a>
                         <a href="{{ Auth::check() ? route('pets.create') : route('login', ['redirectTo' => route('pets.create')]) }}"
-                            class="bg-green-600 text-white px-6 py-3 rounded-full hover:bg-green-700 transition shadow-lg hover:shadow-xl w-full sm:w-auto">
+                            class="bg-green-500 text-white px-6 py-3 rounded-full hover:bg-green-700 transition shadow-lg hover:shadow-xl w-full sm:w-auto">
                             {{ __('Cadastrar Pets') }}
                         </a>
                         <a href="{{ route('ongs.index') }}"
-                            class="bg-orange-500 text-white px-6 py-3 rounded-full hover:bg-orange-600 transition shadow-lg hover:shadow-xl w-full sm:w-auto">
+                            class="bg-orange-500 text-white px-6 py-3 rounded-full hover:bg-orange-700 transition shadow-lg hover:shadow-xl w-full sm:w-auto">
                             {{ __('Buscar ONGs') }}
                         </a>
                         <a href="{{ route('ong-events.index') }}"
-                            class="bg-purple-600 text-white px-6 py-3 rounded-full hover:bg-purple-700 transition shadow-lg hover:shadow-xl w-full sm:w-auto">
+                            class="bg-purple-500 text-white px-6 py-3 rounded-full hover:bg-purple-700 transition shadow-lg hover:shadow-xl w-full sm:w-auto">
                             {{ __('Buscar Eventos') }}
                         </a>
                     </div>
@@ -54,9 +54,12 @@
 
                                         @if ($post->image_path)
                                             <div class="flex-shrink-0 mb-2">
-                                                <img src="{{ asset('storage/' . $post->image_path) }}"
-                                                    alt="{{ $post->title }}"
-                                                    class="w-full h-60 object-cover rounded-lg shadow-sm">
+
+
+                                                <x-image :src="$post->image_path" alt="{{ $post->title }}"
+                                                    class="w-full h-60 object-cover rounded-lg shadow-sm" />
+
+
                                                 <!-- Altura aumentada -->
                                             </div>
                                         @endif

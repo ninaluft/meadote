@@ -9,6 +9,13 @@ use Illuminate\Validation\Rule;
 
 class ProfileEditController extends Controller
 {
+    protected $imageService;
+
+    public function __construct(\App\Services\ImageService $imageService)
+    {
+        $this->imageService = $imageService;
+    }
+
     /**
      * Show the form for editing the user's profile.
      */
@@ -30,7 +37,7 @@ class ProfileEditController extends Controller
         $rules = [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
-            'profile_photo' => ['nullable', 'mimes:jpg,jpeg,png', 'max:2048'],
+            'profile_photo' => ['nullable', 'mimes:jpg,jpeg,png', 'max:5120'],
             'cep' => ['nullable', 'string', 'max:14'],
             'city' => ['nullable', 'string', 'max:255'],
             'state' => ['nullable', 'string', 'max:255'],
@@ -78,12 +85,29 @@ class ProfileEditController extends Controller
 
         // Handle profile photo removal
         if ($request->has('remove_photo') && $request->input('remove_photo') == 1) {
-            $user->deleteProfilePhoto();
+            // Excluir a imagem do Cloudinary
+            if ($user->profile_photo_public_id) {
+                $this->imageService->deleteImage($user->profile_photo_public_id);
+            }
+            // Limpar o campo de imagem no banco de dados
+            $user->update(['profile_photo' => null, 'profile_photo_public_id' => null]);
         }
 
         // Handle profile photo upload
         if ($request->hasFile('profile_photo')) {
-            $user->updateProfilePhoto($request->file('profile_photo'));
+            // Excluir a imagem antiga antes de fazer o upload da nova
+            if ($user->profile_photo_public_id) {
+                $this->imageService->deleteImage($user->profile_photo_public_id);
+            }
+
+            // Fazer o upload da nova imagem usando o ImageService
+            $imageData = $this->imageService->uploadImage($request->file('profile_photo')->getRealPath(), 'profile_photos');
+
+            // Atualizar o caminho da imagem e o public_id no banco de dados
+            $user->update([
+                'profile_photo' => $imageData['secure_url'],
+                'profile_photo_public_id' => $imageData['public_id'],
+            ]);
         }
 
         // Update base user profile fields

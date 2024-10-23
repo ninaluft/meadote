@@ -14,6 +14,7 @@ class Post extends Model
         'content',
         'user_id',
         'image_path',
+        'image_public_id',
     ];
 
     public function author()

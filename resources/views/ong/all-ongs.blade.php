@@ -11,8 +11,10 @@
                 <!-- Formulário de busca -->
                 <form action="{{ route('ongs.index') }}" method="GET" class="mb-6">
                     <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-                        <x-input id="ong_name" name="ong_name" value="{{ request('ong_name') }}" placeholder="Nome da ONG" class="w-full" />
-                        <x-input id="city" name="city" value="{{ request('city') }}" placeholder="Cidade" class="w-full" />
+                        <x-input id="ong_name" name="ong_name" value="{{ request('ong_name') }}"
+                            placeholder="Nome da ONG" class="w-full" />
+                        <x-input id="city" name="city" value="{{ request('city') }}" placeholder="Cidade"
+                            class="w-full" />
                         <x-button class="w-full sm:w-auto">{{ __('Buscar') }}</x-button>
                     </div>
                 </form>
@@ -22,22 +24,23 @@
                         @foreach ($ongs as $ong)
                             <div class="bg-white shadow-md rounded-lg overflow-hidden flex p-4">
                                 <a href="{{ route('user.public-profile', $ong->user->id) }}" class="flex-shrink-0">
-                                    <div class="h-32 w-32 bg-gray-200 flex items-center justify-center rounded-full overflow-hidden">
-                                        @if (!empty($ong->user->profile_photo_path))
-                                            <img src="{{ asset('storage/' . $ong->user->profile_photo_path) }}" alt="{{ $ong->ong_name }}" class="h-32 w-32 object-cover">
+                                    <div
+                                        class="h-32 w-32 bg-gray-200 flex items-center justify-center rounded-full overflow-hidden">
+                                        @if (!empty($ong->user->profile_photo))
+                                            <!-- Usando o componente x-image para exibir a foto -->
+                                            <x-image :src="$ong->user->profile_photo" alt="{{ $ong->ong_name }}"
+                                                class="h-32 w-32 object-cover rounded-full" />
                                         @else
-                                            <div class="flex items-center justify-center h-32 w-32 bg-gray-400 rounded-full">
-                                                <span class="text-4xl font-bold text-white">
-                                                    {{ strtoupper(substr($ong->ong_name, 0, 1)) }}{{ strtoupper(substr($ong->ong_name, 1, 1)) }}
-                                                </span>
-                                            </div>
+                                            <!-- Usando o componente x-initials-avatar para exibir as iniciais -->
+                                            <x-initials-avatar :user="$ong->user" class="h-32 w-32 text-4xl" />
                                         @endif
                                     </div>
                                 </a>
 
                                 <div class="ml-6 flex flex-col justify-center">
                                     <h2 class="text-lg font-bold mb-2">
-                                        <a href="{{ route('user.public-profile', $ong->user->id) }}" class="text-blue-600 hover:underline">
+                                        <a href="{{ route('user.public-profile', $ong->user->id) }}"
+                                            class="text-blue-600 hover:underline">
                                             {{ $ong->ong_name }}
                                         </a>
                                     </h2>
@@ -48,6 +51,7 @@
                             </div>
                         @endforeach
                     </div>
+
 
                     <!-- Links de Paginação -->
                     <div class="mt-6">

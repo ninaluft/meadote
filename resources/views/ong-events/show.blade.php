@@ -37,9 +37,10 @@
                 <!-- Foto do Evento -->
                 @if ($event->photo_path)
                     <div class="mb-4">
-                        <img src="{{ asset('storage/' . $event->photo_path) }}" alt="{{ $event->title }}"
-                            class="rounded-lg w-full h-auto shadow-sm cursor-pointer"
-                            onclick="openModal('{{ asset('storage/' . $event->photo_path) }}')">
+                        <x-image :src="$event->photo_path" alt="{{ $event->title }}"
+                            class="rounded-lg w-full h-auto shadow-sm cursor-pointer" />
+
+
                     </div>
                 @endif
 
@@ -83,6 +84,7 @@
 
 
 
+
                     </div>
                 </div>
             </div>
@@ -113,7 +115,7 @@
 
     <!-- Script para compartilhar o evento -->
     <script>
-        document.getElementById('shareButton').addEventListener('click', function() {
+        document.getElementById('shareEventButton').addEventListener('click', function() {
             const shareData = {
                 title: 'Evento: {{ $event->title }}',
                 text: 'Participe do evento "{{ $event->title }}" organizado por {{ $event->ong->ong_name }}.',
@@ -132,4 +134,5 @@
             }
         });
     </script>
+
 </x-app-layout>

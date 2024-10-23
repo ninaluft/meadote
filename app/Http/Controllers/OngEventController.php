@@ -3,12 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Models\OngEvent;
+use App\Services\ImageService;  // Use o ImageService
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 
 class OngEventController extends Controller
 {
+    protected $imageService;
+
+    // Injeta o ImageService no construtor
+    public function __construct(ImageService $imageService)
+    {
+        $this->imageService = $imageService;
+    }
+
+
     public function create()
     {
         return view('ong-events.create');
@@ -18,7 +27,6 @@ class OngEventController extends Controller
     {
         return view('ong-events.criar');
     }
-
 
     public function store(Request $request)
     {
@@ -30,12 +38,17 @@ class OngEventController extends Controller
             'state' => 'nullable|string|max:255',
             'cep' => 'nullable|string|max:14',
             'location' => 'required|string|max:255',
-            'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048', // Validate image
+            'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:5120',
         ]);
 
         $photoPath = null;
+        $publicId = null;
+
+        // Upload da imagem para o Cloudinary via ImageService
         if ($request->hasFile('photo')) {
-            $photoPath = $request->file('photo')->store('event_photos', 'public');
+            $imageData = $this->imageService->uploadImage($request->file('photo')->getRealPath(), 'events');
+            $photoPath = $imageData['secure_url'];
+            $publicId = $imageData['public_id'];
         }
 
         OngEvent::create([
@@ -48,6 +61,7 @@ class OngEventController extends Controller
             'cep' => $validated['cep'],
             'location' => $validated['location'],
             'photo_path' => $photoPath,
+            'photo_public_id' => $publicId,  // Salva o public_id no banco de dados
         ]);
 
         return redirect()->route('ong-events.index')->with('success', 'Evento criado com sucesso.');
@@ -57,7 +71,6 @@ class OngEventController extends Controller
     {
         $query = OngEvent::query()->with('ong');
 
-        // Aplicar filtros se parâmetros de busca forem fornecidos
         if ($request->filled('search_name')) {
             $query->where('title', 'like', '%' . $request->input('search_name') . '%');
         }
@@ -72,25 +85,19 @@ class OngEventController extends Controller
             });
         }
 
-        // Clonar a consulta para reutilizar nos dois tipos de eventos
         $futureEventsQuery = clone $query;
         $pastEventsQuery = clone $query;
 
-        // Futuros eventos
         $futureEvents = $futureEventsQuery->where('event_date', '>=', now())
             ->orderBy('event_date', 'asc')
             ->paginate(9, ['*'], 'futurePage');
 
-        // Eventos passados
         $pastEvents = $pastEventsQuery->where('event_date', '<', now())
             ->orderBy('event_date', 'desc')
             ->paginate(9, ['*'], 'pastPage');
 
         return view('ong-events.index', compact('futureEvents', 'pastEvents'));
     }
-
-
-
 
     public function show($id)
     {
@@ -102,29 +109,21 @@ class OngEventController extends Controller
     {
         $ongId = Auth::user()->ong->id;
 
-        // Query para eventos futuros
         $futureEvents = OngEvent::where('ong_id', $ongId)
-                                ->where('event_date', '>=', now())
-                                ->orderBy('event_date', 'asc')
-                                ->get();
+            ->where('event_date', '>=', now())
+            ->orderBy('event_date', 'asc')
+            ->get();
 
-        // Query para eventos passados
         $pastEvents = OngEvent::where('ong_id', $ongId)
-                              ->where('event_date', '<', now())
-                              ->orderBy('event_date', 'desc')
-                              ->get();
+            ->where('event_date', '<', now())
+            ->orderBy('event_date', 'desc')
+            ->get();
 
         return view('ong-events.my-events', compact('futureEvents', 'pastEvents'));
     }
 
-
-
-
-    // Edit event
-
     public function edit(OngEvent $event)
     {
-        // Check if the authenticated ONG is the owner of the event
         if (Auth::user()->ong->id !== $event->ong_id) {
             abort(403, 'Unauthorized action.');
         }
@@ -132,17 +131,17 @@ class OngEventController extends Controller
         return view('ong-events.edit', compact('event'));
     }
 
-    // Update event
     public function update(Request $request, $id)
     {
+        // Carrega o evento com base no ID fornecido
         $event = OngEvent::findOrFail($id);
 
-        // Ensure the logged-in user is the one who created the event
+        // Verifica se o usuário atual é o dono do evento (ONG associada)
         if (Auth::user()->ong->id !== $event->ong_id) {
             abort(403, 'Unauthorized action.');
         }
 
-        // Validation and update logic
+        // Validação dos campos do formulário
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
@@ -151,29 +150,41 @@ class OngEventController extends Controller
             'state' => 'nullable|string|max:255',
             'cep' => 'nullable|string|max:14',
             'location' => 'required|string|max:255',
-            'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048', // Validate image
+            'photo' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120', // Validação da imagem
         ]);
 
+        // Atualizar a imagem se houver uma nova
         if ($request->hasFile('photo')) {
-            // Delete the old photo if it exists
-            if ($event->photo_path) {
-                Storage::disk('public')->delete($event->photo_path);
+            // Deletar a imagem antiga usando o public_id
+            if ($event->photo_public_id) {
+                $this->imageService->deleteImage($event->photo_public_id);  // Usa o ImageService para deletar
             }
-            $event->photo_path = $request->file('photo')->store('event_photos', 'public');
+
+            // Fazer o upload da nova imagem
+            $imageData = $this->imageService->uploadImage($request->file('photo')->getRealPath(), 'events');
+
+            // Atualiza os dados da imagem no evento
+            $event->photo_path = $imageData['secure_url'];  // Atualiza a URL da imagem
+            $event->photo_public_id = $imageData['public_id'];  // Atualiza o public_id da imagem
         }
 
-        // Update the event
+        // Atualiza os outros dados validados do evento
         $event->update($validated);
 
-        return redirect()->route('ong-events.show', $event->id)->with('success', 'Event updated successfully.');
+        // Redireciona para a página de visualização do evento
+        return redirect()->route('ong-events.show', $event->id)->with('success', 'Evento atualizado com sucesso.');
     }
 
-    // Delete event
+
     public function destroy(OngEvent $event)
     {
-        // Check if the authenticated ONG is the owner of the event
         if (Auth::user()->ong->id !== $event->ong_id) {
             abort(403, 'Unauthorized action.');
+        }
+
+        // Deletar a imagem associada usando o public_id
+        if ($event->photo_public_id) {
+            $this->imageService->deleteImage($event->photo_public_id);
         }
 
         $event->delete();

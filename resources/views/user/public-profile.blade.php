@@ -18,7 +18,6 @@
                         color="yellow" size="sm">
                         Editar Perfil
                     </x-button-edit>
-
                 </div>
             @endif
         </div>
@@ -26,31 +25,20 @@
 
     <div class="py-8">
         <div class="max-w-4xl mx-auto sm:px-4 lg:px-6">
-
             <div class="bg-white shadow-md rounded-lg p-6">
                 <!-- Verificar o tipo de perfil: ONG ou Tutor -->
                 <div class="container mx-auto py-6">
-
                     <!-- Exibir a Foto de Perfil -->
                     <div class="flex items-center space-x-4 md:space-x-6 mb-6">
-                        @if (Laravel\Jetstream\Jetstream::managesProfilePhotos() && !empty($user->profile_photo_path))
-                            <img src="{{ $user->profile_photo_url }}" alt="Foto de perfil de {{ $user->name }}"
-                                class="rounded-full w-40 h-40 md:w-48 md:h-48 object-cover">
-                        @else
-                            <span
-                                class="inline-flex items-center justify-center h-16 w-16 md:h-20 md:w-20 rounded-full bg-gray-500"
-                                aria-label="Imagem de perfil indisponível, mostrando iniciais de {{ $user->name }}">
-                                <span class="text-lg md:text-xl font-medium leading-none text-white">
-                                    @if ($user->user_type === 'ong' || $user->user_type === 'admin')
-                                        {{ strtoupper(substr($profileData->ong_name ?? 'Informação', 0, 1)) }}
-                                    @elseif ($user->user_type === 'tutor')
-                                        {{ strtoupper(substr($profileData->full_name ?? 'Informação', 0, 1)) }}
-                                    @else
-                                        {{ strtoupper(substr($user->name, 0, 1)) }}{{ strtoupper(substr($user->last_name ?? '', 0, 1)) }}
-                                    @endif
-                                </span>
-                            </span>
-                        @endif
+                        @if (!empty($user->profile_photo))
+                            <!-- Usando x-image para exibir a foto de perfil -->
+                            <x-image :src="$user->profile_photo" alt="Foto de perfil de {{ $user->name }}"
+                                class="rounded-full w-40 h-40 md:w-48 md:h-48 object-cover" />
+                                @else
+                                <!-- Exibir as iniciais caso a foto de perfil não esteja disponível -->
+                                <x-initials-avatar :user="$user" />
+                            @endif
+
 
                         <div>
                             <h2 class="text-lg md:text-xl font-bold text-gray-700">
@@ -173,28 +161,27 @@
         </div>
     </div>
 
+
     <!-- Script para API de Compartilhamento -->
     <script>
-        function sharePet() {
+        document.getElementById('shareProfileButton').addEventListener('click', function () {
+            const shareData = {
+                title: 'Perfil de {{ $user->name }}',
+                text: 'Veja o perfil público de {{ $user->name }} no MeAdote.',
+                url: '{{ route('user.public-profile', $user->id) }}'
+            };
+
             if (navigator.share) {
-                navigator.share({
-                    title: 'Perfil de {{ $user->name }}',
-                    text: 'Veja o perfil público de {{ $user->name }} no MeAdote.',
-                    url: window.location.href
-                }).then(() => {
-                    console.log('Perfil compartilhado com sucesso');
-                }).catch((error) => {
-                    console.error('Erro ao compartilhar:', error);
-                });
+                navigator.share(shareData)
+                    .then(() => console.log('Perfil compartilhado com sucesso'))
+                    .catch((error) => console.log('Erro ao compartilhar:', error));
             } else {
-                navigator.clipboard.writeText(window.location.href).then(() => {
-                    alert('Link copiado para a área de transferência!');
-                }).catch((error) => {
-                    console.error('Erro ao copiar link: ', error);
-                });
+                // Fallback para copiar o link para a área de transferência
+                navigator.clipboard.writeText(shareData.url)
+                    .then(() => alert('Link copiado para a área de transferência!'))
+                    .catch(err => console.error('Erro ao copiar link: ', err));
             }
-        }
-        document.getElementById('shareButton').addEventListener('click', sharePet);
+        });
     </script>
 
 </x-app-layout>

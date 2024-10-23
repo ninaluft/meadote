@@ -31,9 +31,9 @@
 
                 <!-- Imagem do Post -->
                 @if ($post->image_path)
-                    <img src="{{ asset('storage/' . $post->image_path) }}" alt="{{ $post->title }}"
-                        class="w-full h-auto rounded-lg">
+                    <x-image :src="$post->image_path" alt="{{ $post->title }}" class="w-full h-auto rounded-lg" />
                 @endif
+
 
                 <!-- Renderizando o conteúdo HTML do Quill -->
                 <div class="ql-editor text-lg text-gray-800 leading-relaxed">
@@ -44,7 +44,8 @@
                 <div class="mt-6">
                     <x-button-share id="sharePostButton" title="{{ json_encode($post->title) }}"
                         text="{{ json_encode(Illuminate\Support\Str::limit(strip_tags($post->content), 150)) }}"
-                        url="{{ json_encode(url()->current()) }}" aria-label="Compartilhar o post {{ $post->title }}">
+                        url="{{ json_encode(url()->current()) }}"
+                        aria-label="Compartilhar o post {{ $post->title }}">
                         {{ __('Compartilhar') }}
                     </x-button-share>
                 </div>
@@ -72,7 +73,8 @@
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="text-red-600 hover:text-red-800"
-                                                title="Excluir comentário" aria-label="Excluir comentário"> <!-- Tooltip e aria-label para acessibilidade -->
+                                                title="Excluir comentário" aria-label="Excluir comentário">
+                                                <!-- Tooltip e aria-label para acessibilidade -->
                                                 <i class="fas fa-trash"></i> <!-- Ícone de lixeira do Font Awesome -->
                                             </button>
                                         </form>
@@ -85,7 +87,8 @@
                         @auth
                             <div class="mt-6">
                                 <h4 class="text-lg font-semibold" id="leaveCommentLabel">Deixe seu comentário</h4>
-                                <form action="{{ route('comments.store', $post->id) }}" method="POST" class="mt-4" aria-labelledby="leaveCommentLabel">
+                                <form action="{{ route('comments.store', $post->id) }}" method="POST" class="mt-4"
+                                    aria-labelledby="leaveCommentLabel">
                                     @csrf
                                     <textarea name="content" rows="3" class="w-full border-gray-300 rounded-lg p-2"
                                         placeholder="Escreva seu comentário..." aria-describedby="commentHelper"></textarea>

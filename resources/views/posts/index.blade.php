@@ -66,9 +66,9 @@
 
                                 <!-- Imagem - Alinhamento da imagem com altura fixa -->
                                 @if ($post->image_path)
-                                    <img src="{{ asset('storage/' . $post->image_path) }}" alt="{{ $post->title }}"
-                                        class="w-full h-48 object-cover object-center rounded-lg mb-4">
-                                @endif
+                                <x-image :src="$post->image_path" alt="{{ $post->title }}" class="w-full h-48 object-cover object-center rounded-lg mb-4" />
+                            @endif
+
 
                                 <!-- Texto do post com altura mínima -->
                                 <div class="text-gray-700 min-h-[80px]">

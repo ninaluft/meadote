@@ -54,8 +54,8 @@
                                 class="block bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300">
                                 <!-- Imagem do Evento -->
                                 @if ($event->photo_path)
-                                    <img src="{{ asset('storage/' . $event->photo_path) }}" alt="{{ $event->title }}"
-                                        class="w-full h-48 object-cover">
+                                    <x-image :src="$event->photo_path" alt="{{ $event->title }}"
+                                        class="w-full h-48 object-cover" />
                                 @else
                                     <div class="w-full h-48 bg-gray-300 flex items-center justify-center">
                                         <span class="text-gray-700 font-bold">{{ __('Imagem Indisponível') }}</span>
@@ -104,8 +104,8 @@
                                 class="block bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300">
                                 <!-- Imagem do Evento -->
                                 @if ($event->photo_path)
-                                    <img src="{{ asset('storage/' . $event->photo_path) }}" alt="{{ $event->title }}"
-                                        class="w-full h-48 object-cover">
+                                    <x-image :src="$event->photo_path" alt="{{ $event->title }}"
+                                        class="w-full h-48 object-cover" />
                                 @else
                                     <div class="w-full h-48 bg-gray-300 flex items-center justify-center">
                                         <span class="text-gray-700 font-bold">{{ __('Imagem Indisponível') }}</span>

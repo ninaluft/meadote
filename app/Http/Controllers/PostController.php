@@ -4,13 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
+use App\Services\ImageService;
 use HTMLPurifier;
 use HTMLPurifier_Config;
+use Illuminate\Support\Facades\Log;
 
 class PostController extends Controller
 {
+    protected $imageService;
+
+    public function __construct(ImageService $imageService)
+    {
+        $this->imageService = $imageService;
+    }
+
     public function index(Request $request)
     {
         // Pega os parâmetros de busca e ordenação
@@ -31,107 +38,101 @@ class PostController extends Controller
         // Paginação dos resultados
         $posts = $query->paginate(9); // Mostra 9 posts por página
 
-        // Retorna a view com os posts filtrados e ordenados
         return view('posts.index', compact('posts'));
     }
 
-    // Mostrar o formulário de criação de post
     public function create()
     {
         return view('admin.posts.create');
     }
 
-    // Armazenar o post no banco de dados
     public function store(Request $request)
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'content' => 'required|string|max:4000',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'content' => 'required|string|max:10000',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
         ]);
 
         // Configurar o HTMLPurifier
         $config = HTMLPurifier_Config::createDefault();
         $purifier = new HTMLPurifier($config);
-
-        // Sanitizar o conteúdo do post
         $sanitizedContent = $purifier->purify($validated['content']);
 
-        // Criar um novo post
         $post = new Post();
         $post->title = $validated['title'];
         $post->content = $sanitizedContent;
         $post->user_id = auth()->id(); // Associar o post ao usuário logado
 
-        // Armazenar a imagem, se houver
+        // Armazenar a imagem, se houver, usando o ImageService
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('posts', 'public');
-            $post->image_path = $path;
+            $imageData = $this->imageService->uploadImage($request->file('image')->getRealPath(), 'posts');
+            $post->image_path = $imageData['secure_url'];
+            $post->image_public_id = $imageData['public_id']; // Guardar o public_id para exclusão futura
         }
 
-        // Salvar o post no banco de dados
         $post->save();
 
         return redirect()->route('posts.show', $post->id)->with('success', 'Post criado com sucesso.');
     }
 
-    // Mostrar o formulário de edição de post
     public function edit(Post $post)
     {
         return view('admin.posts.edit', compact('post'));
     }
 
-    // Atualizar o post no banco de dados
     public function update(Request $request, Post $post)
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'content' => 'required|string|max:4000',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'content' => 'required|string|max:10000',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
         ]);
 
-        // Configurar o HTMLPurifier para sanitizar o conteúdo
+        // Configurar o HTMLPurifier
         $config = HTMLPurifier_Config::createDefault();
         $purifier = new HTMLPurifier($config);
         $sanitizedContent = $purifier->purify($validated['content']);
 
-        // Atualizar os dados do post
         $post->title = $validated['title'];
         $post->content = $sanitizedContent;
 
-        // Armazenar a nova imagem, se houver
+        // Se houver uma nova imagem, fazer o upload e deletar a antiga
         if ($request->hasFile('image')) {
             // Excluir a imagem antiga, se existir
-            if ($post->image_path) {
-                Storage::disk('public')->delete($post->image_path);
+            if ($post->image_public_id) {
+                $this->imageService->deleteImage($post->image_public_id);
             }
 
-            // Armazenar a nova imagem
-            $path = $request->file('image')->store('posts', 'public');
-            $post->image_path = $path;
+            // Fazer upload da nova imagem
+            $imageData = $this->imageService->uploadImage($request->file('image')->getRealPath(), 'posts');
+            $post->image_path = $imageData['secure_url'];
+            $post->image_public_id = $imageData['public_id']; // Atualiza o public_id
         }
 
-        // Salvar as atualizações
+        Log::info('Salvando post atualizado: ', [
+            'image_path' => $post->image_path ?? 'Nenhuma imagem atualizada',
+            'image_public_id' => $post->image_public_id ?? 'Nenhum public_id atualizado'
+        ]);
+
         $post->save();
 
         return redirect()->route('posts.show', $post->id)->with('success', 'Post atualizado com sucesso.');
     }
 
-    // Excluir o post
+
     public function destroy(Post $post)
     {
-        // Excluir a imagem associada ao post, se existir
-        if ($post->image_path) {
-            Storage::disk('public')->delete($post->image_path);
+        // Excluir a imagem associada, se existir
+        if ($post->image_public_id) {
+            $this->imageService->deleteImage($post->image_public_id);
         }
 
-        // Excluir o post
         $post->delete();
 
         return redirect()->route('posts.index')->with('success', 'Post excluído com sucesso.');
     }
 
-    // Mostrar um post específico
     public function show(Post $post)
     {
         // Obter o post anterior e o próximo

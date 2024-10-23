@@ -54,6 +54,11 @@ return [
             'endpoint' => env('AWS_ENDPOINT'),
         ],
 
+        'cloudinary' => [
+            'driver' => 'cloudinary',
+        ],
+
+
     ],
 
     /*

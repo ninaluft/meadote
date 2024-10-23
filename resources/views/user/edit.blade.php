@@ -27,43 +27,46 @@
                     @method('PUT')
 
                     <!-- Foto de Perfil -->
-                    <div class="mb-6">
-                        <x-label for="profile_photo" :value="__('Foto de Perfil')" />
-                        <div class="flex items-center space-x-6 mt-2">
-                            <!-- Prévia da Nova Imagem -->
-                            <img id="photo-preview" src="{{ $user->profile_photo_url }}" alt="{{ $user->name }}"
-                                class="rounded-full h-32 w-32 object-cover">
+<!-- Foto de Perfil -->
+<div class="mb-6">
+    <x-label for="profile_photo" :value="__('Foto de Perfil')" />
+    <div class="flex items-center space-x-6 mt-2">
+        <!-- Prévia da Nova Imagem -->
+        <img id="photo-preview" @if ($user->profile_photo) src="{{ $user->profile_photo }}" @endif alt="{{ $user->name }}"
+            class="rounded-full h-32 w-32 object-cover @if (!$user->profile_photo) hidden @endif">
 
-                            <x-input id="profile_photo" type="file" name="profile_photo" class="mt-1 block w-full"
-                                onchange="previewImage(event)" />
-                        </div>
-                        @if ($user->profile_photo_path)
-                            <div class="mt-2">
-                                <x-checkbox id="remove_photo" name="remove_photo" value="1" />
-                                <x-label for="remove_photo" :value="__('Remover a foto de perfil atual')" />
-                            </div>
-                        @endif
-                        @error('profile_photo')
-                            <span class="text-sm text-red-600">{{ $message }}</span>
-                        @enderror
-                    </div>
+        <x-input id="profile_photo" type="file" name="profile_photo" class="mt-1 block w-full"
+            onchange="previewImage(event)" />
+    </div>
 
-                    <!-- Modal para o Croppie -->
-                    <div id="cropperModal" class="fixed z-50 inset-0 overflow-y-auto hidden">
-                        <div class="flex items-center justify-center min-h-screen px-4">
-                            <div
-                                class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all max-w-3xl w-full p-6">
-                                <h2 class="text-lg font-semibold mb-4">Ajuste a Imagem de Perfil</h2>
-                                <div id="cropperContainer" class="mb-4"></div>
-                                <div class="flex justify-end mt-4">
-                                    <button type="button" id="cropButton"
-                                        class="bg-blue-500 text-white px-4 py-2 rounded-md">Cortar e Salvar</button>
-                                    <button type="button" onclick="closeCropperModal()"
-                                        class="ml-4 bg-red-500 text-white px-4 py-2 rounded-md">Cancelar</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+    @if ($user->profile_photo)
+        <div class="mt-2">
+            <x-checkbox id="remove_photo" name="remove_photo" value="1" />
+            <x-label for="remove_photo" :value="__('Remover a foto de perfil atual')" />
+        </div>
+    @endif
+
+    @error('profile_photo')
+        <span class="text-sm text-red-600">{{ $message }}</span>
+    @enderror
+</div>
+
+
+                   <!-- Modal para o Croppie -->
+<div id="cropperModal" class="fixed z-50 inset-0 overflow-y-auto hidden">
+    <div class="flex items-center justify-center min-h-screen px-4">
+        <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all max-w-3xl w-full p-6">
+            <h2 class="text-lg font-semibold mb-4">Ajuste a Imagem de Perfil</h2>
+            <div id="cropperContainer" class="mb-4"></div>
+            <div class="flex justify-end mt-4">
+                <button type="button" id="cropButton"
+                    class="bg-blue-500 text-white px-4 py-2 rounded-md">Cortar e Salvar</button>
+                <button type="button" onclick="closeCropperModal()"
+                    class="ml-4 bg-red-500 text-white px-4 py-2 rounded-md">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
                     <!-- Nome -->
                     <div class="mb-6">
@@ -288,79 +291,76 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 
     <!-- Script para visualizar a imagem selecionada -->
-    <script>
-        var croppie;
+    <!-- Script para visualizar a imagem selecionada com Croppie -->
+<script>
+    var croppie;
 
-        document.getElementById('profile_photo').addEventListener('change', function(event) {
-            var reader = new FileReader();
-            reader.onload = function(e) {
-                // Abre o modal
-                openCropperModal();
+    document.getElementById('profile_photo').addEventListener('change', function(event) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            // Mostra a prévia da imagem e abre o modal do Croppie
+            document.getElementById('photo-preview').src = e.target.result;
+            document.getElementById('photo-preview').classList.remove('hidden');
+            openCropperModal();
 
-                // Inicializa o Croppie
-                var el = document.getElementById('cropperContainer');
-                if (croppie) {
-                    croppie.destroy();
-                }
-                croppie = new Croppie(el, {
-                    viewport: {
-                        width: 200,
-                        height: 200,
-                        type: 'circle'
-                    }, // Define o recorte circular
-                    boundary: {
-                        width: 300,
-                        height: 300
-                    },
-                    showZoomer: true, // Mostra o controle de zoom
-                    enableOrientation: true // Permite rotação
-                });
-
-                // Carrega a imagem para o Croppie
-                croppie.bind({
-                    url: e.target.result
-                });
-            };
-            reader.readAsDataURL(event.target.files[0]);
-        });
-
-        // Função para abrir o modal
-        function openCropperModal() {
-            document.getElementById('cropperModal').classList.remove('hidden');
-        }
-
-        // Função para fechar o modal
-        function closeCropperModal() {
-            document.getElementById('cropperModal').classList.add('hidden');
-        }
-
-        // Obtém a imagem cortada quando o botão for clicado
-        document.getElementById('cropButton').addEventListener('click', function() {
-            croppie.result({
-                type: 'blob',
-                size: {
+            // Inicializa o Croppie
+            var el = document.getElementById('cropperContainer');
+            if (croppie) {
+                croppie.destroy();
+            }
+            croppie = new Croppie(el, {
+                viewport: {
                     width: 200,
-                    height: 200
-                }
-            }).then(function(blob) {
-                // Atualiza o preview da imagem de perfil
-                const url = URL.createObjectURL(blob);
-                document.getElementById('photo-preview').src = url;
-
-                // Crie um novo objeto File para enviar ao backend ao submeter o formulário
-                const fileInput = document.getElementById('profile_photo');
-                const dataTransfer = new DataTransfer();
-                const file = new File([blob], 'cropped-profile-photo.png', {
-                    type: 'image/png'
-                });
-                dataTransfer.items.add(file);
-                fileInput.files = dataTransfer.files;
-
-                // Fecha o modal
-                closeCropperModal();
+                    height: 200,
+                    type: 'circle'
+                },
+                boundary: {
+                    width: 300,
+                    height: 300
+                },
+                showZoomer: true,
+                enableOrientation: true
             });
+
+            croppie.bind({
+                url: e.target.result
+            });
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    });
+
+    function openCropperModal() {
+        document.getElementById('cropperModal').classList.remove('hidden');
+    }
+
+    function closeCropperModal() {
+        document.getElementById('cropperModal').classList.add('hidden');
+    }
+
+    document.getElementById('cropButton').addEventListener('click', function() {
+        croppie.result({
+            type: 'blob',
+            size: {
+                width: 200,
+                height: 200
+            }
+        }).then(function(blob) {
+            const url = URL.createObjectURL(blob);
+            document.getElementById('photo-preview').src = url;
+
+            // Crie um novo objeto File para enviar ao backend
+            const fileInput = document.getElementById('profile_photo');
+            const dataTransfer = new DataTransfer();
+            const file = new File([blob], 'cropped-profile-photo.png', {
+                type: 'image/png'
+            });
+            dataTransfer.items.add(file);
+            fileInput.files = dataTransfer.files;
+
+            closeCropperModal();
         });
-    </script>
+    });
+</script>
 
 
     <script>

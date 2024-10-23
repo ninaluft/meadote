@@ -2,12 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\ImageService;
 use App\Models\Pet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+
 class PetController extends Controller
 {
+
+    protected $imageService;
+
+    public function __construct(ImageService $imageService)
+    {
+        $this->imageService = $imageService;
+    }
+
     public function index()
     {
         $pets = Auth::user()->pets()->where('status', 'available')->get();
@@ -35,8 +45,6 @@ class PetController extends Controller
 
         return view('pets.my-pets', compact('user', 'availablePets', 'adoptedPets', 'favoritesCount', 'favoritedPets'));
     }
-
-
 
 
     public function allPets(Request $request)
@@ -77,44 +85,11 @@ class PetController extends Controller
 
     public function create()
     {
-
         return view('pets.create');
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'photo_path' => 'nullable|image|max:2048',
-            'species' => 'required|in:dog,cat,other',
-            'gender' => 'required|in:male,female',
-            'age' => 'required|in:puppy,adult,senior',
-            'size' => 'required|in:small,medium,large',
-            'is_neutered' => 'required|boolean',
-            'special_conditions' => 'required|boolean',
-            'special_conditions_description' => 'required_if:special_conditions,1|nullable|string|max:1000',
-            'description' => 'nullable|string|max:1000',
-            'specify_other' => 'required_if:species,other|nullable|string|max:255',
-        ]);
 
 
-        // Verifica se a espécie é "Outro" e se deve salvar a especificação
-        $petData = $request->all();
-        if ($request->species !== 'other') {
-            $petData['specify_other'] = null; // Se não for "Outro", não salva a especificação
-        }
-
-        $pet = new Pet($petData);
-        $pet->user_id = Auth::id();
-
-        if ($request->hasFile('photo_path')) {
-            $pet->photo_path = $request->file('photo_path')->store('pets', 'public');
-        }
-
-        $pet->save();
-
-        return redirect()->route('pets.my-pets')->with('success', 'Pet cadastrado com sucesso.');
-    }
 
 
     public function show(Pet $pet)
@@ -141,8 +116,6 @@ class PetController extends Controller
     }
 
 
-
-
     public function edit(Pet $pet)
     {
         if (Auth::id() !== $pet->user_id) {
@@ -152,13 +125,78 @@ class PetController extends Controller
         return view('pets.edit', compact('pet'));
     }
 
+
+    public function store(Request $request)
+    {
+        // Validação dos campos
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'photo_path' => 'nullable|image|max:2048',
+            'species' => 'required|in:dog,cat,other',
+            'gender' => 'required|in:male,female',
+            'age' => 'required|in:puppy,adult,senior',
+            'size' => 'required|in:small,medium,large',
+            'is_neutered' => 'required|boolean',
+            'special_conditions' => 'required|boolean',
+            'special_conditions_description' => 'required_if:special_conditions,1|nullable|string|max:1000',
+            'description' => 'nullable|string|max:1000',
+            'specify_other' => 'required_if:species,other|nullable|string|max:255',
+        ]);
+
+        // Variáveis para armazenar o caminho da imagem e o public_id
+        $photoPath = null;
+        $publicId = null;
+
+        // Se o usuário fez upload de uma imagem
+        if ($request->hasFile('photo_path')) {
+            // Chama o serviço de upload de imagem e envia o arquivo, não apenas o caminho
+            $imageData = $this->imageService->uploadImage($request->file('photo_path')->getRealPath(), 'pets');
+
+            // Obtém a URL e o public_id da imagem
+            $photoPath = $imageData['secure_url'];  // URL segura da imagem
+            $publicId = $imageData['public_id'];    // public_id da imagem
+
+
+        }
+
+
+        // Criação do Pet no banco de dados, incluindo o public_id
+        $pet = Pet::create([
+            'name' => $validated['name'],
+            'user_id' => Auth::id(),  // Obtém o ID do usuário autenticado
+            'photo_path' => $photoPath,
+            'photo_public_id' => $publicId,  // Salva o public_id no banco
+            'species' => $validated['species'],
+            'gender' => $validated['gender'],
+            'age' => $validated['age'],
+            'size' => $validated['size'],
+            'is_neutered' => $validated['is_neutered'],
+            'special_conditions' => $validated['special_conditions'],
+            'special_conditions_description' => $validated['special_conditions_description'],
+            'description' => $validated['description'],
+            'specify_other' => $validated['specify_other'],
+        ]);
+
+
+
+        // Redireciona o usuário com uma mensagem de sucesso
+        return redirect()->route('pets.my-pets')->with('success', 'Pet cadastrado com sucesso.');
+    }
+
+
+
+
+
+
     public function update(Request $request, Pet $pet)
     {
+        // Verifica se o usuário autenticado é o dono do pet
         if (Auth::id() !== $pet->user_id) {
             abort(403, 'Unauthorized action.');
         }
 
-        $request->validate([
+        // Validação dos campos
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'photo_path' => 'nullable|image|max:2048',
             'species' => 'required|in:dog,cat,other',
@@ -172,33 +210,51 @@ class PetController extends Controller
             'specify_other' => 'nullable|string|max:255',
         ]);
 
-        $petData = $request->all();
-        if ($request->species !== 'other') {
-            $petData['specify_other'] = null;
-        }
-
-        $pet->fill($petData);
-
+        // Verifica se há uma nova imagem
         if ($request->hasFile('photo_path')) {
-            $pet->photo_path = $request->file('photo_path')->store('pets', 'public');
+
+            // Faz o upload da nova imagem para o Cloudinary
+            $imageData = $this->imageService->uploadImage($request->file('photo_path')->getRealPath(), 'pets');
+            $pet->photo_path = $imageData['secure_url'];    // Atualiza a URL da nova imagem
+            $pet->photo_public_id = $imageData['public_id']; // Atualiza o public_id da nova imagem
         }
 
+        // Atualiza os outros campos
+        $pet->update([
+            'name' => $validated['name'],
+            'species' => $validated['species'],
+            'gender' => $validated['gender'],
+            'age' => $validated['age'],
+            'size' => $validated['size'],
+            'is_neutered' => $validated['is_neutered'],
+            'special_conditions' => $validated['special_conditions'],
+            'special_conditions_description' => $validated['special_conditions_description'],
+            'description' => $validated['description'],
+            'specify_other' => $validated['specify_other'],
+        ]);
 
-        $pet->save();
-
+        // Redireciona o usuário com uma mensagem de sucesso
         return redirect()->route('pets.show', $pet)->with('success', 'Pet atualizado com sucesso.');
     }
 
+
+
+
+
+
     public function destroy(Pet $pet)
     {
-        if (Auth::id() !== $pet->user_id) {
-            abort(403, 'Unauthorized action.');
+        if ($pet->photo_public_id) {
+            // Chama o serviço de exclusão de imagem
+            $this->imageService->deleteImage($pet->photo_public_id);
         }
 
         $pet->delete();
 
         return redirect()->route('pets.my-pets')->with('success', 'Pet excluído com sucesso.');
     }
+
+
 
     public function favorite($id)
     {

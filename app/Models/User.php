@@ -29,6 +29,8 @@ class User extends Authenticatable
         'cep',
         'city',
         'state',
+        'profile_photo',
+        'profile_photo_public_id',
 
     ];
 
@@ -50,7 +52,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $appends = [
-        'profile_photo_url',
+        'profile_photo',
     ];
 
     /**

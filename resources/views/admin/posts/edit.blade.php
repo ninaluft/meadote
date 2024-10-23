@@ -10,7 +10,8 @@
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-10">
                 <h3 class="text-2xl font-bold mb-4">{{ __('Editar Post') }}</h3>
 
-                <form action="{{ route('posts.update', $post->id) }}" method="POST" enctype="multipart/form-data" id="post-form">
+                <form action="{{ route('posts.update', $post->id) }}" method="POST" enctype="multipart/form-data"
+                    id="post-form">
                     @csrf
                     @method('PUT')
 
@@ -39,8 +40,11 @@
                         <x-label for="image" value="{{ __('Imagem') }}" />
                         @if ($post->image_path)
                             <div class="mb-2">
-                                <img id="current-image" src="{{ asset('storage/' . $post->image_path) }}"
-                                    alt="{{ $post->title }}" class="w-full h-auto rounded-lg">
+                                @if ($post->image_path)
+                                    <x-image :src="$post->image_path" alt="{{ $post->title }}"
+                                        class="w-full h-auto rounded-lg" />
+                                @endif
+
                             </div>
                         @endif
                         <input type="file" name="image" id="image" class="form-control" accept="image/*"
@@ -53,7 +57,8 @@
                                 alt="Pré-visualização da Imagem">
                         </div>
                         <div class="mt-4 text-center">
-                            <button type="button" id="crop-button" class="hidden bg-blue-600 text-white px-4 py-2 rounded-lg">Cortar Imagem</button>
+                            <button type="button" id="crop-button"
+                                class="hidden bg-blue-600 text-white px-4 py-2 rounded-lg">Cortar Imagem</button>
                         </div>
                     </div>
 
@@ -79,17 +84,27 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             // Inicializa o editor Quill
             var quill = new Quill('#editor', {
                 theme: 'snow',
                 modules: {
                     toolbar: [
-                        [{ 'header': [1, 2, false] }],
+                        [{
+                            'header': [1, 2, false]
+                        }],
                         ['bold', 'italic', 'underline'],
-                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                        [{
+                            'list': 'ordered'
+                        }, {
+                            'list': 'bullet'
+                        }],
                         ['link', 'blockquote', 'code-block'],
-                        [{ 'color': [] }, { 'background': [] }],
+                        [{
+                            'color': []
+                        }, {
+                            'background': []
+                        }],
                         ['clean']
                     ]
                 }
@@ -99,7 +114,7 @@
             quill.root.innerHTML = `{!! old('content', $post->content) !!}`;
 
             // Ao enviar o formulário, copia o conteúdo do Quill para o textarea
-            document.getElementById('post-form').addEventListener('submit', function () {
+            document.getElementById('post-form').addEventListener('submit', function() {
                 document.getElementById('content').value = quill.root.innerHTML;
             });
 
@@ -108,7 +123,7 @@
             const imagePreview = document.getElementById('image-preview');
             const cropButton = document.getElementById('crop-button');
             const currentImage = document.getElementById('current-image');
-            let croppedBlob;  // Variável para armazenar o Blob da imagem cortada
+            let croppedBlob; // Variável para armazenar o Blob da imagem cortada
 
             // Função para tratar a pré-visualização e o corte da imagem
             window.handleImage = function(event) {
@@ -117,7 +132,7 @@
                 if (input.files && input.files[0]) {
                     const reader = new FileReader();
 
-                    reader.onload = function (e) {
+                    reader.onload = function(e) {
                         imagePreview.src = e.target.result;
                         imagePreview.classList.remove('hidden');
                         cropButton.classList.remove('hidden');
@@ -133,14 +148,16 @@
 
                         // Initialize a new cropper instance
                         cropper = new Cropper(imagePreview, {
-                            aspectRatio: 3,  // Ajuste para uma proporção mais estreita (ex: 3:1)
+                            aspectRatio: 3, // Ajuste para uma proporção mais estreita (ex: 3:1)
                             viewMode: 1,
                             autoCropArea: 1,
-                            ready: function () {
+                            ready: function() {
                                 // Ajusta a área de corte para ser mais estreita
                                 const cropBoxData = cropper.getCropBoxData();
-                                cropBoxData.width = cropBoxData.width / 1.5;  // Reduz a largura da área de corte para torná-la mais estreita
-                                cropBoxData.height = cropBoxData.height; // Mantém a altura original
+                                cropBoxData.width = cropBoxData.width /
+                                1.5; // Reduz a largura da área de corte para torná-la mais estreita
+                                cropBoxData.height = cropBoxData
+                                .height; // Mantém a altura original
                                 cropper.setCropBoxData(cropBoxData);
                             },
                         });
@@ -171,10 +188,12 @@
             });
 
             // Enviar a imagem cortada no formulário
-            document.getElementById('post-form').addEventListener('submit', function (e) {
+            document.getElementById('post-form').addEventListener('submit', function(e) {
                 if (croppedBlob) {
                     // Cria um novo arquivo para o Blob cortado
-                    const file = new File([croppedBlob], 'cropped_image.png', { type: 'image/png' });
+                    const file = new File([croppedBlob], 'cropped_image.png', {
+                        type: 'image/png'
+                    });
 
                     // Cria um objeto FormData e adiciona o arquivo cortado
                     const formData = new FormData(this);

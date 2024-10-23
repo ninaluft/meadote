@@ -17,7 +17,8 @@ class OngEvent extends Model
         'state',
         'cep',
         'location',
-        'photo_path'
+        'photo_path',
+        'photo_public_id',
     ];
 
     public function ong()
