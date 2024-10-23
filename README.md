@@ -106,9 +106,8 @@ Se preferir usar um serviço de nuvem para armazenar as imagens, como o **Cloudi
    ```env
    FILESYSTEM_DISK=cloudinary
 
-   CLOUDINARY_CLOUD_NAME=sua_cloud_name
-   CLOUDINARY_API_KEY=sua_api_key
-   CLOUDINARY_API_SECRET=seu_api_secret
+   CLOUDINARY_URL=cloudinary://<your_api_key>:<your_api_secret>@<your_cloud_name>
+
    ```
 
 ### Alternando entre Local e Cloudinary
