@@ -1,32 +1,33 @@
 
-# MeAdote
+# 🐾 MeAdote
 
 **MeAdote** é uma plataforma web desenvolvida para facilitar a adoção de animais, conectando ONGs, tutores e possíveis adotantes.
 
-## Índice
+## 📋 Índice
 
-- [Requisitos](#requisitos)
-- [Instalação](#instalação)
-- [Configuração](#configuração)
-- [Como Executar](#como-executar)
-- [Rodando as Migrações](#rodando-as-migrações)
+- [🔧 Requisitos](#requisitos)
+- [📦 Instalação](#instalação)
+- [⚙️ Configuração](#configuração)
+- [☁️ Escolha entre Disco Local e Cloudinary](#escolha-entre-disco-local-e-cloudinary)
+- [🚀 Como Executar](#como-executar)
+- [🛠️ Rodando as Migrações](#rodando-as-migrações)
 
-## Requisitos
+## 🔧 Requisitos
 
 Antes de começar, certifique-se de ter as seguintes ferramentas instaladas em sua máquina:
 
-- [Node.js](https://nodejs.org/) (versão LTS recomendada)
-- [Composer](https://getcomposer.org/)
-- [PHP](https://www.php.net/downloads.php) (versão 8.0 ou superior)
-- [MySQL](https://www.mysql.com/downloads/) ou qualquer outro banco de dados compatível
-- [Git](https://git-scm.com/)
+- [Node.js](https://nodejs.org/) (versão LTS recomendada) 🟢
+- [Composer](https://getcomposer.org/) 🛠️
+- [PHP](https://www.php.net/downloads.php) (versão 8.0 ou superior) 💻
+- [MySQL](https://www.mysql.com/downloads/) ou qualquer outro banco de dados compatível 🗄️
+- [Git](https://git-scm.com/) 🧰
 
 Além disso, é recomendado ter um ambiente local para desenvolvimento PHP, como:
 
-- [XAMPP](https://www.apachefriends.org/index.html) ou
-- [Laragon](https://laragon.org/)
+- [XAMPP](https://www.apachefriends.org/index.html) 🐘 ou
+- [Laragon](https://laragon.org/) ⚡
 
-## Instalação
+## 📦 Instalação
 
 1. **Clone o repositório para a sua máquina local:**
 
@@ -52,7 +53,7 @@ Além disso, é recomendado ter um ambiente local para desenvolvimento PHP, como
    npm install
    ```
 
-## Configuração
+## ⚙️ Configuração
 
 5. **Crie uma cópia do arquivo `.env.example` e renomeie para `.env`:**
 
@@ -83,7 +84,50 @@ Além disso, é recomendado ter um ambiente local para desenvolvimento PHP, como
 
 8. **Configure outras variáveis, como o ambiente (`APP_ENV`), a URL da aplicação (`APP_URL`), etc., conforme necessário.**
 
-## Como Executar
+## ☁️ Escolha entre Disco Local e Cloudinary
+
+Para o armazenamento de imagens no **MeAdote**, você tem a opção de escolher entre salvar localmente ou usar o **Cloudinary**, uma plataforma de gerenciamento de imagens na nuvem. 
+
+### Disco Local (Padrão)
+
+Por padrão, as imagens serão armazenadas localmente no diretório `storage`. Isso é adequado para ambientes de desenvolvimento ou servidores que tenham espaço e infraestrutura para armazenamento local. Para usar o disco local, nenhuma configuração adicional é necessária além da configuração padrão no arquivo `.env`:
+
+```env
+FILESYSTEM_DISK=local
+```
+
+### Cloudinary
+
+Se preferir usar um serviço de nuvem para armazenar as imagens, como o **Cloudinary**, você precisa configurar sua conta no Cloudinary e atualizar o arquivo `.env` com as credenciais fornecidas por eles.
+
+1. **Primeiro, crie uma conta no [Cloudinary](https://cloudinary.com/).**
+2. **Adicione suas credenciais no arquivo `.env`:**
+
+   ```env
+   FILESYSTEM_DISK=cloudinary
+
+   CLOUDINARY_CLOUD_NAME=sua_cloud_name
+   CLOUDINARY_API_KEY=sua_api_key
+   CLOUDINARY_API_SECRET=seu_api_secret
+   ```
+
+### Alternando entre Local e Cloudinary
+
+Você pode alternar facilmente entre o armazenamento local e o **Cloudinary** apenas mudando o valor da variável `FILESYSTEM_DISK` no arquivo `.env`. Por exemplo, para usar o disco local, defina:
+
+```env
+FILESYSTEM_DISK=local
+```
+
+E para usar o **Cloudinary**:
+
+```env
+FILESYSTEM_DISK=cloudinary
+```
+
+Essa flexibilidade permite que você escolha o melhor método de armazenamento com base nas suas necessidades e no ambiente em que está rodando a aplicação (desenvolvimento, produção, etc.).
+
+## 🚀 Como Executar
 
 9. **Compile os arquivos front-end:**
 
@@ -109,7 +153,7 @@ Além disso, é recomendado ter um ambiente local para desenvolvimento PHP, como
     http://127.0.0.1:8000/
     ```
 
-## Rodando as Migrações
+## 🛠️ Rodando as Migrações
 
 Para criar as tabelas no banco de dados, execute as migrações:
 
