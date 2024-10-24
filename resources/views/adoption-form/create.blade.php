@@ -15,28 +15,31 @@
 
                     <!-- Nome do Pet, Espécie e Nome do Tutor -->
                     <h3 class="font-semibold text-lg mb-4">{{ __('Informações do Pet e Tutor') }}</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <!-- Nome do Pet -->
+                        <div class="mb-2">
+                            <x-label for="pet_info" :value="__('Nome do Pet')" />
+                            <x-input id="pet_info" class="block mt-1 w-full" type="text" value="{{ $pet->name }}"
+                                readonly />
+                        </div>
 
-                    <div class="mb-4">
-                        <x-label for="pet_info" :value="__('Nome do Pet')" />
-                        <x-input id="pet_info" class="block mt-1 w-full" type="text" value="{{ $pet->name }}"
-                            readonly />
+                        <!-- Espécie do Pet -->
+                        <div class="mb-2">
+                            <x-label for="species" :value="__('Espécie do Pet')" />
+                            <x-input id="species" class="block mt-1 w-full" type="text"
+                                value="{{ $pet->species == 'other' ? $pet->specify_other : __('pets.species_list.' . $pet->species) }}"
+                                readonly />
+                        </div>
+
+                        <!-- Cadastrado por -->
+                        <div class="mb-4">
+                            <x-label for="responsible_name" :value="__('Cadastrado por:')" />
+                            <x-input id="responsible_name" class="block mt-1 w-full" type="text"
+                                value="{{ $responsibleName }}" readonly />
+                        </div>
                     </div>
 
-                    <div class="mb-4">
-                        <x-label for="species" :value="__('Espécie do Pet')" />
-                        <x-input id="species" class="block mt-1 w-full" type="text"
-                        value="{{ $pet->species == 'other' ?  $pet->specify_other : __('pets.species_list.' . $pet->species) }}"
-                        readonly />
 
-
-                    </div>
-
-
-                    <div class="mb-4">
-                        <x-label for="responsible_name" :value="__('Cadastrado por:')" />
-                        <x-input id="responsible_name" class="block mt-1 w-full" type="text"
-                            value="{{ $responsibleName }}" readonly />
-                    </div>
 
 
                     <!-- Nome Completo do Solicitante -->
@@ -44,59 +47,88 @@
                     <div class="mb-4">
                         <x-label for="full_name" :value="__('Nome Completo')" />
                         <x-input id="full_name" name="full_name" type="text" class="block mt-1 w-full"
-                            value="{{ old('full_name') }}" />
-                        @error('full_name')
-                            <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
-                        @enderror
+                            value="{{ old('full_name', $submitterName) }}" />
                     </div>
 
-                    <!-- CPF -->
-                    <div class="mb-4">
-                        <x-label for="cpf" :value="__('CPF')" />
-                        <x-input id="cpf" name="cpf" type="text" class="block mt-1 w-full"
-                            value="{{ old('cpf') }}" />
-                        @error('cpf')
-                            <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
-                        @enderror
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- CPF -->
+                        <div class="mb-2">
+                            <x-label for="cpf" :value="__('CPF')" />
+                            <x-input id="cpf" name="cpf" type="text" class="block mt-1 w-full"
+                                value="{{ old('cpf', $submitterCpf) }}" />
+                            @error('cpf')
+                                <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Data de Nascimento -->
+                        <div class="mb-2">
+                            <x-label for="birth_date" :value="__('Data de Nascimento')" />
+                            <x-input id="birth_date" name="birth_date" type="date" class="block mt-1 w-full"
+                                value="{{ old('birth_date') }}" />
+                            @error('birth_date')
+                                <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
+                            @enderror
+                        </div>
                     </div>
 
-                    <!-- Data de Nascimento -->
-                    <div class="mb-4">
-                        <x-label for="birth_date" :value="__('Data de Nascimento')" />
-                        <x-input id="birth_date" name="birth_date" type="date" class="block mt-1 w-full"
-                            value="{{ old('birth_date') }}" />
-                        @error('birth_date')
-                            <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
-                        @enderror
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Estado Civil -->
+                        <div class="mb-2">
+                            <x-label for="marital_status" :value="__('Estado Civil')" />
+                            <x-input id="marital_status" name="marital_status" type="text" class="block mt-1 w-full"
+                                value="{{ old('marital_status') }}" />
+                            @error('marital_status')
+                                <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Profissão -->
+                        <div class="mb-2">
+                            <x-label for="profession" :value="__('Profissão')" />
+                            <x-input id="profession" name="profession" type="text" class="block mt-1 w-full"
+                                value="{{ old('profession') }}" />
+                            @error('profession')
+                                <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
+                            @enderror
+                        </div>
                     </div>
 
+                    <h3 class="font-semibold text-lg mb-4">{{ __('Endereço') }}</h3>
                     <!-- Endereço -->
-                    <div class="mb-4">
-                        <x-label for="cep" :value="__('CEP')" />
-                        <x-input id="cep" name="cep" type="text" class="block mt-1 w-full"
-                            value="{{ old('cep') }}" />
-                        @error('cep')
-                            <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
-                        @enderror
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <!-- CEP -->
+                        <div class="mb-2">
+                            <x-label for="cep" :value="__('CEP')" />
+                            <x-input id="cep" name="cep" type="text" class="block mt-1 w-full"
+                                value="{{ old('cep', Auth::user()->cep) }}" />
+                            @error('cep')
+                                <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Cidade -->
+                        <div class="mb-2">
+                            <x-label for="city" :value="__('Cidade')" />
+                            <x-input id="city" name="city" type="text" class="block mt-1 w-full"
+                                value="{{ old('city', Auth::user()->city) }}" />
+                            @error('city')
+                                <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Estado -->
+                        <div class="mb-2">
+                            <x-label for="state" :value="__('Estado')" />
+                            <x-input id="state" name="state" type="text" class="block mt-1 w-full"
+                                value="{{ old('state', Auth::user()->state) }}" />
+                            @error('state')
+                                <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
+                            @enderror
+                        </div>
                     </div>
 
-                    <div class="mb-4">
-                        <x-label for="city" :value="__('Cidade')" />
-                        <x-input id="city" name="city" type="text" class="block mt-1 w-full"
-                            value="{{ old('city') }}" />
-                        @error('city')
-                            <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div class="mb-4">
-                        <x-label for="state" :value="__('Estado')" />
-                        <x-input id="state" name="state" type="text" class="block mt-1 w-full"
-                            value="{{ old('state') }}" />
-                        @error('state')
-                            <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
-                        @enderror
-                    </div>
 
                     <div class="mb-4">
                         <x-label for="street" :value="__('Rua')" />
@@ -107,161 +139,151 @@
                         @enderror
                     </div>
 
-                    <div class="mb-4">
-                        <x-label for="number" :value="__('Número')" />
-                        <x-input id="number" name="number" type="text" class="block mt-1 w-full"
-                            value="{{ old('number') }}" />
-                        @error('number')
-                            <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
-                        @enderror
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <!-- Número -->
+                        <div class="mb-2">
+                            <x-label for="number" :value="__('Número')" />
+                            <x-input id="number" name="number" type="text" class="block mt-1 w-full"
+                                value="{{ old('number') }}" />
+                            @error('number')
+                                <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Complemento -->
+                        <div class="mb-2">
+                            <x-label for="complement" :value="__('Complemento')" />
+                            <x-input id="complement" name="complement" type="text" class="block mt-1 w-full"
+                                value="{{ old('complement') }}" />
+                            @error('complement')
+                                <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Bairro -->
+                        <div class="mb-2">
+                            <x-label for="neighborhood" :value="__('Bairro')" />
+                            <x-input id="neighborhood" name="neighborhood" type="text" class="block mt-1 w-full"
+                                value="{{ old('neighborhood') }}" />
+                            @error('neighborhood')
+                                <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
+                            @enderror
+                        </div>
                     </div>
 
-                    <div class="mb-4">
-                        <x-label for="complement" :value="__('Complemento')" />
-                        <x-input id="complement" name="complement" type="text" class="block mt-1 w-full"
-                            value="{{ old('complement') }}" />
-                        @error('complement')
-                            <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
-                        @enderror
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Telefone -->
+                        <div class="mb-2">
+                            <x-label for="phone" :value="__('Telefone')" />
+                            <x-input id="phone" name="phone" type="text" class="block mt-1 w-full"
+                                value="{{ old('phone') }}" />
+                            @error('phone')
+                                <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Email -->
+                        <div class="mb-2">
+                            <x-label for="email" :value="__('Email')" />
+                            <x-input id="email" name="email" type="email" class="block mt-1 w-full"
+                                value="{{ old('email', Auth::user()->email) }}" />
+                            @error('email')
+                                <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
+                            @enderror
+                        </div>
                     </div>
 
-                    <div class="mb-4">
-                        <x-label for="neighborhood" :value="__('Bairro')" />
-                        <x-input id="neighborhood" name="neighborhood" type="text" class="block mt-1 w-full"
-                            value="{{ old('neighborhood') }}" />
-                        @error('neighborhood')
-                            <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
-                        @enderror
-                    </div>
 
-                    <!-- Telefone -->
-                    <div class="mb-4">
-                        <x-label for="phone" :value="__('Telefone')" />
-                        <x-input id="phone" name="phone" type="text" class="block mt-1 w-full"
-                            value="{{ old('phone') }}" />
-                        @error('phone')
-                            <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <!-- Email -->
-                    <div class="mb-4">
-                        <x-label for="email" :value="__('Email')" />
-                        <x-input id="email" name="email" type="email" class="block mt-1 w-full"
-                            value="{{ old('email') }}" />
-                        @error('email')
-                            <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <!-- Estado Civil -->
-                    <div class="mb-4">
-                        <x-label for="marital_status" :value="__('Estado Civil')" />
-                        <x-input id="marital_status" name="marital_status" type="text" class="block mt-1 w-full"
-                            value="{{ old('marital_status') }}" />
-                        @error('marital_status')
-                            <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <!-- Profissão -->
-                    <div class="mb-4">
-                        <x-label for="profession" :value="__('Profissão')" />
-                        <x-input id="profession" name="profession" type="text" class="block mt-1 w-full"
-                            value="{{ old('profession') }}" />
-                        @error('profession')
-                            <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
-                        @enderror
-                    </div>
 
                     <!-- Informações sobre a Casa -->
                     <h3 class="font-semibold text-lg mb-4">{{ __('Informações sobre a Casa') }}</h3>
 
-                    <!-- Tipo de Residência -->
-                    <div class="mb-4">
-                        <x-label for="residence_type" :value="__('Tipo de Residência')" />
-                        <select id="residence_type" name="residence_type"
-                            class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
-                            required>
-                            <option value="house" {{ old('residence_type') == 'house' ? 'selected' : '' }}>Casa
-                            </option>
-                            <option value="apartment" {{ old('residence_type') == 'apartment' ? 'selected' : '' }}>
-                                Apartamento</option>
-                        </select>
-                        @error('residence_type')
-                            <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
-                        @enderror
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <!-- Tipo de Residência -->
+                        <div class="mb-4">
+                            <x-label for="residence_type" :value="__('Tipo de Residência')" />
+                            <select id="residence_type" name="residence_type"
+                                class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                                required>
+                                <option value="house" {{ old('residence_type') == 'house' ? 'selected' : '' }}>Casa</option>
+                                <option value="apartment" {{ old('residence_type') == 'apartment' ? 'selected' : '' }}>Apartamento</option>
+                            </select>
+                            @error('residence_type')
+                                <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Propriedade da Residência -->
+                        <div class="mb-4">
+                            <x-label for="residence_ownership" :value="__('Propriedade da Residência')" />
+                            <select id="residence_ownership" name="residence_ownership"
+                                class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                                required>
+                                <option value="owned" {{ old('residence_ownership') == 'owned' ? 'selected' : '' }}>Própria</option>
+                                <option value="rented" {{ old('residence_ownership') == 'rented' ? 'selected' : '' }}>Alugada</option>
+                            </select>
+                            @error('residence_ownership')
+                                <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Espaço Externo -->
+                        <div class="mb-4">
+                            <x-label for="outdoor_space" :value="__('Você possui espaço externo?')" />
+                            <select id="outdoor_space" name="outdoor_space"
+                                class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                                required>
+                                <option value="0" {{ old('outdoor_space') == '0' ? 'selected' : '' }}>Não</option>
+                                <option value="1" {{ old('outdoor_space') == '1' ? 'selected' : '' }}>Sim</option>
+                            </select>
+                            @error('outdoor_space')
+                                <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
+                            @enderror
+                        </div>
                     </div>
 
-                    <!-- Propriedade da Residência -->
-                    <div class="mb-4">
-                        <x-label for="residence_ownership" :value="__('Propriedade da Residência')" />
-                        <select id="residence_ownership" name="residence_ownership"
-                            class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
-                            required>
-                            <option value="owned" {{ old('residence_ownership') == 'owned' ? 'selected' : '' }}>
-                                Própria</option>
-                            <option value="rented" {{ old('residence_ownership') == 'rented' ? 'selected' : '' }}>
-                                Alugada</option>
-                        </select>
-                        @error('residence_ownership')
-                            <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
-                        @enderror
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <!-- Medidas de Segurança -->
+                        <div class="mb-4">
+                            <x-label for="safety_measures" :value="__('Você possui medidas de segurança (cercas, portões, etc.)?')" />
+                            <select id="safety_measures" name="safety_measures"
+                                class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                                required>
+                                <option value="0" {{ old('safety_measures') == '0' ? 'selected' : '' }}>Não</option>
+                                <option value="1" {{ old('safety_measures') == '1' ? 'selected' : '' }}>Sim</option>
+                            </select>
+                            @error('safety_measures')
+                                <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Número de Moradores -->
+                        <div class="mb-4">
+                            <x-label for="number_of_residents" :value="__('Número de Moradores')" />
+                            <x-input id="number_of_residents" name="number_of_residents" type="number"
+                                class="block mt-1 w-full" value="{{ old('number_of_residents') }}" />
+                            @error('number_of_residents')
+                                <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Tem Crianças -->
+                        <div class="mb-4">
+                            <x-label for="has_children" :value="__('Você possui crianças?')" />
+                            <select id="has_children" name="has_children"
+                                class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                                required>
+                                <option value="0" {{ old('has_children') == '0' ? 'selected' : '' }}>Não</option>
+                                <option value="1" {{ old('has_children') == '1' ? 'selected' : '' }}>Sim</option>
+                            </select>
+                            @error('has_children')
+                                <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
+                            @enderror
+                        </div>
                     </div>
 
-                    <!-- Espaço Externo -->
-                    <div class="mb-4">
-                        <x-label for="outdoor_space" :value="__('Você possui espaço externo?')" />
-                        <select id="outdoor_space" name="outdoor_space"
-                            class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
-                            required>
-                            <option value="0" {{ old('outdoor_space') == '0' ? 'selected' : '' }}>Não</option>
-                            <option value="1" {{ old('outdoor_space') == '1' ? 'selected' : '' }}>Sim</option>
-                        </select>
-                        @error('outdoor_space')
-                            <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <!-- Medidas de Segurança -->
-                    <div class="mb-4">
-                        <x-label for="safety_measures" :value="__('Você possui medidas de segurança (cercas, portões, etc.)?')" />
-                        <select id="safety_measures" name="safety_measures"
-                            class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
-                            required>
-                            <option value="0" {{ old('safety_measures') == '0' ? 'selected' : '' }}>Não</option>
-                            <option value="1" {{ old('safety_measures') == '1' ? 'selected' : '' }}>Sim</option>
-                        </select>
-                        @error('safety_measures')
-                            <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <!-- Número de Moradores -->
-                    <div class="mb-4">
-                        <x-label for="number_of_residents" :value="__('Número de Moradores')" />
-                        <x-input id="number_of_residents" name="number_of_residents" type="number"
-                            class="block mt-1 w-full" value="{{ old('number_of_residents') }}" />
-                        @error('number_of_residents')
-                            <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <!-- Tem Crianças -->
-                    <div class="mb-4">
-                        <x-label for="has_children" :value="__('Você possui crianças?')" />
-                        <select id="has_children" name="has_children"
-                            class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
-                            required>
-                            <option value="0" {{ old('has_children') == '0' ? 'selected' : '' }}>Não</option>
-                            <option value="1" {{ old('has_children') == '1' ? 'selected' : '' }}>Sim</option>
-                        </select>
-                        @error('has_children')
-                            <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <!-- Detalhes das Crianças -->
+                    <!-- Children details section, aligned underneath, visible when required -->
                     <div class="mb-4" id="children_details_section"
                         style="display: {{ old('has_children') == '1' ? 'block' : 'none' }}">
                         <x-label for="children_details" :value="__('Detalhes sobre suas crianças (idade, etc.)')" />
@@ -273,29 +295,32 @@
                     </div>
 
                     <!-- Possui Outros Pets -->
-                    <div class="mb-4">
-                        <x-label for="has_other_pets" :value="__('Você possui outros pets?')" />
-                        <select id="has_other_pets" name="has_other_pets"
-                            class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
-                            required>
-                            <option value="0" {{ old('has_other_pets') == '0' ? 'selected' : '' }}>Não</option>
-                            <option value="1" {{ old('has_other_pets') == '1' ? 'selected' : '' }}>Sim</option>
-                        </select>
-                        @error('has_other_pets')
-                            <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
-                        @enderror
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="mb-4">
+                            <x-label for="has_other_pets" :value="__('Você possui outros pets?')" />
+                            <select id="has_other_pets" name="has_other_pets"
+                                class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                                required>
+                                <option value="0" {{ old('has_other_pets') == '0' ? 'selected' : '' }}>Não</option>
+                                <option value="1" {{ old('has_other_pets') == '1' ? 'selected' : '' }}>Sim</option>
+                            </select>
+                            @error('has_other_pets')
+                                <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Detalhes dos Outros Pets -->
+                        <div class="mb-4" id="other_pets_details_section"
+                            style="display: {{ old('has_other_pets') == '1' ? 'block' : 'none' }}">
+                            <x-label for="other_pets_details" :value="__('Detalhes sobre seus outros pets')" />
+                            <textarea id="other_pets_details" name="other_pets_details"
+                                class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">{{ old('other_pets_details') }}</textarea>
+                            @error('other_pets_details')
+                                <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
+                            @enderror
+                        </div>
                     </div>
 
-                    <!-- Detalhes dos Outros Pets -->
-                    <div class="mb-4" id="other_pets_details_section"
-                        style="display: {{ old('has_other_pets') == '1' ? 'block' : 'none' }}">
-                        <x-label for="other_pets_details" :value="__('Detalhes sobre seus outros pets')" />
-                        <textarea id="other_pets_details" name="other_pets_details"
-                            class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">{{ old('other_pets_details') }}</textarea>
-                        @error('other_pets_details')
-                            <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
-                        @enderror
-                    </div>
 
                     <!-- Motivação e Expectativas -->
                     <h3 class="font-semibold text-lg mb-4">{{ __('Motivação e Expectativas') }}</h3>

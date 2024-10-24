@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\AdoptionFormAccepted;
 use App\Notifications\AdoptionFormRejected;
+use Carbon\Carbon;
 use HTMLPurifier;
 use HTMLPurifier_Config;
 
@@ -21,6 +22,10 @@ class AdoptionFormController extends Controller
 {
     public function create(Pet $pet)
     {
+
+        $user = Auth::user(); // Get the authenticated user (the requester)
+        $responsibleUser = $pet->user; // Get the pet's responsible user
+
         // Check if the user has already submitted a form for this pet
         $existingForm = AdoptionForm::where('submitter_user_id', Auth::id())
             ->where('pet_id', $pet->id)
@@ -36,9 +41,6 @@ class AdoptionFormController extends Controller
             return redirect()->back()->with('error', 'This pet is no longer available for adoption.');
         }
 
-        // Recupera o usuário que cadastrou o pet
-        $responsibleUser = $pet->user;
-
         // Verifica se o usuário é uma ONG ou um Tutor e recupera o nome completo
         if ($responsibleUser->user_type === 'ong') {
             $responsibleName = $responsibleUser->ong->ong_name ?? 'Nome não disponível';
@@ -48,7 +50,25 @@ class AdoptionFormController extends Controller
             $responsibleName = 'Usuário desconhecido';
         }
 
-        return view('adoption-form.create', compact('pet', 'responsibleName'));
+
+        if ($user->user_type === 'ong') {
+            $submitterName = $user->ong->ong_name ?? 'Nome não disponível';
+            $submitterCpf = $user->ong->responsible_cpf ?? 'CPF não disponível';
+
+        } elseif ($user->user_type === 'tutor') {
+            $submitterName = $user->tutor->full_name ?? 'Nome não disponível';
+            $submitterCpf = $user->tutor->cpf ?? 'CPF não disponível';
+
+        } else {
+            $submitterName = 'Usuário desconhecido';
+            $submitterCpf = 'CPF não disponível';
+
+        }
+
+        return view('adoption-form.create', compact('pet', 'responsibleName',  'submitterName', 'submitterCpf'));
+
+
+
     }
 
     public function store(Request $request, Pet $pet)

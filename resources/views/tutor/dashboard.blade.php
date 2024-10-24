@@ -53,7 +53,7 @@
                         <a href="{{ route('adoption-form.submitted') }}"
                             class="inline-block bg-yellow-500 text-white py-2 px-4 rounded-lg hover:bg-yellow-600 mt-auto text-center"
                             aria-label="Ver os formulários de adoção que você enviou">
-                            {{ __('Ver Formulários') }}
+                            {{ __('Formulários Enviados') }}
                         </a>
                     </div>
 
@@ -68,7 +68,7 @@
                         <a href="{{ route('adoption-form.received') }}"
                             class="inline-block bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 mt-auto text-center"
                             aria-label="Ver formulários de adoção recebidos">
-                            {{ __('Ver Formulários Recebidos') }}
+                            {{ __('Formulários Recebidos') }}
                         </a>
                     </div>
 

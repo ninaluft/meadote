@@ -1,19 +1,17 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex justify-between items-center max-w-4xl mx-auto px-4">
+        <div class="flex flex-col sm:flex-row justify-between items-center max-w-4xl mx-auto px-4">
             <!-- Título -->
-            <h2 class="font-semibold text-2xl text-gray-800 leading-tight break-words break-all">
+            <h2 class="font-semibold text-2xl text-gray-800 leading-tight break-words break-all text-center sm:text-left mb-4 sm:mb-0">
                 {{ __('pets.pet_profile') }} {{ $pet->name }}
             </h2>
 
             <!-- Botões Editar e Excluir -->
             @if (Auth::check() && Auth::id() === $pet->user_id)
                 <div class="flex space-x-2">
-
                     <x-button-edit href="{{ route('pets.edit', $pet->id) }}" ariaLabel="Editar pet">
                         {{ __('Editar') }}
                     </x-button-edit>
-
 
                     <!-- Botão de Excluir com ícone -->
                     <form action="{{ route('pets.destroy', $pet->id) }}" method="POST" class="inline-block"
@@ -25,7 +23,6 @@
                             ariaLabel="Excluir pet">
                             Excluir
                         </x-button-delete>
-
                     </form>
                 </div>
             @endif

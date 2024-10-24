@@ -38,7 +38,7 @@ class OngEventController extends Controller
             'state' => 'nullable|string|max:255',
             'cep' => 'nullable|string|max:14',
             'location' => 'required|string|max:255',
-            'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:5120',
+            'photo' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
         ]);
 
         $photoPath = null;
@@ -161,12 +161,11 @@ class OngEventController extends Controller
             'photo' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120', // Validação da imagem
         ]);
 
-        // Atualizar a imagem se houver uma nova
-        // Atualizar a imagem se houver uma nova
+        // Se o arquivo de foto foi enviado, processar o upload
         if ($request->hasFile('photo')) {
-            // Deletar a imagem antiga usando o public_id
+            // Se houver uma foto antiga, excluí-la
             if ($event->photo_public_id) {
-                $this->imageService->deleteImage($event->photo_public_id);  // Usa o ImageService para deletar
+                $this->imageService->deleteImage($event->photo_public_id); // Usa o ImageService para deletar
             }
 
             // Fazer o upload da nova imagem
@@ -182,13 +181,13 @@ class OngEventController extends Controller
             }
         }
 
-
         // Atualiza os outros dados validados do evento
         $event->update($validated);
 
         // Redireciona para a página de visualização do evento
         return redirect()->route('ong-events.show', $event->id)->with('success', 'Evento atualizado com sucesso.');
     }
+
 
 
     public function destroy(OngEvent $event)

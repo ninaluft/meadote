@@ -23,7 +23,8 @@
                 <div class="grid grid-cols-2 gap-4">
                     <p><strong>{{ __('Nome Completo:') }}</strong> {{ $adoptionForm->submitter_name }}</p>
                     <p><strong>{{ __('CPF:') }}</strong> {{ $adoptionForm->cpf }}</p>
-                    <p><strong>{{ __('Data de Nascimento:') }}</strong> {{ \Carbon\Carbon::parse($adoptionForm->birth_date)->format('d/m/Y') }}</p>
+                    <p><strong>{{ __('Data de Nascimento:') }}</strong>
+                        {{ \Carbon\Carbon::parse($adoptionForm->birth_date)->format('d/m/Y') }}</p>
                     <p><strong>{{ __('Telefone:') }}</strong> {{ $adoptionForm->phone }}</p>
                     <p><strong>{{ __('Email:') }}</strong> {{ $adoptionForm->email }}</p>
                     <p><strong>{{ __('Estado Civil:') }}</strong> {{ $adoptionForm->marital_status }}</p>
@@ -36,10 +37,12 @@
                 <h3 class="font-semibold text-xl text-blue-800 mb-4">{{ __('🏠 Informações do Endereço') }}</h3>
                 <div class="grid grid-cols-2 gap-4">
                     <p><strong>{{ __('Rua: ') }}</strong> {{ $adoptionForm->street }},
-                        {{ $adoptionForm->number }}{{ $adoptionForm->complement ? ', ' . $adoptionForm->complement : '' }} </p>
+                        {{ $adoptionForm->number }}{{ $adoptionForm->complement ? ', ' . $adoptionForm->complement : '' }}
+                    </p>
                     <p><strong>{{ __('Bairro:') }}</strong> {{ $adoptionForm->neighborhood }}</p>
                     <p><strong>{{ __('CEP:') }}</strong> {{ $adoptionForm->cep }}</p>
-                    <p><strong>{{ __('Cidade: ') }}</strong> {{ $adoptionForm->city }}, {{ $adoptionForm->state }}</p>
+                    <p><strong>{{ __('Cidade: ') }}</strong> {{ $adoptionForm->city }}, {{ $adoptionForm->state }}
+                    </p>
                 </div>
             </div>
 
@@ -133,32 +136,39 @@
                         </x-button>
                     </form>
 
-                    <!-- Botão de Enviar Mensagem para o Solicitante -->
-                    <form action="{{ route('messages.conversation', ['user' => $adoptionForm->submitter_user_id]) }}"
-                        method="GET">
-                        <x-button type="submit"
-                            class="bg-blue-500 hover:bg-blue-600 w-full flex justify-center items-center">
-                            {{ __('Enviar Mensagem ao Solicitante') }}
-                        </x-button>
-                    </form>
+
                 </div>
             @endif
 
-            <!-- Script para mostrar/ocultar o campo de motivo da rejeição -->
-            <script>
-                document.getElementById('rejectButton').addEventListener('click', function() {
-                    const rejectionForm = document.getElementById('rejectionForm');
-                    if (rejectionForm.style.display === 'none') {
-                        rejectionForm.style.display = 'block';
-                    } else {
-                        rejectionForm.style.display = 'none';
-                    }
-                });
-            </script>
+
+
+            <div class="bg-white shadow-md rounded-lg overflow-hidden p-6 space-y-4">
+
+                <!-- Botão de Enviar Mensagem para o Solicitante -->
+                <form action="{{ route('messages.conversation', ['user' => $adoptionForm->submitter_user_id]) }}"
+                    method="GET">
+                    <x-button type="submit"
+                        class="bg-blue-500 hover:bg-blue-600 w-full flex justify-center items-center">
+                        {{ __('Enviar Mensagem ao Solicitante') }}
+                    </x-button>
+                </form>
+            </div>
 
 
         </div>
     </div>
+
+    <!-- Script para mostrar/ocultar o campo de motivo da rejeição -->
+    <script>
+        document.getElementById('rejectButton').addEventListener('click', function() {
+            const rejectionForm = document.getElementById('rejectionForm');
+            if (rejectionForm.style.display === 'none') {
+                rejectionForm.style.display = 'block';
+            } else {
+                rejectionForm.style.display = 'none';
+            }
+        });
+    </script>
 
     <!-- Script para ativar/desativar botão e exibir diálogos de confirmação -->
     <script>

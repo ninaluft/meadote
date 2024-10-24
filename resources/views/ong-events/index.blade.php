@@ -9,38 +9,55 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
 
-                <!-- Formulário de Busca -->
-                <form method="GET" action="{{ route('ong-events.index') }}" class="mb-6"
+                <!-- Link de Filtros -->
+                <div class="flex justify-end mb-4">
+                    <div class="cursor-pointer flex items-center text-indigo-600 hover:text-indigo-800 font-semibold"
+                        id="toggleFiltersLink">
+                        <span id="toggleFiltersText">Filtros</span>
+                        <svg id="toggleFiltersIcon" class="ml-2 w-5 h-5 transition-transform transform rotate-0"
+                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Formulário de Busca - Ocultado inicialmente -->
+                <form method="GET" action="{{ route('ong-events.index') }}" id="filtersForm" class="mb-6 hidden"
                     aria-label="Formulário de busca de eventos">
-                    <div class="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
-                        <div class="w-full md:w-1/4">
+                    <div class="flex flex-wrap gap-2">
+                        <!-- Nome do Evento -->
+                        <div class="flex flex-col">
                             <x-label for="search_name" value="{{ __('Nome do Evento') }}" />
-                            <x-input id="search_name" type="text" name="search_name"
-                                value="{{ request('search_name') }}" class="mt-1 block w-full"
+                            <x-input id="search_name" type="text" name="search_name" value="{{ request('search_name') }}"
+                                class="block border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm min-w-max w-full px-4 py-2"
                                 placeholder="Buscar por nome do evento" />
                         </div>
 
-                        <div class="w-full md:w-1/4">
+                        <!-- Cidade -->
+                        <div class="flex flex-col">
                             <x-label for="search_city" value="{{ __('Cidade') }}" />
-                            <x-input id="search_city" type="text" name="search_city"
-                                value="{{ request('search_city') }}" class="mt-1 block w-full"
+                            <x-input id="search_city" type="text" name="search_city" value="{{ request('search_city') }}"
+                                class="block border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm min-w-max w-full px-4 py-2"
                                 placeholder="Buscar por cidade" />
                         </div>
 
-                        <div class="w-full md:w-1/4">
+                        <!-- Organizador -->
+                        <div class="flex flex-col">
                             <x-label for="search_organizer" value="{{ __('Organizador') }}" />
                             <x-input id="search_organizer" type="text" name="search_organizer"
-                                value="{{ request('search_organizer') }}" class="mt-1 block w-full"
+                                value="{{ request('search_organizer') }}"
+                                class="block border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm min-w-max w-full px-4 py-2"
                                 placeholder="Buscar por organizador" />
                         </div>
 
                         <!-- Botão de busca -->
                         <div class="flex items-end">
-                            <x-button class="w-full sm:w-auto h-10">{{ __('Buscar') }}</x-button>
+                            <x-button class="flex items-center px-4 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700">
+                                <i class="fas fa-search text-white m-1"></i>
+                            </x-button>
                         </div>
                     </div>
                 </form>
-
 
                 <!-- Lista de Eventos Futuros -->
                 <h3 class="text-lg font-semibold mb-4">{{ __('Eventos Futuros') }}</h3>
@@ -138,4 +155,24 @@
             </div>
         </div>
     </div>
+
+    <script>
+        // Script para alternar a visibilidade da barra de filtros
+        const toggleFiltersLink = document.getElementById('toggleFiltersLink');
+        const filtersForm = document.getElementById('filtersForm');
+        const toggleFiltersText = document.getElementById('toggleFiltersText');
+        const toggleFiltersIcon = document.getElementById('toggleFiltersIcon');
+
+        toggleFiltersLink.addEventListener('click', () => {
+            filtersForm.classList.toggle('hidden');
+
+            if (filtersForm.classList.contains('hidden')) {
+                toggleFiltersText.textContent = 'Mostrar Filtros';
+                toggleFiltersIcon.classList.remove('rotate-180');
+            } else {
+                toggleFiltersText.textContent = 'Esconder Filtros';
+                toggleFiltersIcon.classList.add('rotate-180');
+            }
+        });
+    </script>
 </x-app-layout>

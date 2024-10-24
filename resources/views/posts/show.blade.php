@@ -42,9 +42,9 @@
 
                 <!-- Botão de Compartilhar -->
                 <div class="mt-6">
-                    <x-button-share id="sharePostButton" title="{{ json_encode($post->title) }}"
-                        text="{{ json_encode(Illuminate\Support\Str::limit(strip_tags($post->content), 150)) }}"
-                        url="{{ json_encode(url()->current()) }}"
+                    <x-button-share id="sharePostButton" title="{{$post->title}}"
+                        text="Confira esse post: "
+                        url="{{ route('posts.show', $post->id) }}"
                         aria-label="Compartilhar o post {{ $post->title }}">
                         {{ __('Compartilhar') }}
                     </x-button-share>

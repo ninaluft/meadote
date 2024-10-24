@@ -37,8 +37,10 @@
                             </select>
                         </div>
                         <!-- Botão de busca -->
-                        <div>
-                            <x-button class="w-full sm:w-auto h-full">{{ __('Buscar') }}</x-button>
+                        <div class="flex items-end">
+                            <x-button>
+                                <i class="fas fa-search text-white m-1"></i>
+                            </x-button>
                         </div>
                     </div>
                 </form>

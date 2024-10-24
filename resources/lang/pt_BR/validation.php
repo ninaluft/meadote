@@ -15,7 +15,7 @@ return [
     */
 
 
-    'accepted' => 'O campo :attribute deve ser aceito.',
+    'accepted' => 'Este campo deve ser aceito.',
     'accepted_if' => 'O campo :attribute deve ser aceito quando :other for :value.',
     'active_url' => 'O campo :attribute não contém um URL válido.',
     'after' => 'O campo :attribute deve conter uma data posterior a :date.',
@@ -47,7 +47,7 @@ return [
     'ends_with' => 'O campo :attribute deve terminar com um dos seguintes valores: :values.',
     'exists' => 'O valor selecionado para o campo :attribute é inválido.',
     'file' => 'O campo :attribute deve conter um arquivo.',
-    'filled' => 'O campo :attribute é obrigatório.',
+    'filled' => 'Este campo é obrigatório.',
     'gt' => [
         'numeric' => 'O campo :attribute deve ser maior que :value.',
         'file' => 'O arquivo :attribute deve ser maior que :value kilobytes.',
@@ -105,7 +105,7 @@ return [
     'prohibited_unless' => 'O campo :attribute é proibido a menos que :other esteja em :values.',
     'prohibits' => 'O campo :attribute proíbe :other de estar presente.',
     'regex' => 'O formato do campo :attribute é inválido.',
-    'required' => 'O campo :attribute é obrigatório.',
+    'required' => 'Este campo é obrigatório.',
     'required_if' => 'O campo :attribute é obrigatório quando :other é :value.',
     'required_unless' => 'O campo :attribute é obrigatório a menos que :other esteja em :values.',
     'required_with' => 'O campo :attribute é obrigatório quando :values está presente.',

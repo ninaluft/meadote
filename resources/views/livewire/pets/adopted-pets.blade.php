@@ -4,35 +4,56 @@
         <h3 class="text-xl font-semibold">Pets Adotados ({{ $adoptedPets->total() }})</h3>
     </div>
 
-    {{-- Formulário de Filtro --}}
-    <div class="bg-gray-100 p-2 rounded mb-6">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
-            <div>
+    <!-- Link de Filtros -->
+    <div class="flex justify-end mb-4">
+        <div class="cursor-pointer flex items-center text-indigo-600 hover:text-indigo-800 font-semibold"
+            id="toggleFiltersLink">
+            <span id="toggleFiltersText">Filtros</span>
+            <svg id="toggleFiltersIcon" class="ml-2 w-5 h-5 transition-transform transform rotate-0"
+                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+        </div>
+    </div>
+
+    <!-- Formulário de Filtro - Ocultado inicialmente -->
+    <div id="filtersForm" class="bg-gray-100 p-2 rounded mb-6 hidden">
+        <div class="flex flex-wrap gap-2">
+            <!-- Buscar por nome -->
+            <div class="flex flex-col">
+                <x-label for="searchName" value="Nome" />
                 <input type="text" wire:model.defer="searchNameTemp" placeholder="Buscar por nome"
-                    class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                    class="block border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm min-w-max w-full px-4 py-2" />
             </div>
-            <div>
+
+            <!-- Gênero -->
+            <div class="flex flex-col">
+                <x-label for="searchGender" value="Gênero" />
                 <select wire:model.defer="searchGenderTemp"
-                    class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <option value="">Todos os Gêneros</option>
+                    class="block border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm min-w-max w-full px-4 py-2">
+                    <option value="">Todos</option>
                     <option value="male">Macho</option>
                     <option value="female">Fêmea</option>
                 </select>
             </div>
-            <div>
+
+            <!-- Espécie -->
+            <div class="flex flex-col">
+                <x-label for="searchSpecies" value="Espécie" />
                 <select wire:model.defer="searchSpeciesTemp"
-                    class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <option value="">Todas as Espécies</option>
+                    class="block border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm min-w-max w-full px-4 py-2">
+                    <option value="">Todas</option>
                     <option value="dog">Cachorro</option>
                     <option value="cat">Gato</option>
                     <option value="other">Outro</option>
                 </select>
             </div>
-            <div>
-                <button wire:click="applyFilters"
-                    class="w-full bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded  transition duration-300">
-                    Buscar
-                </button>
+
+            <!-- Botão de busca -->
+            <div class="flex items-end">
+                <x-button wire:click="applyFilters" class="flex items-center px-4 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700">
+                    <i class="fas fa-search text-white m-1"></i>
+                </x-button>
             </div>
         </div>
     </div>
@@ -52,4 +73,25 @@
             {{ $adoptedPets->links() }}
         </div>
     @endif
+
+
+    <script>
+        // Script para alternar a visibilidade da barra de filtros
+        const toggleFiltersLink = document.getElementById('toggleFiltersLink');
+        const filtersForm = document.getElementById('filtersForm');
+        const toggleFiltersText = document.getElementById('toggleFiltersText');
+        const toggleFiltersIcon = document.getElementById('toggleFiltersIcon');
+
+        toggleFiltersLink.addEventListener('click', () => {
+            filtersForm.classList.toggle('hidden');
+
+            if (filtersForm.classList.contains('hidden')) {
+                toggleFiltersText.textContent = 'Mostrar Filtros';
+                toggleFiltersIcon.classList.remove('rotate-180');
+            } else {
+                toggleFiltersText.textContent = 'Esconder Filtros';
+                toggleFiltersIcon.classList.add('rotate-180');
+            }
+        });
+    </script>
 </div>
