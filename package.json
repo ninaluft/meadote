@@ -16,6 +16,7 @@
         "vite": "^5.0"
     },
     "dependencies": {
+        "clarifai": "^2.9.1",
         "cloudinary": "^2.5.1",
         "firebase": "^10.13.1",
         "laravel-echo": "^1.16.1",

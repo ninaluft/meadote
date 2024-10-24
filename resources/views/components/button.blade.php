@@ -36,7 +36,7 @@
 @else
     <button {{ $attributes->merge(['type' => 'submit', 'class' => "inline-flex items-center $sizeClasses $colorClasses rounded-md text-white focus:outline-none disabled:opacity-50"]) }}
         aria-label="{{ $ariaLabel }}"
-        onclick="showSpinner(this)">
+        onclick="handleButtonClick(this)">
         <span class="spinner mr-2" style="display:none;">
             <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -51,9 +51,36 @@
 @endif
 
 <script>
+    function handleButtonClick(button) {
+        // Exibe o spinner e desabilita o botão
+        showSpinner(button);
+
+        // Simula o processo de compartilhamento (exemplo, substitua com a sua lógica)
+        setTimeout(() => {
+            hideSpinner(button); // Esconde o spinner após a ação (aqui simula o término da ação)
+        }, 2000); // Tempo simulado, ajuste conforme sua necessidade
+
+        // Exemplo de compartilhamento ou outra ação que você pode realizar:
+        /*
+        navigator.share({
+            title: 'Exemplo',
+            text: 'Texto de exemplo',
+            url: 'https://seu-site.com'
+        })
+        .then(() => hideSpinner(button))
+        .catch(() => hideSpinner(button));
+        */
+    }
+
     function showSpinner(button) {
-        // Exibe o spinner e desabilita visualmente o botão, mas não interfere na submissão
+        // Exibe o spinner e desabilita visualmente o botão
         button.querySelector('.spinner').style.display = 'inline-block';
-        button.classList.add('opacity-50', 'cursor-not-allowed'); // Adiciona uma aparência desativada
+        button.classList.add('opacity-50', 'cursor-not-allowed'); // Aparência desativada
+    }
+
+    function hideSpinner(button) {
+        // Esconde o spinner e restaura o estado original do botão
+        button.querySelector('.spinner').style.display = 'none';
+        button.classList.remove('opacity-50', 'cursor-not-allowed'); // Remove aparência desativada
     }
 </script>

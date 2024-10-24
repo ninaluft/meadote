@@ -13,9 +13,10 @@
                 @if (Auth::check())
                     <!-- Navigation Links -->
                     <div class="space-x-8 sm:-my-px sm:ms-10 sm:flex mt-6 ml-2 mr-4 ">
-                        <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')" aria-label="Painel">
+                        <x-nav-link href="{{ route('dashboard') }}" :active="request()->is(['admin/dashboard*', 'ong/dashboard*', 'tutor/dashboard*'])" aria-label="Painel">
                             {{ __('Meu Painel') }}
                         </x-nav-link>
+
                     </div>
                 @endif
 
@@ -136,6 +137,12 @@
                                     {{ __('FAQs') }}
                                 </x-dropdown-link>
 
+
+                                <x-dropdown-link href="{{ route('about') }}">
+                                    {{ __('Sobre o site') }}
+                                </x-dropdown-link>
+
+
                                 <div class="border-t border-gray-200"></div>
 
                                 <!-- Authentication -->
@@ -168,6 +175,8 @@
                     <x-nav-link href="{{ route('register') }}" :active="request()->routeIs('register')" aria-label="Registrar-se">
                         {{ __('Registrar-se') }}
                     </x-nav-link>
+
+
                 @endguest
 
 
@@ -265,9 +274,15 @@
 
                         <div class="mt-3 space-y-1">
                             <!-- Account Management -->
+                            <x-responsive-nav-link href="{{ route('user.public-profile', Auth::id()) }}" :active="request()->routeIs('user.public-profile')"
+                                aria-label="Perfil">
+                                {{ __('Meu Perfil') }}
+                            </x-responsive-nav-link>
+
+
 
                             <x-responsive-nav-link href="{{ route('profile.show') }}" :active="request()->routeIs('profile.show')"
-                                aria-label="Perfil">
+                                aria-label="Configuraçoes de conta">
                                 {{ __('Configurações de Conta') }}
                             </x-responsive-nav-link>
 

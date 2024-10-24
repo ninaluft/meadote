@@ -131,7 +131,7 @@ class PetController extends Controller
         // Validação dos campos
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'photo_path' => 'nullable|image|max:2048',
+            'photo_path' => 'nullable|image|max:5120',
             'species' => 'required|in:dog,cat,other',
             'gender' => 'required|in:male,female',
             'age' => 'required|in:puppy,adult,senior',
@@ -149,16 +149,18 @@ class PetController extends Controller
 
         // Se o usuário fez upload de uma imagem
         if ($request->hasFile('photo_path')) {
-            // Chama o serviço de upload de imagem e envia o arquivo, não apenas o caminho
+            // Chama o serviço de upload de imagem e verifica se o upload foi bem-sucedido
             $imageData = $this->imageService->uploadImage($request->file('photo_path')->getRealPath(), 'pets');
 
-            // Obtém a URL e o public_id da imagem
-            $photoPath = $imageData['secure_url'];  // URL segura da imagem
-            $publicId = $imageData['public_id'];    // public_id da imagem
-
-
+            // Verifica se o upload foi bem-sucedido e se o public_id existe
+            if (isset($imageData['secure_url']) && isset($imageData['public_id'])) {
+                $photoPath = $imageData['secure_url'];  // URL segura da imagem
+                $publicId = $imageData['public_id'];    // public_id da imagem
+            } else {
+                // Caso o upload falhe ou a imagem seja imprópria
+                return redirect()->back()->with('error', 'A imagem não pôde ser carregada ou foi considerada imprópria.');
+            }
         }
-
 
         // Criação do Pet no banco de dados, incluindo o public_id
         $pet = Pet::create([
@@ -177,11 +179,10 @@ class PetController extends Controller
             'specify_other' => $validated['specify_other'],
         ]);
 
-
-
         // Redireciona o usuário com uma mensagem de sucesso
         return redirect()->route('pets.my-pets')->with('success', 'Pet cadastrado com sucesso.');
     }
+
 
 
 
@@ -198,7 +199,7 @@ class PetController extends Controller
         // Validação dos campos
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'photo_path' => 'nullable|image|max:2048',
+            'photo_path' => 'nullable|image|max:5120',
             'species' => 'required|in:dog,cat,other',
             'gender' => 'required|in:male,female',
             'age' => 'required|in:puppy,adult,senior',
@@ -212,11 +213,17 @@ class PetController extends Controller
 
         // Verifica se há uma nova imagem
         if ($request->hasFile('photo_path')) {
-
-            // Faz o upload da nova imagem para o Cloudinary
+            // Chama o serviço de upload de imagem e verifica se o upload foi bem-sucedido
             $imageData = $this->imageService->uploadImage($request->file('photo_path')->getRealPath(), 'pets');
-            $pet->photo_path = $imageData['secure_url'];    // Atualiza a URL da nova imagem
-            $pet->photo_public_id = $imageData['public_id']; // Atualiza o public_id da nova imagem
+
+            // Verifica se o upload foi bem-sucedido e se o public_id existe
+            if (isset($imageData['secure_url']) && isset($imageData['public_id'])) {
+                $pet->photo_path = $imageData['secure_url'];    // Atualiza a URL da nova imagem
+                $pet->photo_public_id = $imageData['public_id']; // Atualiza o public_id da nova imagem
+            } else {
+                // Caso o upload falhe ou a imagem seja imprópria
+                return redirect()->back()->with('error', 'A imagem foi considerada imprópria.');
+            }
         }
 
         // Atualiza os outros campos
@@ -236,6 +243,7 @@ class PetController extends Controller
         // Redireciona o usuário com uma mensagem de sucesso
         return redirect()->route('pets.show', $pet)->with('success', 'Pet atualizado com sucesso.');
     }
+
 
 
 

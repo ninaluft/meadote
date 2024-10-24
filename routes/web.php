@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\AboutController;
 use App\Http\Controllers\AdoptionFormController;
 use App\Http\Controllers\OngController;
 use App\Http\Controllers\PublicProfileController;
+use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
@@ -203,5 +205,8 @@ Route::middleware(['auth', 'user_type:tutor'])->group(function () {
         return view('tutor.dashboard');
     })->name('tutor.dashboard');
 });
+
+
+Route::get('/sobre', [AboutController::class, 'index'])->name('about');
 
 

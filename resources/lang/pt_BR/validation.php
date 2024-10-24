@@ -82,7 +82,7 @@ return [
     ],
     'max' => [
         'numeric' => 'O campo :attribute não pode ser superior a :max.',
-        'file' => 'O arquivo :attribute não pode ter mais que :max kilobytes.',
+        'file' => 'A foto não pode ter mais que :max kilobytes.',
         'string' => 'O campo :attribute não pode conter mais que :max caracteres.',
         'array' => 'O campo :attribute não pode conter mais que :max itens.',
     ],
@@ -190,5 +190,7 @@ return [
         'state' => 'estado',
         'terms' => 'termos de serviço',
     ],
+
+
 
 ];

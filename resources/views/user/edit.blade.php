@@ -274,7 +274,7 @@
 
 
                     <div class="flex items-center justify-end mt-4">
-                        <x-button class="ml-4">{{ __('Atualizar Perfil') }}</x-button>
+                        <x-button class="ml-4">{{ __('Salvar') }}</x-button>
                     </div>
 
 
@@ -433,7 +433,7 @@
             const inputDiv = document.createElement('div');
             inputDiv.className = 'flex items-center space-x-2';
             inputDiv.innerHTML = `
-            <x-input type="url" name="new_social_links[]" class="w-full" placeholder="Cole o link da rede social aqui" />
+            <x-input type="url" name="new_social_links[]" class="w-full" placeholder="Cole o link completo da rede social aqui" />
             <button type="button" onclick="removeNewSocialLink(this)" class="bg-red-500 text-white px-2 rounded">X</button>
         `;
             container.appendChild(inputDiv);

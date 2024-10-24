@@ -14,6 +14,15 @@ return [
     |
     */
 
+    'clarifai' => [
+        'api_key' => env('CLARIFAI_API_KEY'),
+    ],
+
+    'moderatecontent' => [
+        'api_key' => env('MODERATECONTENT_API_KEY'),
+    ],
+
+
     'postmark' => [
         'token' => env('POSTMARK_TOKEN'),
     ],

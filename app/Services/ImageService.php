@@ -2,66 +2,97 @@
 
 namespace App\Services;
 
-use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
+use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Illuminate\Support\Facades\Storage;
 
 class ImageService
 {
-    /**
-     * Faz upload de uma imagem para o Cloudinary ou para o armazenamento local, dependendo do driver configurado.
-     *
-     * @param string $filePath O caminho do arquivo local.
-     * @param string|null $folder A pasta opcional no Cloudinary.
-     * @return array Contém a URL segura e o public_id da imagem.
-     */
+    protected $clarifaiClient;
+
+    public function __construct()
+    {
+        $this->clarifaiClient = new Client([
+            'base_uri' => 'https://api.clarifai.com',
+            'headers' => [
+                'Authorization' => 'Key ' . env('CLARIFAI_API_KEY'),
+                'Content-Type' => 'application/json',
+            ]
+        ]);
+    }
+
     public function uploadImage($filePath, $folder = null)
     {
+        $uploadResult = Cloudinary::upload($filePath, ['folder' => $folder]);
+        $imageUrl = $uploadResult->getSecurePath();
 
-        if (env('FILESYSTEM_DISK') === 'cloudinary') {
-            $uploadResult = Cloudinary::upload($filePath, ['folder' => $folder]);
-
+        // Verifica a imagem com Clarifai
+        if ($this->isImageInappropriate($imageUrl)) {
+            Cloudinary::destroy($uploadResult->getPublicId());
             return [
-                'secure_url' => $uploadResult->getSecurePath(),  // URL segura da imagem
-                'public_id'  => $uploadResult->getPublicId(),    // public_id da imagem
+                'secure_url' => null,
+                'message'    => 'A imagem contém conteúdo impróprio',
             ];
-        } else {
+        }
 
-            $folder = $folder ? "public/{$folder}" : 'public';
+        return [
+            'secure_url' => $imageUrl,
+            'public_id'  => $uploadResult->getPublicId(),
+        ];
+    }
 
-            // Use Storage::putFile() para salvar o arquivo de upload no armazenamento local
-            $storedPath = Storage::putFile($folder, new \Illuminate\Http\File($filePath));
+    protected function isImageInappropriate($imageUrl)
+    {
+        try {
+            $response = $this->clarifaiClient->post("/v2/models/moderation-recognition/outputs", [
+                'json' => [
+                    'inputs' => [
+                        [
+                            'data' => [
+                                'image' => ['url' => $imageUrl]
+                            ]
+                        ]
+                    ]
+                ]
+            ]);
 
-            if (!$storedPath) {
+            $data = json_decode($response->getBody(), true);
+            $concepts = $data['outputs'][0]['data']['concepts'];
 
-                return [
-                    'secure_url' => null,
-                    'public_id'  => null,
-                ];
+            Log::info('Clarifai response: ', $data); // Log da resposta completa para depuração
+
+            foreach ($concepts as $concept) {
+                Log::info("Concept: {$concept['name']}, Confidence: {$concept['value']}"); // Log dos conceitos com a pontuação
+
+                // Ajusta o valor de confiança para detectar conteúdo impróprio
+                // if (($concept['name'] == 'nsfw' || $concept['name'] == 'explicit') && $concept['value'] > 0.00085) {
+                //     Log::info('Conteúdo impróprio detectado.');
+                //     return true; // Retorna true se a imagem for imprópria
+                // }
+
+                if ($concept['name'] == 'safe' && $concept['value'] < 0.88) {
+                    Log::info('Conteúdo impróprio detectado. Imagem não é considerada segura.');
+                    return true; // Retorna true se a imagem for considerada insegura
+                }
+
             }
 
-            $url = Storage::url($storedPath);
-
-            return [
-                'secure_url' => $url,  // A URL pública da imagem
-                'public_id'  => $storedPath, // Caminho real do arquivo salvo localmente
-            ];
+            return false;
+        } catch (\Exception $e) {
+            Log::error('Erro ao comunicar com Clarifai: ' . $e->getMessage()); // Log dos erros de comunicação
+            return false;
         }
     }
 
-    /**
-     * Exclui uma imagem, dependendo do driver de armazenamento configurado.
-     *
-     * @param string $publicId O public_id ou caminho da imagem a ser excluída.
-     * @return void
-     */
     public function deleteImage($publicId)
     {
-        // Exclui do Cloudinary ou do local storage dependendo do disco configurado
         if (env('FILESYSTEM_DISK') === 'cloudinary') {
             Cloudinary::destroy($publicId);
         } else {
             Storage::delete($publicId);
         }
     }
+
+
 }

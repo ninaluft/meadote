@@ -94,6 +94,7 @@ class ProfileEditController extends Controller
         }
 
         // Handle profile photo upload
+        // Handle profile photo upload
         if ($request->hasFile('profile_photo')) {
             // Excluir a imagem antiga antes de fazer o upload da nova
             if ($user->profile_photo_public_id) {
@@ -103,12 +104,18 @@ class ProfileEditController extends Controller
             // Fazer o upload da nova imagem usando o ImageService
             $imageData = $this->imageService->uploadImage($request->file('profile_photo')->getRealPath(), 'profile_photos');
 
-            // Atualizar o caminho da imagem e o public_id no banco de dados
-            $user->update([
-                'profile_photo' => $imageData['secure_url'],
-                'profile_photo_public_id' => $imageData['public_id'],
-            ]);
+            // Verifique se a imagem foi considerada imprópria
+            if (isset($imageData['secure_url']) && isset($imageData['public_id'])) {
+                // Atualizar o caminho da imagem e o public_id no banco de dados
+                $user->update([
+                    'profile_photo' => $imageData['secure_url'],
+                    'profile_photo_public_id' => $imageData['public_id'],
+                ]);
+            } else {
+                return redirect()->back()->with('error', 'A imagem foi detectada como imprópria.');
+            }
         }
+
 
         // Update base user profile fields
         $user->update([

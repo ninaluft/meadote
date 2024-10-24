@@ -98,7 +98,39 @@
 
             </div>
         </div>
+
+        
+        <!-- Modal de Disclaimer -->
+        <div id="disclaimerModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
+            <div class="bg-white rounded-lg shadow-lg p-6 max-w-md mx-auto">
+                <!-- Título centralizado -->
+                <h2 class="text-2xl font-semibold mb-4 text-center">Aviso Importante</h2>
+                <p class="mb-4 text-center">
+                    Este site é parte de um projeto TCC em Análise e Desenvolvimento de Sistemas
+                    e é apenas demonstrativo, não possuindo funcionalidade comercial.
+                </p>
+
+                <!-- Botões "Entendi" e "Saiba Mais" -->
+                <div class="flex justify-between">
+                    <a href="{{ route('about') }}"
+                        class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600">
+                        Saiba Mais
+                    </a>
+                    <button id="closeDisclaimer" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
+                        Entendi
+                    </button>
+                </div>
+            </div>
+        </div>
+
     </div>
+
+    <script>
+        document.getElementById('closeDisclaimer').addEventListener('click', function() {
+            document.getElementById('disclaimerModal').style.display = 'none';
+        });
+    </script>
+
 
     <!-- Initialize Swiper.js -->
     <script>

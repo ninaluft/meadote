@@ -45,5 +45,6 @@ return [
         'available' => 'Disponível',
         'adopted' => 'Adotado',
     ],
+    
 
 ];

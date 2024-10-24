@@ -33,6 +33,7 @@
     <meta name="apple-mobile-web-app-status-bar" content="#19598c" />
     <meta name="theme-color" content="#19598c" />
 
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -95,6 +96,14 @@
             <div id="alert"
                 class="fixed top-30 left-0 w-full bg-green-500 bg-opacity-90 text-white p-2 shadow-lg transition-opacity duration-300 text-center z-50">
                 {{ session('success') }}
+            </div>
+        @endif
+
+
+        @if (session('error'))
+            <div id="alert"
+                class="fixed top-30 left-0 w-full bg-red-500 bg-opacity-90 text-white p-2 shadow-lg transition-opacity duration-500 text-center z-50">
+                {{ session('error') }}
             </div>
         @endif
 

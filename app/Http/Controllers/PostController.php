@@ -65,11 +65,19 @@ class PostController extends Controller
         $post->user_id = auth()->id(); // Associar o post ao usuário logado
 
         // Armazenar a imagem, se houver, usando o ImageService
+        // Armazenar a imagem, se houver, usando o ImageService
         if ($request->hasFile('image')) {
             $imageData = $this->imageService->uploadImage($request->file('image')->getRealPath(), 'posts');
-            $post->image_path = $imageData['secure_url'];
-            $post->image_public_id = $imageData['public_id']; // Guardar o public_id para exclusão futura
+
+            // Verifica se a imagem foi considerada imprópria
+            if (isset($imageData['secure_url']) && isset($imageData['public_id'])) {
+                $post->image_path = $imageData['secure_url'];
+                $post->image_public_id = $imageData['public_id']; // Guardar o public_id para exclusão futura
+            } else {
+                return redirect()->back()->with('error', 'A imagem foi detectada como imprópria.');
+            }
         }
+
 
         $post->save();
 
@@ -97,6 +105,7 @@ class PostController extends Controller
         $post->title = $validated['title'];
         $post->content = $sanitizedContent;
 
+
         // Se houver uma nova imagem, fazer o upload e deletar a antiga
         if ($request->hasFile('image')) {
             // Excluir a imagem antiga, se existir
@@ -106,14 +115,19 @@ class PostController extends Controller
 
             // Fazer upload da nova imagem
             $imageData = $this->imageService->uploadImage($request->file('image')->getRealPath(), 'posts');
-            $post->image_path = $imageData['secure_url'];
-            $post->image_public_id = $imageData['public_id']; // Atualiza o public_id
+
+            // Verifica se a imagem foi considerada imprópria
+            if (isset($imageData['secure_url']) && isset($imageData['public_id'])) {
+                // Atualiza o caminho e o public_id da nova imagem
+                $post->image_path = $imageData['secure_url'];
+                $post->image_public_id = $imageData['public_id'];
+            } else {
+                return redirect()->back()->with('error', 'A imagem foi detectada como imprópria.');
+            }
         }
 
-        Log::info('Salvando post atualizado: ', [
-            'image_path' => $post->image_path ?? 'Nenhuma imagem atualizada',
-            'image_public_id' => $post->image_public_id ?? 'Nenhum public_id atualizado'
-        ]);
+
+
 
         $post->save();
 

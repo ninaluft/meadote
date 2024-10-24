@@ -107,7 +107,7 @@
                                             @break
 
                                             @default
-                                                <span>Rede não identificada</span>
+                                                <span>Acessar link externo</span>
                                         @endswitch
                                     </a>
                                 @endforeach

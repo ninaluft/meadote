@@ -45,11 +45,19 @@ class OngEventController extends Controller
         $publicId = null;
 
         // Upload da imagem para o Cloudinary via ImageService
+        // Upload da imagem para o Cloudinary via ImageService
         if ($request->hasFile('photo')) {
             $imageData = $this->imageService->uploadImage($request->file('photo')->getRealPath(), 'events');
-            $photoPath = $imageData['secure_url'];
-            $publicId = $imageData['public_id'];
+
+            // Verifica se a imagem foi considerada imprópria
+            if (isset($imageData['secure_url']) && isset($imageData['public_id'])) {
+                $photoPath = $imageData['secure_url'];
+                $publicId = $imageData['public_id'];
+            } else {
+                return redirect()->back()->with('error', 'A imagem foi detectada como imprópria.');
+            }
         }
+
 
         OngEvent::create([
             'ong_id' => Auth::user()->ong->id,
@@ -154,6 +162,7 @@ class OngEventController extends Controller
         ]);
 
         // Atualizar a imagem se houver uma nova
+        // Atualizar a imagem se houver uma nova
         if ($request->hasFile('photo')) {
             // Deletar a imagem antiga usando o public_id
             if ($event->photo_public_id) {
@@ -163,10 +172,16 @@ class OngEventController extends Controller
             // Fazer o upload da nova imagem
             $imageData = $this->imageService->uploadImage($request->file('photo')->getRealPath(), 'events');
 
-            // Atualiza os dados da imagem no evento
-            $event->photo_path = $imageData['secure_url'];  // Atualiza a URL da imagem
-            $event->photo_public_id = $imageData['public_id'];  // Atualiza o public_id da imagem
+            // Verifica se a imagem foi considerada imprópria
+            if (isset($imageData['secure_url']) && isset($imageData['public_id'])) {
+                // Atualiza os dados da imagem no evento
+                $event->photo_path = $imageData['secure_url'];  // Atualiza a URL da imagem
+                $event->photo_public_id = $imageData['public_id'];  // Atualiza o public_id da imagem
+            } else {
+                return redirect()->back()->with('error', 'A imagem foi detectada como imprópria.');
+            }
         }
+
 
         // Atualiza os outros dados validados do evento
         $event->update($validated);
