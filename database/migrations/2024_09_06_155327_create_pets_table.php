@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('pets', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('photo_path', 2048)->nullable();
             $table->enum('species', ['dog', 'cat', 'other']);
             $table->string('specify_other', 2048)->nullable();
             $table->enum('gender', ['male', 'female']);
@@ -24,8 +23,10 @@ return new class extends Migration
             $table->boolean('special_conditions')->default(false);
             $table->text('special_conditions_description')->nullable();
             $table->text('description')->nullable();
+            $table->string('photo_path', 2048)->nullable();
+            $table->string('photo_public_id', 255)->nullable();
             $table->enum('status', ['available', 'adopted'])->default('available');
-            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // The owner (tutor or ONG)
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
 

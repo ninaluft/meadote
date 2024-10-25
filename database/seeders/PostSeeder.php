@@ -56,7 +56,7 @@ class PostSeeder extends Seeder
 
                     <p>Essas dicas podem ajudar a tornar a transição para o novo lar mais tranquila para seu pet adotado, garantindo que ele se sinta seguro e acolhido em sua nova família.</p>
                 ',
-                'image_path' => 'posts/adaptation_tips.jpg', // Caminho para a imagem do post
+                'image_path' => 'storage/posts/adaptation_tips.jpg', // Caminho para a imagem do post
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
@@ -71,7 +71,7 @@ class PostSeeder extends Seeder
                     <p>A castração contribui para a redução do abandono de animais nas ruas...</p>
                     <p>Adotar medidas de controle populacional, como a castração, é uma responsabilidade de todos os tutores de animais...</p>
                 ',
-                'image_path' => 'posts/castration_benefits.jpg', // Caminho para a imagem do post
+                'image_path' => 'storage/posts/castration_benefits.jpg', // Caminho para a imagem do post
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
@@ -102,7 +102,7 @@ class PostSeeder extends Seeder
                     <h3>Conclusão</h3>
                     <p>Cuidar de um pet vai muito além de alimentá-lo e dar água. É necessário dedicação, amor e compromisso para garantir que ele seja feliz e saudável. Com esses cuidados básicos, seu amigo peludo certamente terá uma vida longa e cheia de bons momentos ao seu lado!</p>
                 ',
-                'image_path' => 'posts/pet_care.jpg', // Caminho para a imagem do post
+                'image_path' => 'storage/posts/pet_care.jpg', // Caminho para a imagem do post
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ]

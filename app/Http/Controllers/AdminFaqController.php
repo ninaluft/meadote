@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Faq;
 
-class FaqController extends Controller
+class AdminFaqController extends Controller
 {
     /**
      * Exibe as FAQs publicamente.
@@ -32,7 +32,7 @@ class FaqController extends Controller
         $faq = Faq::first();
         $faqContent = $faq ? $faq->content : '';
 
-        return view('admin.faq-edit', compact('faqContent'));
+        return view('admin.content-update.faq', compact('faqContent'));
     }
 
     /**

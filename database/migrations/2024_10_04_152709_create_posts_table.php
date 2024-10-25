@@ -15,8 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('content');
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // Autor do post (administrador)
-            $table->string('image_path')->nullable(); // Caminho da imagem opcional do post
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->string('image_path', 255)->nullable();
+            $table->string('image_public_id', 255)->nullable();
             $table->timestamps();
         });
     }

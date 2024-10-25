@@ -22,7 +22,8 @@ return new class extends Migration
             $table->string('state')->nullable();
             $table->string('cep', 14)->nullable();
             $table->string('location'); // Location of the event (e.g., venue address)
-            $table->string('photo_path')->nullable(); // Path to the event photo
+            $table->string('photo_path', 2048)->nullable(); // Cloudinary URL for event photo
+            $table->string('photo_public_id', 255)->nullable();
             $table->timestamps();
         });
     }

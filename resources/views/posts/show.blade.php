@@ -40,6 +40,10 @@
                     {!! $post->content !!}
                 </div>
 
+
+                <hr class="border-t border-gray-300 mt-0 mb-8">
+
+
                 <!-- Botão de Compartilhar -->
                 <div class="mt-6">
                     <x-button-share id="sharePostButton" title="{{$post->title}}"
@@ -50,9 +54,9 @@
                     </x-button-share>
                 </div>
 
-                <div class="py-12">
+                <div class="py-8">
                     <!-- Sessão de Comentários -->
-                    <div class="mt-8">
+                    <div class="mt-6">
                         <h3 class="text-xl font-bold">Comentários</h3>
 
                         <!-- Seção de Comentários com Barra de Rolagem -->

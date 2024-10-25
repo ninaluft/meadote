@@ -133,10 +133,7 @@
                                 {{ __('Compartilhar Pet') }}
                             </x-button-share>
 
-
                         </div>
-
-
                     </div>
                 </div>
             </div>

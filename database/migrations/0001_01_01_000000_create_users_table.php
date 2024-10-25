@@ -21,11 +21,12 @@ return new class extends Migration
             $table->string('cep', 14)->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->boolean('terms_accepted')->default(false); // Terms of use acceptance
+            $table->timestamp('terms_accepted_at')->nullable(); // Date terms were accepted
+            $table->string('profile_photo', 2048)->nullable(); // Cloudinary URL for profile photo
+            $table->string('profile_photo_public_id', 255)->nullable(); // Cloudinary public ID for photo
             $table->rememberToken();
-            $table->foreignId('current_team_id')->nullable();
-            $table->string('profile_photo_path', 2048)->nullable();
             $table->timestamps();
-
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

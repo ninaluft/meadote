@@ -5,14 +5,12 @@
                 {{ $event->title }}
             </h2>
 
-
             @if (Auth::check() && Auth::user()->user_type === 'ong' && Auth::user()->ong->id === $event->ong_id)
                 <div class="flex space-x-2">
                     <!-- Botão de Editar com ícone -->
                     <x-button-edit href="{{ route('events.edit', $event->id) }}" ariaLabel="Editar evento">
                         {{ __('Editar') }}
                     </x-button-edit>
-
 
                     <!-- Botão de Excluir com ícone -->
                     <form action="{{ route('events.destroy', $event->id) }}" method="POST" class="inline-block"
@@ -23,9 +21,7 @@
                             confirmMessage="{{ __('Tem certeza de que deseja excluir este evento?') }}">
                             Excluir
                         </x-button-delete>
-
                     </form>
-
                 </div>
             @endif
         </div>
@@ -36,11 +32,10 @@
             <div class="bg-white shadow-md rounded-lg overflow-hidden p-6 space-y-6">
                 <!-- Foto do Evento -->
                 @if ($event->photo_path)
-                    <div class="mb-4">
-                        <x-image :src="$event->photo_path" alt="{{ $event->title }}"
-                            class="rounded-lg w-full h-auto shadow-sm cursor-pointer" />
-
-
+                    <div class="mb-4 flex justify-center">
+                        <img src="{{ $event->photo_path }}" alt="{{ $event->title }}"
+                            class="rounded-lg max-w-md h-auto shadow-sm cursor-pointer object-contain"
+                            onclick="openModal('{{ $event->photo_path }}')" />
                     </div>
                 @endif
 
@@ -75,16 +70,11 @@
                     </div>
 
                     <div class="mt-4 flex space-x-3 items-center">
-
                         <x-button-share id="shareEventButton" title="Evento: {{ $event->title }}"
                             text="Participe do evento {{ $event->title }} organizado por {{ $event->ong->ong_name }}"
                             url="{{ route('ong-events.show', $event->id) }}" ariaLabel="Compartilhar perfil do evento">
                             {{ __('Compartilhar Evento') }}
                         </x-button-share>
-
-
-
-
                     </div>
                 </div>
             </div>
@@ -92,25 +82,33 @@
     </div>
 
     <!-- Modal de Imagem -->
-    <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-75 hidden z-50 flex items-center justify-center"
-        onclick="closeModal()">
-        <div class="relative">
+    <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-75 hidden z-50 flex items-center justify-center">
+        <div class="relative" onclick="event.stopPropagation()">
             <button onclick="closeModal()" class="absolute top-0 right-0 m-4 text-white text-3xl">&times;</button>
-            <img id="modalImage" src="" alt="Imagem em tamanho real"
-                class="max-w-full max-h-screen rounded-lg object-contain" onclick="event.stopPropagation()">
+            <img id="modalImage" src="" alt="Imagem em tamanho real" class="max-w-full max-h-screen rounded-lg object-contain">
         </div>
     </div>
 
     <!-- Script para o modal de imagem -->
     <script>
         function openModal(imageUrl) {
-            document.getElementById('modalImage').src = imageUrl;
-            document.getElementById('imageModal').classList.remove('hidden');
+            const modal = document.getElementById('imageModal');
+            const modalImage = document.getElementById('modalImage');
+            modalImage.src = imageUrl;
+            modal.classList.remove('hidden');
         }
 
         function closeModal() {
-            document.getElementById('imageModal').classList.add('hidden');
+            const modal = document.getElementById('imageModal');
+            modal.classList.add('hidden');
         }
+
+        // Fecha o modal ao clicar fora da imagem
+        document.getElementById('imageModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
     </script>
 
     <!-- Script para compartilhar o evento -->

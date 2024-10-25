@@ -185,32 +185,34 @@
                 </div>
             </div>
 
-            <!-- Políticas de Privacidade -->
-            @if (Laravel\Jetstream\Jetstream::hasTermsAndPrivacyPolicyFeature())
-                <div class="mt-4">
-                    <x-label for="terms">
-                        <div class="flex items-center">
-                            <x-checkbox name="terms" id="terms" required />
-                            <div class="ml-2">
-                                {!! __('Eu aceito os :terms_of_service e :privacy_policy', [
-                                    'terms_of_service' =>
-                                        '<a target="_blank" href="' .
-                                        route('terms.show') .
-                                        '" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">' .
-                                        __('Termos de Serviço') .
-                                        '</a>',
-                                    'privacy_policy' =>
-                                        '<a target="_blank" href="' .
-                                        route('policy.show') .
-                                        '" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">' .
-                                        __('Política de Privacidade') .
-                                        '</a>',
-                                ]) !!}
-                            </div>
-                        </div>
-                    </x-label>
-                </div>
-            @endif
+             <!-- Políticas de Privacidade -->
+             @if (Laravel\Jetstream\Jetstream::hasTermsAndPrivacyPolicyFeature())
+             <div class="mt-4">
+                 <x-label for="terms">
+                     <div class="flex items-center">
+                         <x-checkbox name="terms" id="terms" required />
+                         <div class="ml-2">
+                             {!! __('Eu aceito os :terms_of_service e :privacy_policy', [
+                                 'terms_of_service' =>
+                                     '<a target="_blank" href="' .
+                                     route('terms.show') .
+                                     '" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">' .
+                                     __('Termos de Serviço') .
+                                     '</a>',
+                                 'privacy_policy' =>
+                                     '<a target="_blank" href="' .
+                                     route('policy.show') .
+                                     '" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">' .
+                                     __('Política de Privacidade') .
+                                     '</a>',
+                             ]) !!}
+                         </div>
+                     </div>
+                 </x-label>
+             </div>
+         @endif
+
+
 
             <!-- Botão de Registro -->
             <div class="flex items-center justify-end mt-4">

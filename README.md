@@ -8,7 +8,7 @@
 - [🔧 Requisitos](#requisitos)
 - [📦 Instalação](#instalação)
 - [⚙️ Configuração](#configuração)
-- [☁️ Escolha entre Disco Local e Cloudinary](#escolha-entre-disco-local-e-cloudinary)
+- [☁️ Armazenamento de Imagens com Cloudinary e Verificação com Clarifai](#armazenamento-de-imagens-com-cloudinary-e-verificação-com-clarifai)
 - [🚀 Como Executar](#como-executar)
 - [🛠️ Rodando as Migrações](#rodando-as-migrações)
 
@@ -84,47 +84,23 @@ Além disso, é recomendado ter um ambiente local para desenvolvimento PHP, como
 
 8. **Configure outras variáveis, como o ambiente (`APP_ENV`), a URL da aplicação (`APP_URL`), etc., conforme necessário.**
 
-## ☁️ Escolha entre Disco Local e Cloudinary
+## ☁️ Armazenamento de Imagens com Cloudinary e Verificação com Clarifai
 
-Para o armazenamento de imagens no **MeAdote**, você tem a opção de escolher entre salvar localmente ou usar o **Cloudinary**, uma plataforma de gerenciamento de imagens na nuvem. 
+O **MeAdote** utiliza o **Cloudinary** para armazenamento e gerenciamento de imagens na nuvem, e o **Clarifai** para verificação de segurança nas imagens. Esse sistema verifica se as imagens carregadas atendem aos requisitos de moderação, ajudando a manter a plataforma apropriada para todos os usuários.
 
-### Disco Local (Padrão)
+### Configuração do Cloudinary e Clarifai
 
-Por padrão, as imagens serão armazenadas localmente no diretório `storage`. Isso é adequado para ambientes de desenvolvimento ou servidores que tenham espaço e infraestrutura para armazenamento local. Para usar o disco local, nenhuma configuração adicional é necessária além da configuração padrão no arquivo `.env`:
-
-```env
-FILESYSTEM_DISK=local
-```
-
-### Cloudinary
-
-Se preferir usar um serviço de nuvem para armazenar as imagens, como o **Cloudinary**, você precisa configurar sua conta no Cloudinary e atualizar o arquivo `.env` com as credenciais fornecidas por eles.
-
-1. **Primeiro, crie uma conta no [Cloudinary](https://cloudinary.com/).**
+1. **Primeiro, crie uma conta no [Cloudinary](https://cloudinary.com/) e no [Clarifai](https://www.clarifai.com/).**
 2. **Adicione suas credenciais no arquivo `.env`:**
 
    ```env
    FILESYSTEM_DISK=cloudinary
 
    CLOUDINARY_URL=cloudinary://<your_api_key>:<your_api_secret>@<your_cloud_name>
-
+   CLARIFAI_API_KEY=your_clarifai_api_key
    ```
 
-### Alternando entre Local e Cloudinary
-
-Você pode alternar facilmente entre o armazenamento local e o **Cloudinary** apenas mudando o valor da variável `FILESYSTEM_DISK` no arquivo `.env`. Por exemplo, para usar o disco local, defina:
-
-```env
-FILESYSTEM_DISK=local
-```
-
-E para usar o **Cloudinary**:
-
-```env
-FILESYSTEM_DISK=cloudinary
-```
-
-Essa flexibilidade permite que você escolha o melhor método de armazenamento com base nas suas necessidades e no ambiente em que está rodando a aplicação (desenvolvimento, produção, etc.).
+Com essa configuração, todas as imagens são carregadas diretamente para o Cloudinary. O Clarifai é utilizado automaticamente para avaliar o conteúdo das imagens antes de finalizarem o upload, removendo imagens que não estejam em conformidade com as diretrizes de segurança.
 
 ## 🚀 Como Executar
 

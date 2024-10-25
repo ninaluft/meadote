@@ -16,6 +16,10 @@ use App\Http\Controllers\ProfileEditController;
 use App\Http\Controllers\TemporaryHousingController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\AdminFaqController;
+use App\Http\Controllers\AdminFooterController;
+use App\Http\Controllers\AdminPolicyController;
+use App\Http\Controllers\AdminTermsController;
 use App\Http\Controllers\FaqController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PostController;
@@ -77,7 +81,12 @@ Route::get('/all-ongs', [OngController::class, 'index'])->name('ongs.index');
 Route::get('/user/public-profile/{id}', [PublicProfileController::class, 'show'])->name('user.public-profile');
 Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
 Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show');
-Route::get('/faqs', [FaqController::class, 'show'])->name('faqs.show');
+Route::get('/faqs', [AdminFaqController::class, 'show'])->name('faqs.show');
+Route::get('/sobre', [AboutController::class, 'index'])->name('about');
+
+Route::get('/terms-of-service', [AdminTermsController::class, 'show'])->name('terms.show');
+Route::get('/privacy-policy', [AdminPolicyController::class, 'show'])->name('policy.show');
+
 
 
 
@@ -166,9 +175,21 @@ Route::middleware(['auth', 'user_type:admin'])->group(function () {
     Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
 
 
-    Route::get('/admin/faqs/edit', [FaqController::class, 'edit'])->name('faqs.edit');
-    Route::post('/admin/faqs/store', [FaqController::class, 'store'])->name('faqs.store');
-    Route::post('/admin/faqs/update', [FaqController::class, 'update'])->name('faqs.update');
+    Route::get('/admin/faqs/edit', [AdminFaqController::class, 'edit'])->name('faqs.edit');
+    Route::post('/admin/faqs/store', [AdminFaqController::class, 'store'])->name('faqs.store');
+    Route::post('/admin/faqs/update', [AdminFaqController::class, 'update'])->name('faqs.update');
+
+   Route::get('/admin/terms/edit', [AdminTermsController::class, 'edit'])->name('admin.terms.edit');
+   Route::post('/admin/terms/store', [AdminTermsController::class, 'store'])->name('admin.terms.store');
+   Route::post('/admin/terms/update', [AdminTermsController::class, 'update'])->name('admin.terms.update');
+
+   Route::get('/admin/policy/edit', [AdminPolicyController::class, 'edit'])->name('admin.policy.edit');
+   Route::post('/admin/policy/store', [AdminPolicyController::class, 'store'])->name('admin.policy.store');
+   Route::post('/admin/policy/update', [AdminPolicyController::class, 'update'])->name('admin.policy.update');
+
+   Route::get('/footer/edit', [AdminFooterController::class, 'edit'])->name('admin.footer.edit');
+   Route::put('/footer/update', [AdminFooterController::class, 'update'])->name('admin.footer.update');
+
 });
 
 
@@ -205,8 +226,5 @@ Route::middleware(['auth', 'user_type:tutor'])->group(function () {
         return view('tutor.dashboard');
     })->name('tutor.dashboard');
 });
-
-
-Route::get('/sobre', [AboutController::class, 'index'])->name('about');
 
 
