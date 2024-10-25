@@ -24,10 +24,10 @@
                         <textarea id="termsEditor" name="content">{{ old('content', $termsContent) }}</textarea>
                     </div>
 
-                    <!-- Botão de Salvar -->
-                    <button type="submit" class="btn btn-primary mt-3">
-                        Criar Termos de Uso
-                    </button>
+                    <!-- Botão para salvar -->
+                    <x-button type="submit">
+                        {{ __('Salvar') }}
+                    </x-button>
                 </form>
 
             </div>

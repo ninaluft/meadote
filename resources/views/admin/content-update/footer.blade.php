@@ -28,9 +28,10 @@
                     </div>
 
                     <!-- Botão para salvar -->
-                    <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition duration-200 ease-in-out">
-                        {{ __('Salvar Rodapé') }}
-                    </button>
+                    <x-button type="submit">
+                        {{ __('Salvar') }}
+                    </x-button>
+
                 </form>
 
             </div>
@@ -47,7 +48,7 @@
     <script>
         $(document).ready(function() {
             $('#summernote').summernote({
-                height: 300,   // Altura do editor
+                height: 300, // Altura do editor
                 tabsize: 2,
                 toolbar: [
                     ['style', ['style']],
@@ -55,7 +56,7 @@
                     ['color', ['color']], // Ferramenta para escolher cor do texto
                     ['para', ['ul', 'ol', 'paragraph']],
                     ['insert', ['link']],
-                    ['view', ['codeview']],  // Habilita visualização de código HTML
+                    ['view', ['codeview']], // Habilita visualização de código HTML
                 ]
             });
         });

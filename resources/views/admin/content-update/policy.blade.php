@@ -25,10 +25,10 @@
                         <textarea id="policyEditor" name="content">{{ old('content', $policyContent) }}</textarea>
                     </div>
 
-                    <!-- Botão de Salvar -->
-                    <button type="submit" class="btn btn-primary mt-3">
-                        Criar Política de Privacidade
-                    </button>
+                    <!-- Botão para salvar -->
+                    <x-button type="submit">
+                        {{ __('Salvar') }}
+                    </x-button>
                 </form>
 
             </div>

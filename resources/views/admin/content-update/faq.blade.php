@@ -19,8 +19,10 @@
                         <textarea id="faqEditor" name="faq_content">{{ $faqContent }}</textarea>
                     </div>
 
-                    <!-- Botão de Salvar -->
-                    <button type="submit" class="btn btn-primary mt-3">Salvar FAQs</button>
+                    <!-- Botão para salvar -->
+                    <x-button type="submit">
+                        {{ __('Salvar') }}
+                    </x-button>
                 </form>
 
             </div>
