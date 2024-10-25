@@ -134,14 +134,14 @@
                 if (alert) { // Verifica se o alerta existe
                     alert.classList.add('opacity-0');
                 }
-            }, 2000);
+            }, 3000);
 
             setTimeout(function() {
                 var alert = document.getElementById('alert');
                 if (alert) { // Verifica se o alerta existe
                     alert.style.display = 'none';
                 }
-            }, 3500);
+            }, 5000);
         });
     </script>
 
