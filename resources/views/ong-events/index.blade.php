@@ -11,7 +11,7 @@
 
                 <!-- Link de Filtros -->
                 <div class="flex justify-end mb-4">
-                    <div class="cursor-pointer flex items-center text-indigo-600 hover:text-indigo-800 font-semibold"
+                    <div class="cursor-pointer flex items-center text-teal-600 hover:text-teal-700 font-semibold"
                         id="toggleFiltersLink">
                         <span id="toggleFiltersText">Filtros</span>
                         <svg id="toggleFiltersIcon" class="ml-2 w-5 h-5 transition-transform transform rotate-0"

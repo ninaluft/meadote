@@ -9,7 +9,7 @@
 
     <title>{{ config('app.name', 'MeAdote') }}</title>
 
-    <link rel="icon" href="{{ asset('images/favicon.png') }}" type="image/png"/>
+    <link rel="icon" href="{{ asset('images/favicon.png') }}" type="image/png" />
 
 
     <!-- Fonts -->
@@ -65,8 +65,6 @@
             height: 150px;
         }
     </style>
-
-
 
 
 </head>
@@ -146,6 +144,8 @@
             }, 3500);
         });
     </script>
+
+
 
 </body>
 

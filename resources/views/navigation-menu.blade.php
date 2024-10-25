@@ -19,14 +19,11 @@
 
                     </div>
                 @endif
-
             </div>
-
 
 
             <div class="hidden sm:flex sm:items-center sm:ms-4">
                 @auth
-
 
                     <!-- All Pets -->
                     <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
@@ -137,10 +134,10 @@
                                     {{ __('FAQs') }}
                                 </x-dropdown-link>
 
-
+{{--
                                 <x-dropdown-link href="{{ route('about') }}">
                                     {{ __('Sobre o site') }}
-                                </x-dropdown-link>
+                                </x-dropdown-link> --}}
 
 
                                 <div class="border-t border-gray-200"></div>
@@ -159,7 +156,6 @@
 
 
                 @guest
-
                     <!-- Blog -->
                     <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                         <x-nav-link :href="route('posts.index')" :active="request()->routeIs('posts.index')" aria-label="Blog">
@@ -175,14 +171,9 @@
                     <x-nav-link href="{{ route('register') }}" :active="request()->routeIs('register')" aria-label="Registrar-se">
                         {{ __('Registrar-se') }}
                     </x-nav-link>
-
-
                 @endguest
 
-
             </div>
-
-
 
 
 
@@ -191,8 +182,6 @@
 
                 <!-- Add Messages Icon for Mobile -->
                 @auth
-
-
                     <x-nav-link :href="route('messages.inbox')" :active="request()->routeIs('messages.inbox')" aria-label="Mensagens">
                         <svg xmlns="http://www.w3.org/2000/svg"
                             class="h-6 w-6 text-teal-600 hover:text-teal-700 transition duration-150 ease-in-out"
@@ -207,8 +196,6 @@
                             </span>
                         @endif
                     </x-nav-link>
-
-
 
                 @endauth
 
@@ -227,9 +214,6 @@
             </div>
         </div>
     </div>
-
-
-
 
 
     <!-- Responsive Navigation Menu -->

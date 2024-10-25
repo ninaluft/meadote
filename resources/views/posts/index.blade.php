@@ -54,7 +54,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         @foreach ($posts as $post)
                             <a href="{{ route('posts.show', $post->id) }}"
-                                class="block bg-white p-6 rounded-lg shadow-md hover:shadow-lg hover:bg-gray-100 transition duration-300 ease-in-out w-full h-full flex flex-col">
+                                class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg hover:bg-gray-100 transition duration-300 ease-in-out w-full h-full flex flex-col">
 
                                 <!-- Container do título e autor com altura mínima para alinhar os títulos -->
                                 <div class="mb-4 flex-grow">

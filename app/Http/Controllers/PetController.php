@@ -158,7 +158,7 @@ class PetController extends Controller
                 $publicId = $imageData['public_id'];    // public_id da imagem
             } else {
                 // Caso o upload falhe ou a imagem seja imprópria
-                return redirect()->back()->with('error', 'A imagem não pôde ser carregada ou foi considerada imprópria.');
+                return redirect()->back()->with('error', 'A imagem foi considerada imprópria.');
             }
         }
 

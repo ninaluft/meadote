@@ -17,6 +17,7 @@ use App\Notifications\AdoptionFormRejected;
 use Carbon\Carbon;
 use HTMLPurifier;
 use HTMLPurifier_Config;
+use Illuminate\Support\HtmlString;
 
 class AdoptionFormController extends Controller
 {
@@ -189,7 +190,6 @@ class AdoptionFormController extends Controller
 
         return response()->json(['status' => 'Notification sent successfully']);
     }
-
 
 
     public function sendSystemNotification($userId, $messageContent)

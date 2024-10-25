@@ -99,8 +99,8 @@
             </div>
         </div>
 
-        
-        <!-- Modal de Disclaimer -->
+
+        {{-- <!-- Modal de Disclaimer -->
         <div id="disclaimerModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
             <div class="bg-white rounded-lg shadow-lg p-6 max-w-md mx-auto">
                 <!-- Título centralizado -->
@@ -121,15 +121,15 @@
                     </button>
                 </div>
             </div>
-        </div>
+        </div> --}}
 
     </div>
 
-    <script>
+    {{-- <script>
         document.getElementById('closeDisclaimer').addEventListener('click', function() {
             document.getElementById('disclaimerModal').style.display = 'none';
         });
-    </script>
+    </script> --}}
 
 
     <!-- Initialize Swiper.js -->

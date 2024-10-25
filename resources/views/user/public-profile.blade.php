@@ -3,12 +3,7 @@
         <div class="flex justify-between items-center max-w-4xl mx-auto px-4">
             <!-- Título -->
             <h2 class="font-semibold text-2xl text-gray-800 leading-tight break-words break-all">
-                Perfil de
-                @if ($user->user_type === 'ong' || $user->user_type === 'admin')
-                    {{ $profileData ? $profileData->ong_name : 'Informações não disponíveis' }}
-                @elseif ($user->user_type === 'tutor')
-                    {{ $profileData ? $profileData->full_name : $user->name }}
-                @endif
+                Perfil de {{ $user->name }}
             </h2>
 
             <!-- Botão para Editar Perfil -->
@@ -34,10 +29,10 @@
                             <!-- Usando x-image para exibir a foto de perfil -->
                             <x-image :src="$user->profile_photo" alt="Foto de perfil de {{ $user->name }}"
                                 class="rounded-full w-40 h-40 md:w-48 md:h-48 object-cover" />
-                                @else
-                                <!-- Exibir as iniciais caso a foto de perfil não esteja disponível -->
-                                <x-initials-avatar :user="$user" />
-                            @endif
+                        @else
+                            <!-- Exibir as iniciais caso a foto de perfil não esteja disponível -->
+                            <x-initials-avatar :user="$user" />
+                        @endif
 
 
                         <div>
@@ -164,7 +159,7 @@
 
     <!-- Script para API de Compartilhamento -->
     <script>
-        document.getElementById('shareProfileButton').addEventListener('click', function () {
+        document.getElementById('shareProfileButton').addEventListener('click', function() {
             const shareData = {
                 title: 'Perfil de {{ $user->name }}',
                 text: 'Veja o perfil público de {{ $user->name }} no MeAdote.',
