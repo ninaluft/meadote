@@ -8,7 +8,7 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use App\Models\AdoptionForm;
 
-class AdoptionFormRejected extends Notification
+class AdoptionFormRejected extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -17,7 +17,7 @@ class AdoptionFormRejected extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct(AdoptionForm $adoptionForm) // Passa o formulário de adoção como parâmetro
+    public function __construct(AdoptionForm $adoptionForm)
     {
         $this->adoptionForm = $adoptionForm;
     }
@@ -29,7 +29,7 @@ class AdoptionFormRejected extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['mail', 'database']; // Notifica via e-mail e banco de dados (para o inbox)
+        return ['mail', 'database'];
     }
 
     /**
@@ -38,13 +38,15 @@ class AdoptionFormRejected extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->line('Your adoption form for the pet ' . $this->adoptionForm->pet_name . ' has been rejected.')
-            ->action('View Adoption Form', url('/adoption-forms/' . $this->adoptionForm->id))
-            ->line('We are sorry to inform you that your adoption request was not accepted.');
+            ->subject('Adoção Não Aprovada para ' . $this->adoptionForm->pet_name)
+            ->greeting("Olá, {$notifiable->name}")
+            ->line('Infelizmente, seu formulário de adoção para o pet ' . $this->adoptionForm->pet_name . ' não foi aprovado.')
+            ->action('Ver Detalhes do Formulário de Adoção', url('/adoption-form/' . $this->adoptionForm->id))
+            ->line('Agradecemos o seu interesse e esperamos que encontre um novo amigo em breve!');
     }
 
     /**
-     * Get the array representation of the notification.
+     * Get the array representation of the notification for database storage.
      *
      * @return array<string, mixed>
      */
@@ -53,7 +55,8 @@ class AdoptionFormRejected extends Notification
         return [
             'adoptionForm_id' => $this->adoptionForm->id,
             'pet_name' => $this->adoptionForm->pet_name,
-            'message' => 'Your adoption form for ' . $this->adoptionForm->pet_name . ' has been rejected.'
+            'message' => 'Lamentamos informar que seu formulário de adoção para ' . $this->adoptionForm->pet_name . ' foi rejeitado. Acesse nossa plataforma para saber mais detalhes.',
+            'action_url' => url('/adoption-form/' . $this->adoptionForm->id),
         ];
     }
 }

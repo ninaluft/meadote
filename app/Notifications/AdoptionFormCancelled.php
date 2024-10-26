@@ -8,7 +8,7 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use App\Models\AdoptionForm;
 
-class AdoptionFormCancelled extends Notification
+class AdoptionFormCancelled extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -17,7 +17,7 @@ class AdoptionFormCancelled extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct(AdoptionForm $adoptionForm) // Passa o formulário de adoção como parâmetro
+    public function __construct(AdoptionForm $adoptionForm)
     {
         $this->adoptionForm = $adoptionForm;
     }
@@ -29,7 +29,7 @@ class AdoptionFormCancelled extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['mail', 'database']; // Notifica via e-mail e banco de dados (para o inbox)
+        return ['mail', 'database'];
     }
 
     /**
@@ -38,13 +38,15 @@ class AdoptionFormCancelled extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->line('The adoption form for the pet ' . $this->adoptionForm->pet_name . ' has been cancelled.')
-            ->action('View Adoption Forms', url('/adoption-forms/' . $this->adoptionForm->id))
-            ->line('We are sorry to see this happen.');
+            ->subject('Formulário de Adoção Cancelado para ' . $this->adoptionForm->pet_name)
+            ->greeting("Olá, {$notifiable->name}")
+            ->line('O formulário de adoção para o pet ' . $this->adoptionForm->pet_name . ' foi cancelado.')
+            ->action('Ver Formulários de Adoção', url('/adoption-form/' . $this->adoptionForm->id))
+            ->line('Lamentamos ver isso acontecer, mas esperamos que você continue interessado em ajudar nossos pets.');
     }
 
     /**
-     * Get the array representation of the notification.
+     * Get the array representation of the notification for database storage.
      *
      * @return array<string, mixed>
      */
@@ -53,7 +55,8 @@ class AdoptionFormCancelled extends Notification
         return [
             'adoptionForm_id' => $this->adoptionForm->id,
             'pet_name' => $this->adoptionForm->pet_name,
-            'message' => 'The adoption form for ' . $this->adoptionForm->pet_name . ' has been cancelled.'
+            'message' => 'O formulário de adoção para ' . $this->adoptionForm->pet_name . ' foi cancelado.',
+            'action_url' => url('/adoption-form/' . $this->adoptionForm->id),
         ];
     }
 }

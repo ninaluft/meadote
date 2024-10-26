@@ -6,9 +6,9 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use App\Models\AdoptionForm; // Certifique-se de importar o modelo AdoptionForm
+use App\Models\AdoptionForm;
 
-class AdoptionFormSubmitted extends Notification
+class AdoptionFormSubmitted extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -17,7 +17,7 @@ class AdoptionFormSubmitted extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct(AdoptionForm $adoptionForm) // Recebe o formulário de adoção
+    public function __construct(AdoptionForm $adoptionForm)
     {
         $this->adoptionForm = $adoptionForm;
     }
@@ -29,7 +29,7 @@ class AdoptionFormSubmitted extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['mail'];
+        return ['mail', 'database'];
     }
 
     /**
@@ -38,13 +38,15 @@ class AdoptionFormSubmitted extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->line('A new adoption form has been submitted for your pet: ' . $this->adoptionForm->pet_name) // Acessa o nome do pet
-            ->action('View Adoption Form', url('/adoption-forms/' . $this->adoptionForm->id)) // Link para o formulário
-            ->line('Thank you for using our application!');
+            ->subject('Novo Formulário de Adoção Recebido')
+            ->greeting("Olá, {$notifiable->name}!")
+            ->line('Um novo formulário de adoção foi recebido para o seu pet: ' . $this->adoptionForm->pet_name)
+            ->action('Ver Formulário de Adoção', url('/adoption-form/' . $this->adoptionForm->id))
+            ->line('Obrigado por usar nossa plataforma para ajudar os animais a encontrarem lares amorosos!');
     }
 
     /**
-     * Get the array representation of the notification.
+     * Get the array representation of the notification for database storage.
      *
      * @return array<string, mixed>
      */
@@ -53,6 +55,8 @@ class AdoptionFormSubmitted extends Notification
         return [
             'adoptionForm_id' => $this->adoptionForm->id,
             'pet_name' => $this->adoptionForm->pet_name,
+            'message' => 'Um novo formulário de adoção foi submetido para o seu pet ' . $this->adoptionForm->pet_name,
+            'action_url' => url('/adoption-forms/' . $this->adoptionForm->id),
         ];
     }
 }

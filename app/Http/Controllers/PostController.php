@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Services\ImageService;
 use HTMLPurifier;
 use HTMLPurifier_Config;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class PostController extends Controller
@@ -152,6 +153,8 @@ class PostController extends Controller
         // Obter o post anterior e o próximo
         $previousPost = Post::where('id', '<', $post->id)->orderBy('id', 'desc')->first();
         $nextPost = Post::where('id', '>', $post->id)->orderBy('id', 'asc')->first();
+
+
 
         return view('posts.show', compact('post', 'previousPost', 'nextPost'));
     }

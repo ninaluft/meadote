@@ -122,14 +122,16 @@
                         </x-button-share>
 
 
-                        <!-- Botão para Enviar Mensagem -->
-                        @if (Auth::check() && Auth::id() !== $user->id)
-                            <x-button icon="fas fa-envelope" color="green"
-                                href="{{ route('messages.conversation', $user->id) }}"
-                                ariaLabel="Enviar mensagem para {{ $user->name }}">
-                                Enviar Mensagem
-                            </x-button>
-                        @endif
+
+                        <x-button icon="fas fa-envelope" color="green"
+                            href="{{ Auth::check() ? route('messages.conversation', $user->id) : route('login', ['redirectTo' => route('messages.conversation', $user->id)]) }}"
+                            ariaLabel="Enviar mensagem para {{ $user->name }}">
+                            Enviar Mensagem
+                        </x-button>
+
+
+
+
 
                     </div>
 
