@@ -140,6 +140,9 @@
             const remaining = maxLength - content.value.length;
             charCount.textContent = `${remaining} caracteres restantes`;
         }
+
+
+
     </script>
 
 </x-app-layout>

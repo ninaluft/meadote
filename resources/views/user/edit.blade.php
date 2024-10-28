@@ -27,46 +27,49 @@
                     @method('PUT')
 
                     <!-- Foto de Perfil -->
-<!-- Foto de Perfil -->
-<div class="mb-6">
-    <x-label for="profile_photo" :value="__('Foto de Perfil')" />
-    <div class="flex items-center space-x-6 mt-2">
-        <!-- Prévia da Nova Imagem -->
-        <img id="photo-preview" @if ($user->profile_photo) src="{{ $user->profile_photo }}" @endif alt="{{ $user->name }}"
-            class="rounded-full h-32 w-32 object-cover @if (!$user->profile_photo) hidden @endif">
+                    <!-- Foto de Perfil -->
+                    <div class="mb-6">
+                        <x-label for="profile_photo" :value="__('Foto de Perfil')" />
+                        <div class="flex items-center space-x-6 mt-2">
+                            <!-- Prévia da Nova Imagem -->
+                            <img id="photo-preview"
+                                @if ($user->profile_photo) src="{{ $user->profile_photo }}" @endif
+                                alt="{{ $user->name }}"
+                                class="rounded-full h-32 w-32 object-cover @if (!$user->profile_photo) hidden @endif">
 
-        <x-input id="profile_photo" type="file" name="profile_photo" class="mt-1 block w-full"
-            onchange="previewImage(event)" />
-    </div>
+                            <x-input id="profile_photo" type="file" name="profile_photo" class="mt-1 block w-full"
+                                onchange="previewImage(event)" />
+                        </div>
 
-    @if ($user->profile_photo)
-        <div class="mt-2">
-            <x-checkbox id="remove_photo" name="remove_photo" value="1" />
-            <x-label for="remove_photo" :value="__('Remover a foto de perfil atual')" />
-        </div>
-    @endif
+                        @if ($user->profile_photo)
+                            <div class="mt-2">
+                                <x-checkbox id="remove_photo" name="remove_photo" value="1" />
+                                <x-label for="remove_photo" :value="__('Remover a foto de perfil atual')" />
+                            </div>
+                        @endif
 
-    @error('profile_photo')
-        <span class="text-sm text-red-600">{{ $message }}</span>
-    @enderror
-</div>
+                        @error('profile_photo')
+                            <span class="text-sm text-red-600">{{ $message }}</span>
+                        @enderror
+                    </div>
 
 
-                   <!-- Modal para o Croppie -->
-<div id="cropperModal" class="fixed z-50 inset-0 overflow-y-auto hidden">
-    <div class="flex items-center justify-center min-h-screen px-4">
-        <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all max-w-3xl w-full p-6">
-            <h2 class="text-lg font-semibold mb-4">Ajuste a Imagem de Perfil</h2>
-            <div id="cropperContainer" class="mb-4"></div>
-            <div class="flex justify-end mt-4">
-                <button type="button" id="cropButton"
-                    class="bg-blue-500 text-white px-4 py-2 rounded-md">Cortar e Salvar</button>
-                <button type="button" onclick="closeCropperModal()"
-                    class="ml-4 bg-red-500 text-white px-4 py-2 rounded-md">Cancelar</button>
-            </div>
-        </div>
-    </div>
-</div>
+                    <!-- Modal para o Croppie -->
+                    <div id="cropperModal" class="fixed z-50 inset-0 overflow-y-auto hidden">
+                        <div class="flex items-center justify-center min-h-screen px-4">
+                            <div
+                                class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all max-w-3xl w-full p-6">
+                                <h2 class="text-lg font-semibold mb-4">Ajuste a Imagem de Perfil</h2>
+                                <div id="cropperContainer" class="mb-4"></div>
+                                <div class="flex justify-end mt-4">
+                                    <button type="button" id="cropButton"
+                                        class="bg-blue-500 text-white px-4 py-2 rounded-md">Cortar e Salvar</button>
+                                    <button type="button" onclick="closeCropperModal()"
+                                        class="ml-4 bg-red-500 text-white px-4 py-2 rounded-md">Cancelar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                     <!-- Nome -->
                     <div class="mb-6">
@@ -292,110 +295,78 @@
 
     <!-- Script para visualizar a imagem selecionada -->
     <!-- Script para visualizar a imagem selecionada com Croppie -->
-<script>
-    var croppie;
-
-    document.getElementById('profile_photo').addEventListener('change', function(event) {
-        var reader = new FileReader();
-        reader.onload = function(e) {
-            // Mostra a prévia da imagem e abre o modal do Croppie
-            document.getElementById('photo-preview').src = e.target.result;
-            document.getElementById('photo-preview').classList.remove('hidden');
-            openCropperModal();
-
-            // Inicializa o Croppie
-            var el = document.getElementById('cropperContainer');
-            if (croppie) {
-                croppie.destroy();
-            }
-            croppie = new Croppie(el, {
-                viewport: {
-                    width: 200,
-                    height: 200,
-                    type: 'circle'
-                },
-                boundary: {
-                    width: 300,
-                    height: 300
-                },
-                showZoomer: true,
-                enableOrientation: true
-            });
-
-            croppie.bind({
-                url: e.target.result
-            });
-        };
-        reader.readAsDataURL(event.target.files[0]);
-    });
-
-    function openCropperModal() {
-        document.getElementById('cropperModal').classList.remove('hidden');
-    }
-
-    function closeCropperModal() {
-        document.getElementById('cropperModal').classList.add('hidden');
-    }
-
-    document.getElementById('cropButton').addEventListener('click', function() {
-        croppie.result({
-            type: 'blob',
-            size: {
-                width: 200,
-                height: 200
-            }
-        }).then(function(blob) {
-            const url = URL.createObjectURL(blob);
-            document.getElementById('photo-preview').src = url;
-
-            // Crie um novo objeto File para enviar ao backend
-            const fileInput = document.getElementById('profile_photo');
-            const dataTransfer = new DataTransfer();
-            const file = new File([blob], 'cropped-profile-photo.png', {
-                type: 'image/png'
-            });
-            dataTransfer.items.add(file);
-            fileInput.files = dataTransfer.files;
-
-            closeCropperModal();
-        });
-    });
-</script>
-
-
     <script>
-        $(document).ready(function() {
-            // Máscara para CPF
-            $('#cpf').mask('000.000.000-00', {
-                reverse: true
-            });
+        var croppie;
 
-            // Máscara para CNPJ
-            $('#cnpj').mask('00.000.000/0000-00', {
-                reverse: true
-            });
+        document.getElementById('profile_photo').addEventListener('change', function(event) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                // Mostra a prévia da imagem e abre o modal do Croppie
+                document.getElementById('photo-preview').src = e.target.result;
+                document.getElementById('photo-preview').classList.remove('hidden');
+                openCropperModal();
 
-            // Máscara para CEP
-            $('#cep').mask('00000-000');
+                // Inicializa o Croppie
+                var el = document.getElementById('cropperContainer');
+                if (croppie) {
+                    croppie.destroy();
+                }
+                croppie = new Croppie(el, {
+                    viewport: {
+                        width: 200,
+                        height: 200,
+                        type: 'circle'
+                    },
+                    boundary: {
+                        width: 300,
+                        height: 300
+                    },
+                    showZoomer: true,
+                    enableOrientation: true
+                });
+
+                croppie.bind({
+                    url: e.target.result
+                });
+            };
+            reader.readAsDataURL(event.target.files[0]);
         });
 
-        function validateForm() {
-            const cpf = $('#cpf').val();
-            const cnpj = $('#cnpj').val();
-
-            if (cpf && !validateCPF(cpf)) {
-                alert("CPF inválido.");
-                return false;
-            }
-
-            if (cnpj && !validateCNPJ(cnpj)) {
-                alert("CNPJ inválido.");
-                return false;
-            }
-
-            return true;
+        function openCropperModal() {
+            document.getElementById('cropperModal').classList.remove('hidden');
         }
+
+        function closeCropperModal() {
+            document.getElementById('cropperModal').classList.add('hidden');
+        }
+
+        document.getElementById('cropButton').addEventListener('click', function() {
+            croppie.result({
+                type: 'blob',
+                size: {
+                    width: 200,
+                    height: 200
+                }
+            }).then(function(blob) {
+                const url = URL.createObjectURL(blob);
+                document.getElementById('photo-preview').src = url;
+
+                // Crie um novo objeto File para enviar ao backend
+                const fileInput = document.getElementById('profile_photo');
+                const dataTransfer = new DataTransfer();
+                const file = new File([blob], 'cropped-profile-photo.png', {
+                    type: 'image/png'
+                });
+                dataTransfer.items.add(file);
+                fileInput.files = dataTransfer.files;
+
+                closeCropperModal();
+            });
+        });
     </script>
+
+
+
 
     <script>
         function buscarCEP(cep) {
@@ -503,6 +474,49 @@
                 updateOngCharacterCount();
             }
         });
+
+
+
+
+
+
+
+
+
+
+
+        // Função para validar o CPF
+        function validarCPF(cpf) {
+            cpf = cpf.replace(/[^\d]+/g, '');
+            if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
+            let soma = 0,
+                resto;
+            for (let i = 1; i <= 9; i++) soma += parseInt(cpf.substring(i - 1, i)) * (11 - i);
+            resto = (soma * 10) % 11;
+            if ((resto === 10) || (resto === 11)) resto = 0;
+            if (resto !== parseInt(cpf.substring(9, 10))) return false;
+            soma = 0;
+            for (let i = 1; i <= 10; i++) soma += parseInt(cpf.substring(i - 1, i)) * (12 - i);
+            resto = (soma * 10) % 11;
+            if ((resto === 10) || (resto === 11)) resto = 0;
+            return resto === parseInt(cpf.substring(10, 11));
+        }
+
+        // Evento de validação ao sair do campo CPF
+        document.getElementById('cpf').addEventListener('blur', function() {
+            const cpf = this.value;
+            const cpfError = document.getElementById('cpfError');
+
+            if (!validarCPF(cpf)) {
+                cpfError.style.display = 'block';
+                this.classList.add('border-red-500');
+            } else {
+                cpfError.style.display = 'none';
+                this.classList.remove('border-red-500');
+            }
+        });
     </script>
+
+
 
 </x-app-layout>

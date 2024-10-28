@@ -1,6 +1,7 @@
 {
     "name": "MeAdote",
     "short_name": "MeAdote",
+    "description": "Uma plataforma para adoção de animais.",
     "theme_color": "#ffffff",
     "background_color": "#ffffff",
     "display": "standalone",

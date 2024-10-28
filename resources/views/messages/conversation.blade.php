@@ -16,17 +16,18 @@
     <div class="py-8">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white shadow-xl sm:rounded-lg p-6">
-                @if($messages->isEmpty())
+                @if ($messages->isEmpty())
                     <p>{{ __('Você ainda não tem mensagens.') }}</p>
                 @else
                     <!-- Container com barra de rolagem lateral -->
                     <div id="messages-container" class="overflow-y-auto h-96">
                         <ul>
-                            @foreach($messages as $message)
+                            @foreach ($messages as $message)
                                 <li class="mb-4">
                                     <strong>{{ $message->sender->name }}:</strong>
                                     <p>{!! $message->content !!}</p>
-                                    <span class="text-xs text-gray-400">{{ $message->created_at->diffForHumans() }}</span>
+                                    <span
+                                        class="text-xs text-gray-400">{{ $message->created_at->diffForHumans() }}</span>
                                 </li>
                             @endforeach
                         </ul>
@@ -35,7 +36,7 @@
             </div>
         </div>
 
-        @if($user->email !== 'sistema@meadote.com')
+        @if ($user->email !== 'sistema@meadote.com')
             <!-- Exibe o formulário de envio de mensagem apenas se o usuário não for o sistema -->
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white shadow-xl sm:rounded-lg p-6">
@@ -48,7 +49,8 @@
                                     class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                     required oninput="updateCharacterCount()"></textarea>
                                 <!-- Botão de Emoji -->
-                                <button type="button" id="emoji-btn" class="absolute right-2 bottom-2 text-gray-500 hover:text-gray-700">
+                                <button type="button" id="emoji-btn"
+                                    class="absolute right-2 bottom-2 text-gray-500 hover:text-gray-700">
                                     😀
                                 </button>
                             </div>
@@ -70,7 +72,7 @@
 
     <!-- Script para rolagem automática e atualização de caracteres -->
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             // Rolagem automática para o final do histórico de mensagens
             var messagesContainer = document.getElementById('messages-container');
             if (messagesContainer) {
@@ -85,5 +87,10 @@
             const remaining = maxLength - content.value.length;
             charCount.textContent = `${remaining} caracteres restantes`;
         }
+
+
+    
+
+
     </script>
 </x-app-layout>

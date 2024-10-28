@@ -13,7 +13,7 @@
                     onsubmit="return confirmSubmit()">
                     @csrf
 
-                    <!-- Nome do Pet, Espécie e Nome do Tutor -->
+                    <!-- Informações do Pet e Tutor -->
                     <h3 class="font-semibold text-lg mb-4">{{ __('Informações do Pet e Tutor') }}</h3>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <!-- Nome do Pet -->
@@ -39,10 +39,10 @@
                         </div>
                     </div>
 
+                    <!-- Linha de Separação -->
+                    <hr class="my-8 border-gray-300">
 
-
-
-                    <!-- Nome Completo do Solicitante -->
+                    <!-- Informações Pessoais do Solicitante -->
                     <h3 class="font-semibold text-lg mb-4">{{ __('Informações Pessoais do Solicitante') }}</h3>
                     <div class="mb-4">
                         <x-label for="full_name" :value="__('Nome Completo')" />
@@ -50,13 +50,14 @@
                             value="{{ old('full_name', $submitterName) }}" />
                     </div>
 
-
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
                         <!-- CPF -->
                         <div class="mb-2">
                             <x-label for="cpf" :value="__('CPF')" />
                             <x-input id="cpf" name="cpf" type="text" class="block mt-1 w-full"
                                 value="{{ old('cpf', $submitterCpf) }}" />
+                            <p id="cpfError" class="text-red-500 text-sm mt-2" style="display: none;">CPF inválido.</p>
                             @error('cpf')
                                 <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
                             @enderror
@@ -95,8 +96,34 @@
                         </div>
                     </div>
 
-                    <h3 class="font-semibold text-lg mb-4">{{ __('Endereço') }}</h3>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Telefone -->
+                        <div class="mb-2">
+                            <x-label for="phone" :value="__('Telefone')" />
+                            <x-input id="phone" name="phone" type="text" class="block mt-1 w-full"
+                                value="{{ old('phone') }}" />
+                            @error('phone')
+                                <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Email -->
+                        <div class="mb-2">
+                            <x-label for="email" :value="__('Email')" />
+                            <x-input id="email" name="email" type="email" class="block mt-1 w-full"
+                                value="{{ old('email', Auth::user()->email) }}" />
+                            @error('email')
+                                <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <!-- Linha de Separação -->
+                    <hr class="my-8 border-gray-300">
+
                     <!-- Endereço -->
+                    <h3 class="font-semibold text-lg mb-4">{{ __('Endereço') }}</h3>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <!-- CEP -->
                         <div class="mb-2">
@@ -129,7 +156,7 @@
                         </div>
                     </div>
 
-
+                    <!-- Rua -->
                     <div class="mb-4">
                         <x-label for="street" :value="__('Rua')" />
                         <x-input id="street" name="street" type="text" class="block mt-1 w-full"
@@ -171,29 +198,9 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <!-- Telefone -->
-                        <div class="mb-2">
-                            <x-label for="phone" :value="__('Telefone')" />
-                            <x-input id="phone" name="phone" type="text" class="block mt-1 w-full"
-                                value="{{ old('phone') }}" />
-                            @error('phone')
-                                <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
-                            @enderror
-                        </div>
 
-                        <!-- Email -->
-                        <div class="mb-2">
-                            <x-label for="email" :value="__('Email')" />
-                            <x-input id="email" name="email" type="email" class="block mt-1 w-full"
-                                value="{{ old('email', Auth::user()->email) }}" />
-                            @error('email')
-                                <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
-                            @enderror
-                        </div>
-                    </div>
-
-
+                    <!-- Linha de Separação -->
+                    <hr class="my-8  border-gray-300">
 
                     <!-- Informações sobre a Casa -->
                     <h3 class="font-semibold text-lg mb-4">{{ __('Informações sobre a Casa') }}</h3>
@@ -205,8 +212,10 @@
                             <select id="residence_type" name="residence_type"
                                 class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
                                 required>
-                                <option value="house" {{ old('residence_type') == 'house' ? 'selected' : '' }}>Casa</option>
-                                <option value="apartment" {{ old('residence_type') == 'apartment' ? 'selected' : '' }}>Apartamento</option>
+                                <option value="house" {{ old('residence_type') == 'house' ? 'selected' : '' }}>Casa
+                                </option>
+                                <option value="apartment"
+                                    {{ old('residence_type') == 'apartment' ? 'selected' : '' }}>Apartamento</option>
                             </select>
                             @error('residence_type')
                                 <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
@@ -219,8 +228,10 @@
                             <select id="residence_ownership" name="residence_ownership"
                                 class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
                                 required>
-                                <option value="owned" {{ old('residence_ownership') == 'owned' ? 'selected' : '' }}>Própria</option>
-                                <option value="rented" {{ old('residence_ownership') == 'rented' ? 'selected' : '' }}>Alugada</option>
+                                <option value="owned" {{ old('residence_ownership') == 'owned' ? 'selected' : '' }}>
+                                    Própria</option>
+                                <option value="rented" {{ old('residence_ownership') == 'rented' ? 'selected' : '' }}>
+                                    Alugada</option>
                             </select>
                             @error('residence_ownership')
                                 <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
@@ -233,8 +244,10 @@
                             <select id="outdoor_space" name="outdoor_space"
                                 class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
                                 required>
-                                <option value="0" {{ old('outdoor_space') == '0' ? 'selected' : '' }}>Não</option>
-                                <option value="1" {{ old('outdoor_space') == '1' ? 'selected' : '' }}>Sim</option>
+                                <option value="0" {{ old('outdoor_space') == '0' ? 'selected' : '' }}>Não
+                                </option>
+                                <option value="1" {{ old('outdoor_space') == '1' ? 'selected' : '' }}>Sim
+                                </option>
                             </select>
                             @error('outdoor_space')
                                 <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
@@ -250,8 +263,10 @@
                             <select id="safety_measures" name="safety_measures"
                                 class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
                                 required>
-                                <option value="0" {{ old('safety_measures') == '0' ? 'selected' : '' }}>Não</option>
-                                <option value="1" {{ old('safety_measures') == '1' ? 'selected' : '' }}>Sim</option>
+                                <option value="0" {{ old('safety_measures') == '0' ? 'selected' : '' }}>Não
+                                </option>
+                                <option value="1" {{ old('safety_measures') == '1' ? 'selected' : '' }}>Sim
+                                </option>
                             </select>
                             @error('safety_measures')
                                 <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
@@ -301,8 +316,10 @@
                             <select id="has_other_pets" name="has_other_pets"
                                 class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
                                 required>
-                                <option value="0" {{ old('has_other_pets') == '0' ? 'selected' : '' }}>Não</option>
-                                <option value="1" {{ old('has_other_pets') == '1' ? 'selected' : '' }}>Sim</option>
+                                <option value="0" {{ old('has_other_pets') == '0' ? 'selected' : '' }}>Não
+                                </option>
+                                <option value="1" {{ old('has_other_pets') == '1' ? 'selected' : '' }}>Sim
+                                </option>
                             </select>
                             @error('has_other_pets')
                                 <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
@@ -321,6 +338,8 @@
                         </div>
                     </div>
 
+                    <!-- Linha de Separação -->
+                    <hr class="my-8  border-gray-300">
 
                     <!-- Motivação e Expectativas -->
                     <h3 class="font-semibold text-lg mb-4">{{ __('Motivação e Expectativas') }}</h3>
@@ -335,6 +354,9 @@
                             <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
                         @enderror
                     </div>
+
+                    <!-- Linha de Separação -->
+                    <hr class="my-8  border-gray-300">
 
                     <!-- Termos de Aceitação -->
                     <h3 class="font-semibold text-lg mb-4">{{ __('Termos de Aceitação') }}</h3>
@@ -427,7 +449,7 @@
 
             // Função para exibir ou ocultar a seção de detalhes
             function toggleOtherPetsDetails() {
-                if (hasOtherPets.value == '1') { // 1 significa "Yes"
+                if (hasOtherPets && hasOtherPets.value == '1') { // 1 significa "Yes"
                     otherPetsDetailsSection.style.display = 'block';
                 } else {
                     otherPetsDetailsSection.style.display = 'none';
@@ -435,43 +457,46 @@
             }
 
             // Chama a função ao carregar a página (para carregar o estado correto)
-            toggleOtherPetsDetails();
-
-            // Chama a função quando o usuário mudar o valor do select
-            hasOtherPets.addEventListener('change', toggleOtherPetsDetails);
-        });
-
-
-        document.getElementById('confirmButton').addEventListener('click', function(event) {
-            // Prevenir o comportamento padrão do botão de submit temporariamente
-            event.preventDefault();
-
-
-
-            // Verificar se todos os termos foram aceitos
-            const checkboxes = document.querySelectorAll('input[type="checkbox"][required]');
-            let allChecked = true;
-
-            checkboxes.forEach(function(checkbox) {
-                if (!checkbox.checked) {
-                    allChecked = false;
-                }
-            });
-
-            if (!allChecked) {
-                alert('Você deve aceitar todos os termos antes de enviar o formulário.');
-                return;
+            if (hasOtherPets) {
+                toggleOtherPetsDetails();
+                // Chama a função quando o usuário mudar o valor do select
+                hasOtherPets.addEventListener('change', toggleOtherPetsDetails);
             }
 
-            // Pergunta de confirmação
-            const confirmed = confirm('Você realmente deseja enviar o formulário?');
+            // Verifica se o botão de confirmação existe antes de adicionar o evento
+            const confirmButton = document.getElementById('confirmButton');
+            if (confirmButton) {
+                confirmButton.addEventListener('click', function(event) {
+                    // Prevenir o comportamento padrão do botão de submit temporariamente
+                    event.preventDefault();
 
-            if (confirmed) {
-                // Submeter o formulário se confirmado
-                document.getElementById('adoptionForm').submit();
+                    // Verificar se todos os termos foram aceitos
+                    const checkboxes = document.querySelectorAll('input[type="checkbox"][required]');
+                    let allChecked = true;
+
+                    checkboxes.forEach(function(checkbox) {
+                        if (!checkbox.checked) {
+                            allChecked = false;
+                        }
+                    });
+
+                    if (!allChecked) {
+                        alert('Você deve aceitar todos os termos antes de enviar o formulário.');
+                        return;
+                    }
+
+                    // Pergunta de confirmação
+                    const confirmed = confirm('Você realmente deseja enviar o formulário?');
+
+                    if (confirmed) {
+                        // Submeter o formulário se confirmado
+                        document.getElementById('adoptionForm').submit();
+                    }
+                });
             }
         });
     </script>
+
 
     <script>
         document.getElementById('cep').addEventListener('blur', function() {
@@ -501,6 +526,47 @@
         function confirmSubmit() {
             return confirm('Você tem certeza que deseja enviar o formulário?');
         }
+    </script>
+
+
+    <script>
+        // Função para validar o CPF
+        function validarCPF(cpf) {
+            cpf = cpf.replace(/[^\d]+/g, '');
+            if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
+            let soma = 0,
+                resto;
+            for (let i = 1; i <= 9; i++) soma += parseInt(cpf.substring(i - 1, i)) * (11 - i);
+            resto = (soma * 10) % 11;
+            if ((resto === 10) || (resto === 11)) resto = 0;
+            if (resto !== parseInt(cpf.substring(9, 10))) return false;
+            soma = 0;
+            for (let i = 1; i <= 10; i++) soma += parseInt(cpf.substring(i - 1, i)) * (12 - i);
+            resto = (soma * 10) % 11;
+            if ((resto === 10) || (resto === 11)) resto = 0;
+            return resto === parseInt(cpf.substring(10, 11));
+        }
+
+        // Evento de validação ao sair do campo CPF
+        document.getElementById('cpf').addEventListener('blur', function() {
+            const cpf = this.value;
+            const cpfError = document.getElementById('cpfError');
+
+            if (!validarCPF(cpf)) {
+                cpfError.style.display = 'block';
+                this.classList.add('border-red-500');
+            } else {
+                cpfError.style.display = 'none';
+                this.classList.remove('border-red-500');
+            }
+        });
+
+        // Remove mensagem de erro ao focar em qualquer outro campo do formulário
+        document.getElementById('adoptionForm').addEventListener('focusin', function(event) {
+            if (event.target.id !== 'cpf') {
+                document.getElementById('cpfError').style.display = 'none';
+            }
+        });
     </script>
 
 </x-app-layout>

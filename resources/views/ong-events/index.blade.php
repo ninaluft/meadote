@@ -153,6 +153,53 @@
                         {{ $futureEvents->links('pagination::bootstrap-4') }}
                     </div>
                 @endif
+
+                <!-- Linha de Separação -->
+                <hr class="my-12 border-t-2 border-gray-300">
+
+                <!-- Lista de Eventos Passados -->
+                <h3 class="text-lg font-semibold mt-10 mb-4">{{ __('Eventos Passados') }}</h3>
+
+                @if ($pastEvents->isEmpty())
+                    <p class="text-gray-600 text-center">{{ __('Nenhum evento passado encontrado.') }}</p>
+                @else
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        @foreach ($pastEvents as $event)
+                            <a href="{{ route('ong-events.show', $event->id) }}"
+                                class="block bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                                <!-- Imagem do Evento -->
+                                @if ($event->photo_path)
+                                    <x-image :src="$event->photo_path" alt="{{ $event->title }}"
+                                        class="w-full h-48 object-cover" />
+                                @else
+                                    <div class="w-full h-48 bg-gray-300 flex items-center justify-center">
+                                        <span class="text-gray-700 font-bold">{{ __('Imagem Indisponível') }}</span>
+                                    </div>
+                                @endif
+
+                                <!-- Detalhes do Evento -->
+                                <div class="p-4">
+                                    <h4 class="text-xl font-semibold text-gray-800">{{ $event->title }}</h4>
+                                    <p class="text-gray-600">
+                                        <strong>{{ __('Data:') }}</strong>
+                                        {{ \Carbon\Carbon::parse($event->event_date)->format('d/m/Y') }}
+                                    </p>
+                                    <p class="text-gray-600">
+                                        <strong>{{ __('Cidade:') }}</strong> {{ $event->city }}
+                                    </p>
+                                    <p class="mt-2 text-indigo-600 hover:underline font-medium">
+                                        {{ __('Ver Evento') }}
+                                    </p>
+                                </div>
+                            </a>
+                        @endforeach
+                    </div>
+
+                    <!-- Links de Paginação dos Eventos Passados -->
+                    <div class="mt-6">
+                        {{ $pastEvents->links('pagination::bootstrap-4') }}
+                    </div>
+                @endif
             </div>
         </div>
     </div>

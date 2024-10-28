@@ -28,7 +28,5 @@ document.addEventListener('DOMContentLoaded', function () {
         picker.on('emoji', selection => {
             contentInput.value += selection.emoji;
         });
-    } else {
-        console.log('Elementos não encontrados no DOM');
-    }
+    } 
 });

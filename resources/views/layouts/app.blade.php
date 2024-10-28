@@ -21,6 +21,8 @@
 
     <link rel="manifest" href="{{ asset('manifest.json') }}">
 
+
+
     <!-- ios support -->
     <link rel="apple-touch-icon" href="images/icons/icon-72x72.png" />
     <link rel="apple-touch-icon" href="images/icons/icon-96x96.png" />
