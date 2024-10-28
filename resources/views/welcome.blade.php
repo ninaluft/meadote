@@ -20,24 +20,25 @@
                 <!-- Seção de Exploração -->
                 <div class="mb-8 text-center">
                     <h3 class="font-bold text-3xl text-gray-800 mb-6">{{ __('Explore Nossa Plataforma:') }}</h3>
-                    <div class="flex flex-wrap justify-center gap-6 mt-4">
+                    <div class="flex flex-wrap justify-center gap-6 mt-4 space-x-0 sm:space-x-2">
                         <a href="{{ route('pets.all-pets') }}"
-                            class="bg-blue-500 text-white px-6 py-3 rounded-full hover:bg-blue-700 transition shadow-lg hover:shadow-xl w-full sm:w-auto">
-                            {{ __('Buscar Pets') }}
+                           class="bg-blue-500 text-white px-6 py-3 rounded-full hover:bg-blue-700 transition transform hover:scale-105 shadow-lg w-full sm:w-auto flex items-center justify-center space-x-2">
+                            <i class="fas fa-paw"></i><span>{{ __('Buscar Pets') }}</span>
                         </a>
                         <a href="{{ Auth::check() ? route('pets.create') : route('login', ['redirectTo' => route('pets.create')]) }}"
-                            class="bg-green-500 text-white px-6 py-3 rounded-full hover:bg-green-700 transition shadow-lg hover:shadow-xl w-full sm:w-auto">
-                            {{ __('Cadastrar Pets') }}
+                           class="bg-green-500 text-white px-6 py-3 rounded-full hover:bg-green-700 transition transform hover:scale-105 shadow-lg w-full sm:w-auto flex items-center justify-center space-x-2">
+                            <i class="fas fa-plus-circle"></i><span>{{ __('Cadastrar Pets') }}</span>
                         </a>
                         <a href="{{ route('ongs.index') }}"
-                            class="bg-orange-500 text-white px-6 py-3 rounded-full hover:bg-orange-700 transition shadow-lg hover:shadow-xl w-full sm:w-auto">
-                            {{ __('Buscar ONGs') }}
+                           class="bg-orange-500 text-white px-6 py-3 rounded-full hover:bg-orange-700 transition transform hover:scale-105 shadow-lg w-full sm:w-auto flex items-center justify-center space-x-2">
+                            <i class="fas fa-hand-holding-heart"></i><span>{{ __('Buscar ONGs') }}</span>
                         </a>
                         <a href="{{ route('ong-events.index') }}"
-                            class="bg-purple-500 text-white px-6 py-3 rounded-full hover:bg-purple-700 transition shadow-lg hover:shadow-xl w-full sm:w-auto">
-                            {{ __('Buscar Eventos') }}
+                           class="bg-purple-500 text-white px-6 py-3 rounded-full hover:bg-purple-700 transition transform hover:scale-105 shadow-lg w-full sm:w-auto flex items-center justify-center space-x-2">
+                            <i class="fas fa-calendar-alt"></i><span>{{ __('Buscar Eventos') }}</span>
                         </a>
                     </div>
+
                 </div>
 
                 <!-- Carrossel de Últimos Posts -->

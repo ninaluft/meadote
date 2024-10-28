@@ -33,11 +33,13 @@
                 <!-- Foto do Evento -->
                 @if ($event->photo_path)
                     <div class="mb-4 flex justify-center">
-                        <img src="{{ $event->photo_path }}" alt="{{ $event->title }}"
+                        <img src="{{ Str::startsWith($event->photo_path, 'http') ? $event->photo_path : asset($event->photo_path) }}"
+                            alt="{{ $event->title }}"
                             class="rounded-lg max-w-md h-auto shadow-sm cursor-pointer object-contain"
-                            onclick="openModal('{{ $event->photo_path }}')" />
+                            onclick="openModal('{{ Str::startsWith($event->photo_path, 'http') ? $event->photo_path : asset($event->photo_path) }}')" />
                     </div>
                 @endif
+
 
                 <!-- Detalhes do Evento -->
                 <div class="space-y-4">
@@ -85,7 +87,8 @@
     <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-75 hidden z-50 flex items-center justify-center">
         <div class="relative" onclick="event.stopPropagation()">
             <button onclick="closeModal()" class="absolute top-0 right-0 m-4 text-white text-3xl">&times;</button>
-            <img id="modalImage" src="" alt="Imagem em tamanho real" class="max-w-full max-h-screen rounded-lg object-contain">
+            <img id="modalImage" src="" alt="Imagem em tamanho real"
+                class="max-w-full max-h-screen rounded-lg object-contain">
         </div>
     </div>
 

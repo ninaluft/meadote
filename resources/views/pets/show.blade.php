@@ -37,9 +37,11 @@
 
                     <!-- Foto do Pet -->
                     <div class="md:w-1/3 mb-4 md:mb-0">
-                        <img src="{{ $pet->photo_path }}" alt="{{ __('pets.description') }} {{ $pet->name }}"
-                            class="rounded-lg w-full h-auto shadow-sm cursor-pointer"
-                            onclick="openModal('{{ $pet->photo_path }}')">
+                        <img src="{{ Str::startsWith($pet->photo_path, 'http') ? $pet->photo_path : asset($pet->photo_path) }}"
+                        alt="{{ __('pets.description') }} {{ $pet->name }}"
+                        class="rounded-lg w-full h-auto shadow-sm cursor-pointer"
+                        onclick="openModal('{{ Str::startsWith($pet->photo_path, 'http') ? $pet->photo_path : asset($pet->photo_path) }}')">
+
 
                     </div>
 

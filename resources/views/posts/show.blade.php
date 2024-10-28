@@ -31,7 +31,9 @@
 
                 <!-- Imagem do Post -->
                 @if ($post->image_path)
-                    <x-image :src="$post->image_path" alt="{{ $post->title }}" class="w-full h-auto rounded-lg" />
+                    <x-image :src="Str::startsWith($post->image_path, 'http')
+                        ? $post->image_path
+                        : asset($post->image_path)" alt="{{ $post->title }}" class="w-full h-auto rounded-lg" />
                 @endif
 
                 <!-- Renderizando o conteúdo HTML do Quill -->
@@ -108,9 +110,10 @@
                                 </form>
                             </div>
                         @else
-                        <p class="mt-4 text-gray-500">
-                            Você precisa <a href="{{ route('login') }}?redirectTo={{ url()->current() }}" class="text-blue-500">fazer login</a> para comentar.
-                        </p>
+                            <p class="mt-4 text-gray-500">
+                                Você precisa <a href="{{ route('login') }}?redirectTo={{ url()->current() }}"
+                                    class="text-blue-500">fazer login</a> para comentar.
+                            </p>
 
                         @endauth
 

@@ -27,8 +27,8 @@
                     <div class="mb-4">
                         <x-label for="name" :value="__('Nome do Pet')" />
                         <x-input id="name"
-                            class="block mt-1 w-full border-gray-300  focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" maxlength="100"
-                            type="text" name="name" :value="old('name')" required autofocus />
+                            class="block mt-1 w-full border-gray-300  focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                            maxlength="100" type="text" name="name" :value="old('name')" required autofocus />
                     </div>
 
                     <!-- Photos -->
@@ -36,7 +36,7 @@
                         <x-label for="photo_path" :value="__('Foto do Pet')" />
                         <x-input id="photo_path"
                             class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
-                            type="file" name="photo_path" accept="image/*" multiple onchange="previewImage()" />
+                            type="file" name="photo_path" accept="image/*" multiple onchange="previewImage()" required  />
                     </div>
 
                     <!-- Image Preview -->
@@ -62,7 +62,8 @@
                     <div id="specify_other_field" class="mb-4" style="display: none;">
                         <x-label for="specify_other" :value="__('Especifique a Espécie')" />
                         <x-input id="specify_other" name="specify_other" type="text"
-                            class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" maxlength="1000" />
+                            class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                            maxlength="1000" />
                     </div>
 
 
@@ -127,7 +128,8 @@
                     <div id="special_conditions_description_field" class="mb-4" style="display: none;">
                         <x-label for="special_conditions_description" :value="__('Descrição das Condições Especiais')" />
                         <textarea id="special_conditions_description" name="special_conditions_description"
-                            class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" maxlength="1000">{{ old('special_conditions_description') }}</textarea>
+                            class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                            maxlength="1000">{{ old('special_conditions_description') }}</textarea>
                     </div>
 
 
@@ -135,7 +137,8 @@
                     <div class="mb-4">
                         <x-label for="description" :value="__('Mais sobre o pet')" />
                         <textarea id="description" name="description"
-                            class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" maxlength="1000">{{ old('description') }}</textarea>
+                            class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                            maxlength="1000">{{ old('description') }}</textarea>
                     </div>
 
                     <!-- Submit Button -->
@@ -151,10 +154,21 @@
 
     <!-- Script to show/hide the special conditions description, specify other species, and preview image -->
     <script>
-        function toggleSpecialConditions(value) {
-            const descriptionField = document.getElementById('special_conditions_description_field');
-            descriptionField.style.display = value == 1 ? 'block' : 'none';
-        }
+function toggleSpecialConditions(value) {
+    const descriptionField = document.getElementById('special_conditions_description_field');
+    const descriptionTextarea = document.getElementById('special_conditions_description');
+
+    // Exibe ou oculta o campo
+    descriptionField.style.display = value == 1 ? 'block' : 'none';
+
+    // Define ou remove o atributo "required" do textarea
+    if (value == 1) {
+        descriptionTextarea.setAttribute('required', 'required');
+    } else {
+        descriptionTextarea.removeAttribute('required');
+    }
+}
+
 
         function toggleSpecifyOther(value) {
             const specifyOtherField = document.getElementById('specify_other_field');

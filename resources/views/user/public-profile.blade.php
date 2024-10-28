@@ -1,8 +1,9 @@
 <x-app-layout>
+
     <x-slot name="header">
         <div class="flex justify-between items-center max-w-4xl mx-auto px-4">
             <!-- Título -->
-            <h2 class="font-semibold text-2xl text-gray-800 leading-tight break-words break-all">
+            <h2 class="font-semibold text-2xl text-gray-800 leading-tight break-words sm:break-all">
                 Perfil de {{ $user->name }}
             </h2>
 
@@ -10,13 +11,16 @@
             @if (Auth::check() && Auth::id() === $user->id)
                 <div>
                     <x-button-edit href="{{ route('profile.edit') }}" ariaLabel="Editar perfil" icon="fas fa-edit"
-                        color="yellow" size="sm">
-                        Editar Perfil
+                        color="yellow" class="flex items-center justify-center w-12 h-12 sm:w-auto sm:h-auto sm:p-1">
+                        <!-- Show text only on larger screens -->
+                        <span >Editar Perfil</span>
                     </x-button-edit>
                 </div>
             @endif
         </div>
     </x-slot>
+
+
 
     <div class="py-8">
         <div class="max-w-4xl mx-auto sm:px-4 lg:px-6">
@@ -128,10 +132,6 @@
                             ariaLabel="Enviar mensagem para {{ $user->name }}">
                             Enviar Mensagem
                         </x-button>
-
-
-
-
 
                     </div>
 
