@@ -11,8 +11,8 @@
                 @if($conversations->isEmpty())
                     <p>{{ __('Você ainda não tem conversas.') }}</p>
                 @else
-                    <!-- Função para pegar as iniciais do nome -->
                     @php
+                        // Função para pegar as iniciais do nome
                         $getInitials = function($name) {
                             $words = explode(' ', $name);
                             $initials = '';
@@ -28,39 +28,34 @@
                         <ul>
                             @foreach($conversations as $conversation)
                                 @php
-                                    // Obter o usuário "Sistema" pelo e-mail
                                     $systemUser = \App\Models\User::where('email', 'sistema@meadote.com')->first();
-
-                                    // Verifica se é uma mensagem do sistema
                                     $isSystemMessage = $conversation->sender_id === $systemUser->id;
-
-                                    // Define o usuário "Sistema" ou outro usuário na conversa
                                     $otherUser = $isSystemMessage
                                         ? (object) ['id' => $systemUser->id, 'name' => 'Sistema']
                                         : ($conversation->sender_id === Auth::id() ? $conversation->recipient : $conversation->sender);
                                 @endphp
 
-                                <!-- Se o otherUser for nulo, continue para a próxima iteração -->
                                 @if (!$otherUser)
                                     @continue
                                 @endif
 
                                 <li class="mb-2 flex items-center">
-                                    <!-- Espaço reservado para alinhar corretamente as mensagens do sistema -->
                                     @if($isSystemMessage)
                                         <div class="w-10 h-10 mr-3"></div>
                                     @else
-                                        <!-- Exibir iniciais do usuário -->
-                                        <div class="w-10 h-10 mr-3 flex items-center justify-center bg-gray-500 text-white font-medium rounded-full">
-                                            <span class="text-sm">{{ $getInitials($otherUser->name) }}</span>
+                                        <!-- Verifique se o usuário tem uma foto de perfil -->
+                                        <div class="w-10 h-10 mr-3 flex items-center justify-center bg-gray-500 text-white font-medium rounded-full overflow-hidden">
+                                            @if($otherUser->profile_photo)
+                                                <img src="{{ asset($otherUser->profile_photo) }}" alt="{{ $otherUser->name }}" class="w-full h-full object-cover rounded-full">
+                                            @else
+                                                <span class="text-sm">{{ $getInitials($otherUser->name) }}</span>
+                                            @endif
                                         </div>
                                     @endif
 
-                                    <!-- Informações da conversa com altura reduzida -->
-                                    <a href="{{ route('messages.conversation', $otherUser->id) }}" class="flex-1 p-3 bg-gray-50 border bg-gray-100' hover:bg-gray-100 rounded-lg" aria-label="Conversa com {{ $otherUser->name }}">
+                                    <a href="{{ route('messages.conversation', $otherUser->id) }}" class="flex-1 p-3 bg-gray-50 border hover:bg-gray-100 rounded-lg" aria-label="Conversa com {{ $otherUser->name }}">
                                         <h3 class="text-base font-semibold flex items-center justify-between">
                                             <span>{{ $otherUser->name }}</span>
-                                            <!-- Mostrar contador de mensagens não lidas, se houver -->
                                             @if($conversation->unread_count > 0)
                                                 <span class="ml-2 inline-block bg-red-600 text-white text-xs rounded-full px-2 py-1">
                                                     {{ $conversation->unread_count }}
