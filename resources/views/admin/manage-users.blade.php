@@ -10,14 +10,14 @@
             <div class="bg-white shadow-sm sm:rounded-lg p-6">
 
                 <!-- Formulário de Pesquisa -->
-                <form method="GET" action="{{ route('admin.manage-users') }}" class="mb-4 flex space-x-4">
-                    <!-- Campo de busca ocupa mais espaço -->
+                <form method="GET" action="{{ route('admin.manage-users') }}" class="mb-4 flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                    <!-- Campo de busca ocupa mais espaço e é responsivo -->
                     <input type="text" name="search" placeholder="Buscar por nome ou email"
-                        value="{{ request('search') }}"
-                        class="flex-grow p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                           value="{{ request('search') }}"
+                           class="w-full sm:flex-grow p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
 
-                    <!-- Filtro por tipo de usuário -->
-                    <select name="user_type" class="p-2 border border-gray-300 rounded-md w-1/4">
+                    <!-- Filtro por tipo de usuário, adaptado para responsividade -->
+                    <select name="user_type" class="w-full sm:w-1/4 p-2 border border-gray-300 rounded-md">
                         <option value="">Todos Usuários ({{ array_sum($userTypeCounts) }})</option>
                         <option value="tutor" {{ request('user_type') === 'tutor' ? 'selected' : '' }}>
                             Tutor ({{ $userTypeCounts['tutor'] ?? 0 }})
@@ -30,12 +30,13 @@
                         </option>
                     </select>
 
-                    <!-- Botão de Buscar com tamanho fixo -->
+                    <!-- Botão de Buscar com tamanho fixo, adaptado para responsividade -->
                     <button type="submit"
-                        class="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md">
+                            class="w-full sm:w-auto bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md">
                         Buscar
                     </button>
                 </form>
+
 
                 @if ($users->count() > 0)
                     <!-- Tabela Responsiva -->
@@ -123,18 +124,14 @@
 
                                         <!-- Dropdown de user_type com formulário -->
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <form method="POST" action="{{ route('admin.update-user', $user->id) }}">
+                                            <form method="POST" action="{{ route('admin.update-user', $user->id) }}" id="user-type-form-{{ $user->id }}">
                                                 @csrf
-                                                <select name="usertype" onchange="this.form.submit()"
-                                                    class="block w-full p-2 border border-gray-300 rounded-md">
-                                                    <option value="tutor"
-                                                        {{ $user->user_type == 'tutor' ? 'selected' : '' }}>Tutor
-                                                    </option>
-                                                    <option value="ong"
-                                                        {{ $user->user_type == 'ong' ? 'selected' : '' }}>ONG</option>
-                                                    <option value="admin"
-                                                        {{ $user->user_type == 'admin' ? 'selected' : '' }}>
-                                                        Administrador</option>
+                                                <select name="usertype"
+                                                        onchange="confirmUserTypeChange(this, '{{ $user->name }}', {{ $user->id }})"
+                                                        class="block w-full p-2 border border-gray-300 rounded-md">
+                                                    <option value="tutor" {{ $user->user_type == 'tutor' ? 'selected' : '' }}>Tutor</option>
+                                                    <option value="ong" {{ $user->user_type == 'ong' ? 'selected' : '' }}>ONG</option>
+                                                    <option value="admin" {{ $user->user_type == 'admin' ? 'selected' : '' }}>Administrador</option>
                                                 </select>
                                             </form>
                                         </td>
@@ -168,4 +165,20 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function confirmUserTypeChange(selectElement, userName, userId) {
+            const userType = selectElement.value;
+            const confirmation = confirm(`Tem certeza que deseja alterar o tipo de usuário de ${userName} para ${userType}?`);
+
+            if (confirmation) {
+                document.getElementById(`user-type-form-${userId}`).submit();
+            } else {
+                // Reverte a seleção para o valor anterior se o usuário cancelar
+                selectElement.selectedIndex = Array.from(selectElement.options).findIndex(
+                    option => option.value === '{{ $user->user_type }}'
+                );
+            }
+        }
+    </script>
 </x-app-layout>

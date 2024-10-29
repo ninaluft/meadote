@@ -28,5 +28,31 @@ document.addEventListener('DOMContentLoaded', function () {
         picker.on('emoji', selection => {
             contentInput.value += selection.emoji;
         });
-    } 
+    }
 });
+
+//*--NAVEGAÇAO MOBILE: ------------------------------
+
+// Variável para armazenar a posição inicial do toque
+let startX = 0;
+
+// Evento de início do toque
+document.addEventListener('touchstart', (e) => {
+    startX = e.touches[0].clientX;
+});
+
+// Evento final do toque
+document.addEventListener('touchend', (e) => {
+    const endX = e.changedTouches[0].clientX;
+    const threshold = 50; // Define a distância mínima para acionar o gesto de deslizar
+
+    if (startX - endX > threshold) {
+        // Gesto de deslizar para a esquerda (pode ser usado para avançar)
+        // Ação personalizada para avançar (por exemplo, window.history.forward())
+    } else if (endX - startX > threshold) {
+        // Gesto de deslizar para a direita (voltar)
+        window.history.back();
+    }
+});
+
+//*-----------------------------------------

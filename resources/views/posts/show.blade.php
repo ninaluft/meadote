@@ -8,15 +8,13 @@
                 <div class="flex justify-end mb-4 space-x-4">
                     @if (Auth::check() && Auth::user()->user_type === 'admin')
                         <!-- Botão de Editar -->
-                        <x-button-edit href="{{ route('posts.edit', $post->id) }}"
-                            aria-label="Editar o post {{ $post->title }}">
+                        <x-button-edit href="{{ route('posts.edit', $post->id) }}" aria-label="Editar o post {{ $post->title }}">
                             {{ __('Editar') }}
                         </x-button-edit>
 
                         <!-- Botão de Excluir -->
                         <x-button-delete action="{{ route('posts.destroy', $post->id) }}"
-                            confirmMessage="Tem certeza de que deseja excluir este post?"
-                            aria-label="Excluir o post {{ $post->title }}">
+                            confirmMessage="Tem certeza de que deseja excluir este post?" aria-label="Excluir o post {{ $post->title }}">
                             {{ __('Excluir') }}
                         </x-button-delete>
                     @endif
@@ -25,15 +23,13 @@
                 <!-- Título do Post e Autor -->
                 <div class="mb-4">
                     <h3 class="text-2xl font-bold">{{ $post->title }}</h3>
-                    <p class="text-gray-600">Por {{ $post->author->name }} em {{ $post->created_at->format('d/m/Y') }}
-                    </p>
+                    <p class="text-gray-600">Por {{ $post->author->name }} em {{ $post->created_at->format('d/m/Y') }}</p>
                 </div>
 
                 <!-- Imagem do Post -->
                 @if ($post->image_path)
-                    <x-image :src="Str::startsWith($post->image_path, 'http')
-                        ? $post->image_path
-                        : asset($post->image_path)" alt="{{ $post->title }}" class="w-full h-auto rounded-lg" />
+                    <x-image :src="Str::startsWith($post->image_path, 'http') ? $post->image_path : asset($post->image_path)"
+                        alt="{{ $post->title }}" class="w-full h-auto rounded-lg" />
                 @endif
 
                 <!-- Renderizando o conteúdo HTML do Quill -->
@@ -46,8 +42,7 @@
                 <!-- Botão de Compartilhar -->
                 <div class="mt-6">
                     <x-button-share id="sharePostButton" title="{{ $post->title }}" text="Confira esse post: "
-                        url="{{ route('posts.show', $post->id) }}"
-                        aria-label="Compartilhar o post {{ $post->title }}">
+                        url="{{ route('posts.show', $post->id) }}" aria-label="Compartilhar o post {{ $post->title }}">
                         {{ __('Compartilhar') }}
                     </x-button-share>
                 </div>
@@ -60,12 +55,12 @@
                         <!-- Seção de Comentários com Barra de Rolagem -->
                         <div id="comments-container" class="space-y-4 mt-4 max-h-80 overflow-y-scroll">
                             @foreach ($post->comments as $comment)
-                                <div class="bg-gray-100 p-4 rounded-lg relative">
+                                <div class="bg-gray-100 p-4 rounded-lg relative break-words overflow-wrap-anywhere">
                                     <p class="text-sm text-gray-600">
                                         <strong>{{ $comment->user->name }}</strong> comentou em
                                         {{ $comment->created_at->format('d/m/Y H:i') }}:
                                     </p>
-                                    <p class="mt-2">{{ $comment->content }}</p>
+                                    <p class="mt-2 text-gray-800">{{ $comment->content }}</p>
 
                                     <!-- Excluir comentário (somente autor ou admin) -->
                                     @if (Auth::check() && (Auth::user()->id === $comment->user_id || Auth::user()->user_type === 'admin'))
@@ -76,7 +71,7 @@
                                             @method('DELETE')
                                             <button type="submit" class="text-red-600 hover:text-red-800"
                                                 title="Excluir comentário" aria-label="Excluir comentário">
-                                                <i class="fas fa-trash"></i> <!-- Ícone de lixeira do Font Awesome -->
+                                                <i class="fas fa-trash"></i>
                                             </button>
                                         </form>
                                     @endif
@@ -93,8 +88,8 @@
                                     @csrf
                                     <div class="relative">
                                         <textarea id="content" name="content" class="w-full border-gray-300 rounded-lg p-2 pr-10"
-                                            placeholder="Escreva seu comentário..." aria-describedby="commentHelper" oninput="updateCharacterCount()"
-                                            maxlength="500"></textarea>
+                                            placeholder="Escreva seu comentário..." aria-describedby="commentHelper"
+                                            oninput="updateCharacterCount()" maxlength="500"></textarea>
                                         <button type="button" id="emoji-btn"
                                             class="absolute right-2 bottom-2 text-gray-500 hover:text-gray-700">
                                             😀
@@ -114,7 +109,6 @@
                                 Você precisa <a href="{{ route('login') }}?redirectTo={{ url()->current() }}"
                                     class="text-blue-500">fazer login</a> para comentar.
                             </p>
-
                         @endauth
 
                     </div>
@@ -140,9 +134,7 @@
             const remaining = maxLength - content.value.length;
             charCount.textContent = `${remaining} caracteres restantes`;
         }
-
-
-
     </script>
+
 
 </x-app-layout>

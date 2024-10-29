@@ -17,7 +17,10 @@ const dynamicRoutes = [
     '/support',
     '/admin',
     '/ong',
-    '/tutor'
+    '/tutor',
+    '/posts',
+    '/all-pets',
+    '/',
 ];
 
 // Instalar Service Worker e cachear recursos estáticos
