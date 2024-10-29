@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
+
 //*--NAVEGAÇAO MOBILE: ------------------------------
 
 // Variável para armazenar a posição inicial do toque

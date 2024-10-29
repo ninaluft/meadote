@@ -28,6 +28,8 @@ use App\Models\OngEvent;
 use App\Models\Message;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Broadcast;
+
 use App\Http\Controllers\CommentController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');

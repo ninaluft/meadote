@@ -40,14 +40,14 @@
             <!-- Exibe o formulário de envio de mensagem apenas se o usuário não for o sistema -->
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white shadow-xl sm:rounded-lg p-6">
-                    <form action="{{ route('messages.send', $user->id) }}" method="POST">
+                    <form id="sendMessageForm" action="{{ route('messages.send', $user->id) }}" method="POST">
                         @csrf
                         <div class="mb-4">
                             <label for="content" class="block text-sm font-medium text-gray-700">Mensagem</label>
                             <div class="relative">
                                 <textarea id="content" name="content" rows="4" maxlength="900"
                                     class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                    required oninput="updateCharacterCount()"></textarea>
+                                    required></textarea>
                                 <!-- Botão de Emoji -->
                                 <button type="button" id="emoji-btn"
                                     class="absolute right-2 bottom-2 text-gray-500 hover:text-gray-700">
@@ -70,7 +70,7 @@
         @endif
     </div>
 
-    <!-- Script para rolagem automática e atualização de caracteres -->
+    <!-- Script para rolagem automática -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Rolagem automática para o final do histórico de mensagens
@@ -79,18 +79,58 @@
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
             }
         });
-
-        function updateCharacterCount() {
-            const content = document.getElementById('content');
-            const charCount = document.getElementById('char-count');
-            const maxLength = content.getAttribute('maxlength');
-            const remaining = maxLength - content.value.length;
-            charCount.textContent = `${remaining} caracteres restantes`;
-        }
-
-
-    
-
-
     </script>
+
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const userId = {{ auth()->user()->id }};
+            const recipientId = {{ $user->id }}; // O usuário destinatário
+
+            // Ordena os IDs para criar o nome do canal
+            const channelName = `chat.${Math.min(userId, recipientId)}.${Math.max(userId, recipientId)}`;
+
+            var messagesContainer = document.getElementById('messages-container');
+
+            Echo.private(channelName)
+                .listen('MessageSent', (e) => {
+                    const messageElement = document.createElement('li');
+                    messageElement.innerHTML =
+                        `<strong>${e.user.name}:</strong> ${e.message} <span class="text-xs text-gray-400">${e.created_at}</span>`;
+                    messagesContainer.appendChild(messageElement);
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                });
+        });
+
+
+
+        document.querySelector('#sendMessageForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // Previne o envio padrão do formulário
+
+            const content = document.querySelector('#content').value;
+            const url = this.action;
+
+            axios.post(url, {
+                    content: content
+                })
+                .then(response => {
+                    // Limpa o campo de texto após o envio
+                    document.querySelector('#content').value = '';
+
+                    // Opcional: Adiciona a mensagem ao container de mensagens
+                    const messageContainer = document.getElementById('messages-container');
+                    const messageElement = document.createElement('li');
+                    messageElement.innerHTML = `<strong>Você:</strong> ${content}`;
+                    messageContainer.appendChild(messageElement);
+
+                    // Rolagem automática para a nova mensagem
+                    messageContainer.scrollTop = messageContainer.scrollHeight;
+                })
+                .catch(error => {
+                    console.error('Erro ao enviar mensagem:', error);
+                });
+        });
+    </script>
+
 </x-app-layout>

@@ -20,8 +20,12 @@ class MessageController extends Controller
             'content' => $request->content,
         ]);
 
-        return redirect()->route('messages.conversation', $user->id);
+        broadcast(new MessageSent($message))->toOthers();
+
+        return response()->json(['message' => $message], 200);
     }
+
+
 
     public function store(Request $request, User $user)
     {

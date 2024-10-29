@@ -157,4 +157,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(Comment::class);
     }
+    public function getProfilePhotoAttribute()
+    {
+        return $this->attributes['profile_photo'] ?? asset('images/default-profile.jpg');
+    }
 }

@@ -6,9 +6,7 @@ namespace App\Events;
 use App\Models\Message;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 
 class MessageSent implements ShouldBroadcastNow
@@ -24,9 +22,14 @@ class MessageSent implements ShouldBroadcastNow
 
     public function broadcastOn()
     {
-        // Canal privado
-        return new PrivateChannel('chat.' . $this->message->recipient_id);
+        // Ordena os IDs para que o nome do canal seja consistente
+        $ids = [$this->message->sender_id, $this->message->recipient_id];
+        sort($ids);
+
+        return new PrivateChannel('chat.' . implode('.', $ids));
     }
+
+
 
     public function broadcastWith()
     {
@@ -35,7 +38,8 @@ class MessageSent implements ShouldBroadcastNow
             'user' => [
                 'id' => $this->message->sender->id,
                 'name' => $this->message->sender->name,
-            ]
+            ],
+            'created_at' => $this->message->created_at->diffForHumans(),
         ];
     }
 }
