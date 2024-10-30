@@ -35,26 +35,36 @@ document.addEventListener('DOMContentLoaded', function () {
 
 //*--NAVEGAÇAO MOBILE: ------------------------------
 
-// Variável para armazenar a posição inicial do toque
+// Variáveis para armazenar a posição inicial do toque
 let startX = 0;
+let startY = 0;
 
 // Evento de início do toque
 document.addEventListener('touchstart', (e) => {
     startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
 });
 
 // Evento final do toque
 document.addEventListener('touchend', (e) => {
     const endX = e.changedTouches[0].clientX;
-    const threshold = 50; // Define a distância mínima para acionar o gesto de deslizar
+    const endY = e.changedTouches[0].clientY;
+    const threshold = 250; // Distância mínima para ativar o gesto horizontal
+    const verticalLimit = 30; // Limite de movimento vertical para não confundir gestos diagonais
 
-    if (startX - endX > threshold) {
-        // Gesto de deslizar para a esquerda (pode ser usado para avançar)
-        // Ação personalizada para avançar (por exemplo, window.history.forward())
-    } else if (endX - startX > threshold) {
-        // Gesto de deslizar para a direita (voltar)
-        window.history.back();
+    const horizontalDistance = endX - startX;
+    const verticalDistance = Math.abs(endY - startY);
+
+    if (verticalDistance < verticalLimit) { // Garante que o movimento é quase horizontal
+        if (horizontalDistance > threshold) {
+            // Gesto de deslizar para a direita (voltar)
+            window.history.back();
+        } else if (horizontalDistance < -threshold) {
+            // Gesto de deslizar para a esquerda (avançar)
+            // Ação personalizada para avançar (por exemplo, window.history.forward())
+        }
     }
 });
 
 //*-----------------------------------------
+

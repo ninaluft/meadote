@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NewNotification;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Message;
@@ -25,21 +26,18 @@ class NotificationController extends Controller
 
     // Enviar notificação como mensagem do sistema
 
-    public function sendSystemNotification($supportRequestId, $userId, $messageContent=null)
+    public function sendSystemNotification($supportRequestId, $userId, $messageContent = null)
     {
         // Obtém o usuário "Sistema"
         $systemUser = User::where('email', 'sistema@meadote.com')->first();
 
-        // Cria um link para redirecionar para a página de detalhes da solicitação de suporte do usuário
-        $conversationLink = route('support.show', $supportRequestId); // Usando o ID da solicitação de suporte
+        // Link para detalhes de suporte
+        $conversationLink = route('support.show', $supportRequestId);
+        $messageContent .= " <a href='{$conversationLink}' class='...'>Ver</a>";
 
-        // Adiciona o botão/link na mensagem
-        $messageContent .= " <a href='{$conversationLink}' class='inline-flex items-center px-4 py-2 bg-blue-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150'>Ver</a>";
-
-
-        // Cria a mensagem no inbox como se fosse enviada pelo sistema
+        // Cria a mensagem
         $message = Message::create([
-            'sender_id' => $systemUser->id,  // Usuário "Sistema"
+            'sender_id' => $systemUser->id,
             'recipient_id' => $userId,
             'content' => $messageContent,
             'is_read' => false,
@@ -47,7 +45,6 @@ class NotificationController extends Controller
 
         return $message;
     }
-
 
     // Exemplo de uso ao enviar uma notificação
     public function notifyAdoptionRequest($userId, AdoptionForm $adoptionForm)

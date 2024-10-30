@@ -11,6 +11,8 @@
 
     <link rel="icon" href="{{ asset('images/favicon.png') }}" type="image/png" />
 
+    <meta name="user-id" content="{{ auth()->check() ? auth()->id() : '' }}">
+
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -45,6 +47,7 @@
 
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 
+
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -72,9 +75,11 @@
     </style>
 
 
+
 </head>
 
 <body class="font-sans antialiased">
+
 
     <div id="loading">
         <img src="{{ asset('images/loading.gif') }}" alt="Carregando...">
@@ -83,6 +88,7 @@
     <x-banner />
 
     <div class="min-h-screen bg-gray-100">
+
         @livewire('navigation-menu')
 
         <!-- Page Heading -->
@@ -151,7 +157,7 @@
     </script>
 
 
-
 </body>
+
 
 </html>

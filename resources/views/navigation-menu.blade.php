@@ -49,23 +49,9 @@
                         </x-nav-link>
                     </div>
 
-                    <!-- Messages Link with Notification Icon -->
-                    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex items-center">
-                        <x-nav-link :href="route('messages.inbox')" :active="request()->routeIs('messages.inbox')" aria-label="Mensagens">
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                class="h-6 w-6 text-teal-600 hover:text-teal-700 transition duration-150 ease-in-out"
-                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                            </svg>
 
-                            @if (auth()->user()->unreadMessages()->count() > 0)
-                                <span class="ml-1 inline-block bg-red-600 text-white text-xs rounded-full px-2 py-1">
-                                    {{ auth()->user()->unreadMessages()->count() }}
-                                </span>
-                            @endif
-                        </x-nav-link>
-                    </div>
+
+
 
                     <!-- Settings Dropdown -->
                     <div class="ms-3 relative">
@@ -74,7 +60,8 @@
                                 @if (Laravel\Jetstream\Jetstream::managesProfilePhotos())
                                     <button aria-label="Configurações da Conta"
                                         class="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition">
-                                        <x-image class="h-12 w-12 rounded-full object-cover" :src="Auth::user()->profile_photo ?? asset('images/default-avatar.jpg')" alt="{{ Auth::user()->name }}" />
+                                        <x-image class="h-12 w-12 rounded-full object-cover" :src="Auth::user()->profile_photo ?? asset('images/default-avatar.jpg')"
+                                            alt="{{ Auth::user()->name }}" />
                                     </button>
                                 @else
                                     <span class="inline-flex rounded-md">
@@ -143,11 +130,10 @@
                                 d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                         </svg>
 
-                        @if (auth()->user()->unreadMessages()->count() > 0)
-                            <span class="ml-1 inline-block bg-red-600 text-white text-xs rounded-full px-2 py-1">
-                                {{ auth()->user()->unreadMessages()->count() }}
-                            </span>
-                        @endif
+                        <span id="notification-count" class="ml-1 inline-block bg-red-600 text-white text-xs rounded-full px-2 py-1">
+                            {{ auth()->user()->unreadMessages()->count() > 0 ? auth()->user()->unreadMessages()->count() : '' }}
+                        </span>
+
                     </x-nav-link>
                 @endauth
 
@@ -167,14 +153,15 @@
     </div>
 
     <!-- Responsive Navigation Menu -->
-    <div x-show="open" x-cloak @click.away="open = false" class="fixed inset-0 bg-black bg-opacity-50 z-40 flex justify-end">
+    <div x-show="open" x-cloak @click.away="open = false"
+        class="fixed inset-0 bg-black bg-opacity-50 z-40 flex justify-end">
         <div x-show="open" x-transition:enter="transition ease-out duration-300"
-             x-transition:enter-start="opacity-0 transform translate-x-full"
-             x-transition:enter-end="opacity-100 transform translate-x-0"
-             x-transition:leave="transition ease-in duration-300"
-             x-transition:leave-start="opacity-100 transform translate-x-0"
-             x-transition:leave-end="opacity-0 transform translate-x-full"
-             class="bg-white w-64 h-full shadow-md p-4 z-50 relative">
+            x-transition:enter-start="opacity-0 transform translate-x-full"
+            x-transition:enter-end="opacity-100 transform translate-x-0"
+            x-transition:leave="transition ease-in duration-300"
+            x-transition:leave-start="opacity-100 transform translate-x-0"
+            x-transition:leave-end="opacity-0 transform translate-x-full"
+            class="bg-white w-64 h-full shadow-md p-4 z-50 relative">
             <!-- Close Button -->
             <div class="flex justify-end">
                 <button @click="open = false" aria-label="Fechar Menu" class="text-gray-500 hover:text-gray-700">
@@ -274,4 +261,7 @@
                 </div>
             </div>
         </div>
+    </div>
+
+
 </nav>

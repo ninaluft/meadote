@@ -30,3 +30,36 @@ window.Echo = new Echo({
         }
     }
 });
+
+
+// Obtém o userId da meta tag e define como variável global
+const userIdMeta = document.querySelector('meta[name="user-id"]');
+window.userId = userIdMeta ? userIdMeta.getAttribute('content') : null;
+
+// Adiciona o listener de evento para as notificações
+if (window.userId) {
+    window.Echo.channel('notifications-channel-' + window.userId)
+        .listen('.NewNotification', (event) => {
+            console.log("New notification event received:", event); // Verifica se o evento é recebido e o valor de `newCount`
+            updateNotificationCount(event.newCount); // Passa o valor de `newCount` vindo do evento
+        });
+} else {
+    console.log("User ID is not defined. Ensure the meta tag is present and has the correct value.");
+}
+
+
+// Define a função de atualização de contagem de notificações como global
+window.updateNotificationCount = function(newCount) {
+    setTimeout(() => {
+        let notificationCounter = document.querySelector('#notification-count');
+        if (notificationCounter) {
+            console.log("Counter element found:", notificationCounter);
+            notificationCounter.innerHTML = newCount > 0 ? newCount : '';
+            console.log("Notification count updated to:", newCount);
+        } else {
+            console.log("Notification counter element not found");
+        }
+    }, 100); // Ajuste o tempo, se necessário
+};
+
+

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\MessageSent;
+use App\Events\NewNotification; // Importe o evento de notificação
 use App\Models\Message;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -14,18 +15,21 @@ class MessageController extends Controller
     {
         $request->validate(['content' => 'required|string|max:1000']);
 
+        // Cria a mensagem com o remetente e o destinatário
         $message = Message::create([
             'sender_id' => Auth::id(),
             'recipient_id' => $user->id,
             'content' => $request->content,
         ]);
 
+        // Dispara o evento para a mensagem
         broadcast(new MessageSent($message))->toOthers();
+
+        // Dispara o evento de notificação para o destinatário
+        broadcast(new NewNotification($user->id))->toOthers();
 
         return response()->json(['message' => $message], 200);
     }
-
-
 
     public function store(Request $request, User $user)
     {
@@ -41,11 +45,8 @@ class MessageController extends Controller
         ]);
 
         // Handle any post-save actions, such as broadcasting an event
-
         return redirect()->route('messages.conversation', $user->id);
     }
-
-
 
     public function conversation(User $user)
     {
@@ -68,7 +69,6 @@ class MessageController extends Controller
 
         return view('messages.conversation', compact('messages', 'user'));
     }
-
 
     public function inbox()
     {
@@ -96,8 +96,6 @@ class MessageController extends Controller
         return view('messages.inbox', compact('conversations'));
     }
 
-
-
     public function unreadCount()
     {
         $userId = Auth::id();
@@ -106,6 +104,4 @@ class MessageController extends Controller
             ->where('is_read', false)
             ->count();
     }
-
-
 }
