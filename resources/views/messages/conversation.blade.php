@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Notificações de ') }}
+            Conversa com
             @if ($user->email === 'sistema@meadote.com')
                 Sistema
             @else
@@ -12,125 +12,99 @@
         </h2>
     </x-slot>
 
-
     <div class="py-8">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white shadow-xl sm:rounded-lg p-6">
-                @if ($messages->isEmpty())
-                    <p>{{ __('Você ainda não tem mensagens.') }}</p>
-                @else
-                    <!-- Container com barra de rolagem lateral -->
-                    <div id="messages-container" class="overflow-y-auto h-96">
-                        <ul>
+        <div class="flex flex-col max-w-4xl mx-auto h-[80vh]"> <!-- Define a altura da caixa com h-[70vh] -->
+
+            <!-- Container principal de mensagens com rolagem lateral -->
+            <div id="messages-container" class="flex-grow overflow-y-auto bg-gray-50 p-6 rounded-t-lg shadow-md h-[55vh]">
+                <div class="space-y-4">
+                    @if ($messages->isEmpty())
+                        <p class="text-gray-500 text-center">{{ __('Você ainda não tem mensagens.') }}</p>
+                    @else
+                        <ul id="messages-list">
                             @foreach ($messages as $message)
-                                <li class="mb-4">
-                                    <strong>{{ $message->sender->name }}:</strong>
-                                    <p>{!! $message->content !!}</p>
-                                    <span
-                                        class="text-xs text-gray-400">{{ $message->created_at->diffForHumans() }}</span>
+                                <li class="flex {{ $message->sender->id === auth()->id() ? 'justify-end' : 'justify-start' }} mb-4">
+                                    <div class="{{ $message->sender->id === auth()->id() ? 'bg-indigo-500 text-white' : 'bg-gray-300 text-gray-800' }} max-w-xs p-4 rounded-2xl shadow-md">
+                                        <p class="font-semibold">{{ $message->sender->id === auth()->id() ? 'Você' : $message->sender->name }}</p>
+                                        <p class="mt-1">{!! $message->content !!}</p>
+                                        <span class="text-xs block mt-2 {{ $message->sender->id === auth()->id() ? 'text-gray-200' : 'text-gray-600' }}">
+                                            {{ $message->created_at->diffForHumans() }}
+                                        </span>
+                                    </div>
                                 </li>
                             @endforeach
                         </ul>
-                    </div>
-                @endif
+                    @endif
+                </div>
+            </div>
+
+            <!-- Barra fixa de envio de mensagem -->
+            <div class="bg-white shadow-md p-4 flex items-center space-x-4 w-full rounded-b-lg">
+                <!-- Botão de Emoji fora da caixa de texto -->
+                <button type="button" id="emoji-btn" class="text-gray-500 hover:text-gray-700 text-2xl">😀</button>
+
+                <form id="sendMessageForm" action="{{ route('messages.send', $user->id) }}" method="POST" class="flex-grow flex items-center">
+                    @csrf
+                    <textarea id="content" name="content" rows="1" maxlength="900"
+                        class="block w-full resize-none rounded-full border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3"
+                        placeholder="Escreva sua mensagem..." required></textarea>
+                </form>
+
+                <button type="submit" form="sendMessageForm" class="bg-indigo-500 hover:bg-indigo-600 text-white p-3 rounded-full shadow-md transition duration-150 ease-in-out">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
             </div>
         </div>
-
-        @if ($user->email !== 'sistema@meadote.com')
-            <!-- Exibe o formulário de envio de mensagem apenas se o usuário não for o sistema -->
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white shadow-xl sm:rounded-lg p-6">
-                    <form id="sendMessageForm" action="{{ route('messages.send', $user->id) }}" method="POST">
-                        @csrf
-                        <div class="mb-4">
-                            <label for="content" class="block text-sm font-medium text-gray-700">Mensagem</label>
-                            <div class="relative">
-                                <textarea id="content" name="content" rows="4" maxlength="900"
-                                    class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                    required></textarea>
-                                <!-- Botão de Emoji -->
-                                <button type="button" id="emoji-btn"
-                                    class="absolute right-2 bottom-2 text-gray-500 hover:text-gray-700">
-                                    😀
-                                </button>
-                            </div>
-
-                        </div>
-                        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Enviar</button>
-                    </form>
-                </div>
-            </div>
-        @else
-            <!-- Se for uma conversa com o sistema, exibe a mensagem abaixo -->
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white shadow-xl sm:rounded-lg p-6">
-                    <p class="text-center text-gray-500">Esta é uma mensagem do sistema. Você não pode responder.</p>
-                </div>
-            </div>
-        @endif
     </div>
 
-    <!-- Script para rolagem automática -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Rolagem automática para o final do histórico de mensagens
-            var messagesContainer = document.getElementById('messages-container');
-            if (messagesContainer) {
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
-            }
-        });
-    </script>
 
-
+    <!-- Script para rolagem automática e carregamento de mensagens -->
     <script>
+        function scrollToBottom() {
+            const messagesContainer = document.getElementById('messages-container');
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
 
         document.addEventListener('DOMContentLoaded', function() {
+            scrollToBottom();
+
             const userId = {{ auth()->user()->id }};
-            const recipientId = {{ $user->id }}; // O usuário destinatário
-
-            // Ordena os IDs para criar o nome do canal
+            const recipientId = {{ $user->id }};
             const channelName = `chat.${Math.min(userId, recipientId)}.${Math.max(userId, recipientId)}`;
-
-            var messagesContainer = document.getElementById('messages-container');
 
             Echo.private(channelName)
                 .listen('MessageSent', (e) => {
                     const messageElement = document.createElement('li');
+                    messageElement.classList.add('flex', e.user.id === userId ? 'justify-end' : 'justify-start',
+                        'mb-4');
                     messageElement.innerHTML =
-                        `<strong>${e.user.name}:</strong> ${e.message} <span class="text-xs text-gray-400">${e.created_at}</span>`;
-                    messagesContainer.appendChild(messageElement);
-                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                        `<div class="${e.user.id === userId ? 'bg-indigo-500 text-white' : 'bg-gray-300 text-gray-800'} max-w-xs p-4 rounded-2xl shadow-md"><p class="font-semibold">${e.user.id === userId ? 'Você' : e.user.name}</p><p class="mt-1">${e.message}</p><span class="text-xs block mt-2 ${e.user.id === userId ? 'text-gray-200' : 'text-gray-600'}">${e.created_at}</span></div>`;
+                    document.getElementById('messages-list').appendChild(messageElement);
+                    scrollToBottom();
                 });
         });
 
-
-
         document.querySelector('#sendMessageForm').addEventListener('submit', function(e) {
-            e.preventDefault(); // Previne o envio padrão do formulário
-
+            e.preventDefault();
             const content = document.querySelector('#content').value;
             const url = this.action;
 
             axios.post(url, {
-                    content: content
+                    content
                 })
                 .then(response => {
-                    // Limpa o campo de texto após o envio
                     document.querySelector('#content').value = '';
-
-                    // Opcional: Adiciona a mensagem ao container de mensagens
-                    const messageContainer = document.getElementById('messages-container');
+                    const messageContainer = document.getElementById('messages-list');
                     const messageElement = document.createElement('li');
-                    messageElement.innerHTML = `<strong>Você:</strong> ${content}`;
+                    messageElement.classList.add('flex', 'justify-end', 'mb-4');
+                    messageElement.innerHTML =
+                        `<div class="bg-indigo-500 text-white max-w-xs p-4 rounded-2xl shadow-md"><p class="font-semibold">Você</p><p class="mt-1">${content}</p><span class="text-xs text-gray-200 block mt-2">Agora mesmo</span></div>`;
                     messageContainer.appendChild(messageElement);
-
-                    // Rolagem automática para a nova mensagem
-                    messageContainer.scrollTop = messageContainer.scrollHeight;
+                    scrollToBottom();
                 })
                 .catch(error => {
                     console.error('Erro ao enviar mensagem:', error);
                 });
         });
     </script>
-
 </x-app-layout>

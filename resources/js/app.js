@@ -14,6 +14,7 @@ if ('serviceWorker' in navigator) {
 }
 
 
+
 document.addEventListener('DOMContentLoaded', function () {
     const picker = new EmojiButton();
     const emojiBtn = document.getElementById('emoji-btn');
