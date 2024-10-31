@@ -3,17 +3,18 @@
 namespace App\Events;
 
 use App\Models\User;
-
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
 class NewNotification implements ShouldBroadcast
 {
     public $userId;
+    public $senderId;
 
-    public function __construct($userId)
+    public function __construct($userId, $senderId)
     {
         $this->userId = $userId;
+        $this->senderId = $senderId;
     }
 
     public function broadcastOn()
@@ -28,7 +29,14 @@ class NewNotification implements ShouldBroadcast
 
     public function broadcastWith()
     {
-        // Retorna a contagem de mensagens não lidas para o usuário correto
-        return ['newCount' => User::find($this->userId)->unreadMessages()->count()];
+        $unreadCount = User::find($this->userId)
+            ->unreadMessages()
+            ->where('is_read', false)
+            ->count();
+
+        return [
+            'newCount' => $unreadCount,
+            'senderId' => $this->senderId,
+        ];
     }
 }

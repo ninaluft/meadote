@@ -108,22 +108,17 @@ Route::middleware('auth')->group(function () {
 
 // Message Routes
 Route::middleware('auth')->group(function () {
+    // Rotas de Mensagens
     Route::get('/messages/inbox', [MessageController::class, 'inbox'])->name('messages.inbox');
     Route::get('/messages/conversation/{user}', [MessageController::class, 'conversation'])->name('messages.conversation');
     Route::post('/messages/send/{user}', [MessageController::class, 'send'])->name('messages.send');
     Route::post('/messages/{user}', [MessageController::class, 'store'])->name('messages.store');
-    // Notifications
+
+    // Rotas de Notificações e Leitura de Mensagens
     Route::post('/notifications/{id}/mark-as-read', [UserController::class, 'markNotificationAsRead'])->name('notifications.markAsRead');
-
-
-    // Route to handle message reading
-    Route::post('/messages/read/{messageId}', function ($messageId) {
-        $message = Message::find($messageId);
-        $message->is_read = true;
-        $message->save();
-        return response()->json(['status' => 'success']);
-    })->middleware('auth');
+    Route::post('/conversations/{user}/mark-as-read', [MessageController::class, 'markAsReadForConversation'])->name('conversations.markAsRead');
 });
+
 
 
 // Profile Editing Routes

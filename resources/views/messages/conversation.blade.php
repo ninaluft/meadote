@@ -13,10 +13,10 @@
     </x-slot>
 
     <div class="py-8">
-        <div class="flex flex-col max-w-4xl mx-auto h-[80vh]"> <!-- Define a altura da caixa com h-[70vh] -->
+        <div class="flex flex-col max-w-4xl mx-auto h-[70vh]"> <!-- Define a altura da caixa com h-[70vh] -->
 
             <!-- Container principal de mensagens com rolagem lateral -->
-            <div id="messages-container" class="flex-grow overflow-y-auto bg-gray-50 p-6 rounded-t-lg shadow-md h-[55vh]">
+            <div id="messages-container" class="flex-grow overflow-y-auto bg-gray-50 p-4 rounded-t-lg shadow-md h-[55vh]">
                 <div class="space-y-4">
                     @if ($messages->isEmpty())
                         <p class="text-gray-500 text-center">{{ __('Você ainda não tem mensagens.') }}</p>
@@ -26,13 +26,13 @@
                                 <li
                                     class="flex {{ $message->sender->id === auth()->id() ? 'justify-end' : 'justify-start' }} mb-4">
                                     <div
-                                        class="{{ $message->sender->id === auth()->id() ? 'bg-indigo-500 text-white' : 'bg-gray-300 text-gray-800' }} max-w-xs p-4 rounded-2xl shadow-md">
+                                        class="{{ $message->sender->id === auth()->id() ? 'bg-indigo-500 text-white' : 'bg-gray-300 text-gray-800' }} max-w-xs p-3 rounded-2xl shadow-md">
                                         <p class="font-semibold">
                                             {{ $message->sender->id === auth()->id() ? 'Você' : $message->sender->name }}
                                         </p>
                                         <p class="mt-1">{!! $message->content !!}</p>
                                         <span
-                                            class="text-xs block mt-2 {{ $message->sender->id === auth()->id() ? 'text-gray-200' : 'text-gray-600' }}">
+                                            class="text-xs block mt-1 {{ $message->sender->id === auth()->id() ? 'text-gray-200' : 'text-gray-600' }}">
                                             {{ $message->created_at->diffForHumans() }}
                                         </span>
                                     </div>
@@ -44,7 +44,7 @@
             </div>
 
             <!-- Barra fixa de envio de mensagem -->
-            <div class="bg-white shadow-md p-4 flex items-center space-x-4 w-full rounded-b-lg">
+            <div class="bg-white shadow-md p-2 flex items-center space-x-4 w-full rounded-b-lg">
                 <!-- Botão de Emoji fora da caixa de texto -->
                 <button type="button" id="emoji-btn" class="text-gray-500 hover:text-gray-700 text-2xl">😀</button>
 
@@ -52,12 +52,12 @@
                     class="flex-grow flex items-center">
                     @csrf
                     <textarea id="content" name="content" rows="1" maxlength="900"
-                        class="block w-full resize-none rounded-full border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3"
+                        class="block w-full resize-none rounded-2xl border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2"
                         placeholder="Escreva sua mensagem..." required></textarea>
                 </form>
 
                 <button type="submit" form="sendMessageForm" id="sendButton"
-                    class="bg-indigo-500 hover:bg-indigo-600 text-white p-3 rounded-full shadow-md transition duration-150 ease-in-out">
+                    class="bg-indigo-500 hover:bg-indigo-600 text-white p-2 rounded-full shadow-md transition duration-150 ease-in-out">
                     <i class="fas fa-paper-plane"></i>
                 </button>
 
@@ -80,18 +80,48 @@
             const recipientId = {{ $user->id }};
             const channelName = `chat.${Math.min(userId, recipientId)}.${Math.max(userId, recipientId)}`;
 
+            // Define a conversa ativa com o destinatário
+            setActiveConversationUserId(recipientId);
+
+            // Marcar a conversa como lida ao abrir
+            axios.post(`/conversations/${recipientId}/mark-as-read`)
+                .then(response => {
+                    console.log("Conversa marcada como lida");
+                })
+                .catch(error => {
+                    console.error("Erro ao marcar a conversa como lida:", error);
+                });
+
+            // Configura o canal privado para ouvir mensagens em tempo real
             Echo.private(channelName)
                 .listen('MessageSent', (e) => {
+                    // Verifica se a mensagem é do usuário com quem estamos conversando
+                    if (e.user.id === recipientId) {
+                        // Marcar mensagem como lida se a conversa está ativa
+                        axios.post(`/conversations/${recipientId}/mark-as-read`)
+                            .then(response => {
+                                console.log("Mensagem marcada como lida");
+                            })
+                            .catch(error => {
+                                console.error("Erro ao marcar a mensagem como lida:", error);
+                            });
+                    }
+
+                    // Cria um novo elemento de mensagem e exibe na janela do chat
                     const messageElement = document.createElement('li');
-                    messageElement.classList.add('flex', e.user.id === userId ? 'justify-end' : 'justify-start',
-                        'mb-4');
-                    messageElement.innerHTML =
-                        `<div class="${e.user.id === userId ? 'bg-indigo-500 text-white' : 'bg-gray-300 text-gray-800'} max-w-xs p-4 rounded-2xl shadow-md"><p class="font-semibold">${e.user.id === userId ? 'Você' : e.user.name}</p><p class="mt-1">${e.message}</p><span class="text-xs block mt-2 ${e.user.id === userId ? 'text-gray-200' : 'text-gray-600'}">${e.created_at}</span></div>`;
+                    messageElement.classList.add('flex', e.user.id === userId ? 'justify-end' : 'justify-start', 'mb-4');
+                    messageElement.innerHTML = `
+                        <div class="${e.user.id === userId ? 'bg-indigo-500 text-white' : 'bg-gray-300 text-gray-800'} max-w-xs p-4 rounded-2xl shadow-md">
+                            <p class="font-semibold">${e.user.id === userId ? 'Você' : e.user.name}</p>
+                            <p class="mt-1">${e.message}</p>
+                            <span class="text-xs block mt-2 ${e.user.id === userId ? 'text-gray-200' : 'text-gray-600'}">${e.created_at}</span>
+                        </div>`;
                     document.getElementById('messages-list').appendChild(messageElement);
                     scrollToBottom();
                 });
         });
 
+        // Gerencia o envio de mensagens
         document.querySelector('#sendMessageForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const sendButton = document.getElementById('sendButton');
@@ -100,30 +130,25 @@
             const content = document.querySelector('#content').value;
             const messageContainer = document.getElementById('messages-list');
 
-            // Exibe a mensagem localmente imediatamente
+            // Exibe a mensagem localmente
             const messageElement = document.createElement('li');
             messageElement.classList.add('flex', 'justify-end', 'mb-4');
             messageElement.innerHTML = `
-        <div class="bg-indigo-500 text-white max-w-xs p-4 rounded-2xl shadow-md">
-            <p class="font-semibold">Você</p>
-            <p class="mt-1">${content}</p>
-            <span class="text-xs text-gray-200 block mt-2">Agora mesmo</span>
-        </div>`;
+                <div class="bg-indigo-500 text-white max-w-xs p-4 rounded-2xl shadow-md">
+                    <p class="font-semibold">Você</p>
+                    <p class="mt-1">${content}</p>
+                    <span class="text-xs text-gray-200 block mt-2">Agora mesmo</span>
+                </div>`;
             messageContainer.appendChild(messageElement);
             scrollToBottom();
 
-            // Limpa a caixa de envio instantaneamente
             document.querySelector('#content').value = '';
 
-            // Envia para o servidor
-            axios.post(this.action, {
-                    content
-                })
+            axios.post(this.action, { content })
                 .then(response => {
-                    // Confirmação de sucesso (opcional, aqui não faz nada)
+                    // Sucesso opcional
                 })
                 .catch(error => {
-                    // Remove a mensagem localmente e exibe uma notificação de erro
                     messageContainer.removeChild(messageElement);
                     console.error('Erro ao enviar mensagem:', error);
                 })
@@ -131,7 +156,7 @@
                     sendButton.disabled = false;
                 });
         });
-
-        
     </script>
+
+
 </x-app-layout>

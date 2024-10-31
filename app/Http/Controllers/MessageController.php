@@ -15,21 +15,20 @@ class MessageController extends Controller
     {
         $request->validate(['content' => 'required|string|max:1000']);
 
-        // Cria a mensagem com o remetente e o destinatário
+        // Cria a mensagem
         $message = Message::create([
             'sender_id' => Auth::id(),
             'recipient_id' => $user->id,
             'content' => $request->content,
         ]);
 
-        // Dispara o evento para a mensagem
+        // Dispara eventos para atualizar a conversa e notificações em tempo real
         broadcast(new MessageSent($message))->toOthers();
-
-        // Dispara o evento de notificação para o destinatário
-        broadcast(new NewNotification($user->id))->toOthers();
+        broadcast(new NewNotification($user->id, Auth::id()))->toOthers();
 
         return response()->json(['message' => $message], 200);
     }
+
 
     public function store(Request $request, User $user)
     {
@@ -110,7 +109,7 @@ class MessageController extends Controller
     {
         $userId = Auth::id();
 
-        // Marcar todas as mensagens como lidas para a conversa com o usuário especificado
+        // Marcar todas as mensagens como lidas para a conversa ativa
         Message::where('sender_id', $user->id)
             ->where('recipient_id', $userId)
             ->where('is_read', false)

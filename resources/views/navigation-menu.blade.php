@@ -12,13 +12,34 @@
 
                 @if (Auth::check())
                     <!-- Navigation Links -->
-                    <div class="space-x-8 sm:-my-px sm:ms-10 sm:flex mt-6 ml-2 mr-4 ">
+                    <div class="space-x-2 sm:-my-px sm:ms-2 sm:flex mt-6 ml-2 mr-4 ">
                         <x-nav-link href="{{ route('dashboard') }}" :active="request()->is(['admin/dashboard*', 'ong/dashboard*', 'tutor/dashboard*'])" aria-label="Painel">
                             {{ __('Meu Painel') }}
                         </x-nav-link>
+
+                        <!-- Notificações no menu -->
+                        <x-nav-link :href="route('messages.inbox')" :active="request()->routeIs('messages.inbox')" aria-label="Mensagens"
+                            class="flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                class="h-6 w-6 text-teal-600 hover:text-teal-700 transition duration-150 ease-in-out"
+                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+
+                            @if (auth()->user()->unreadMessages()->count() > 0)
+                                <span id="notification-count"
+                                    class="ml-1 inline-block bg-red-600 text-white text-xs rounded-full px-2 py-1">
+                                    {{ auth()->user()->unreadMessages()->count() ?: 0 }}
+                                </span>
+                            @endif
+                        </x-nav-link>
+
                     </div>
+
                 @endif
             </div>
+
 
             <div class="hidden sm:flex sm:items-center sm:ms-4">
                 @auth
@@ -46,28 +67,6 @@
                     <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                         <x-nav-link :href="route('posts.index')" :active="request()->routeIs('posts.index')" aria-label="Blog">
                             {{ __('Blog') }}
-                        </x-nav-link>
-                    </div>
-
-
-
-                    <!-- Notificações no menu -->
-                    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex items-center">
-                        <x-nav-link :href="route('messages.inbox')" :active="request()->routeIs('messages.inbox')" aria-label="Mensagens">
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                class="h-6 w-6 text-teal-600 hover:text-teal-700 transition duration-150 ease-in-out"
-                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                            </svg>
-
-                            <!-- Contador de notificações -->
-                            @if (auth()->user()->unreadMessages()->count() > 0)
-                                <span id="notification-count-desktop"
-                                    class="ml-1 inline-block bg-red-600 text-white text-xs rounded-full px-2 py-1">
-                                    {{ auth()->user()->unreadMessages()->count() }}
-                                </span>
-                            @endif
                         </x-nav-link>
                     </div>
 
@@ -138,25 +137,9 @@
                 @endguest
             </div>
 
+
             <!-- Hamburger -->
             <div class="-me-2 flex items-center sm:hidden">
-                @auth
-                    <x-nav-link :href="route('messages.inbox')" :active="request()->routeIs('messages.inbox')" aria-label="Mensagens">
-                        <svg xmlns="http://www.w3.org/2000/svg"
-                            class="h-6 w-6 text-teal-600 hover:text-teal-700 transition duration-150 ease-in-out"
-                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                        </svg>
-                        @if (auth()->user()->unreadMessages()->count() > 0)
-                            <span id="notification-count-mobile"
-                                class="ml-1 inline-block bg-red-600 text-white text-xs rounded-full px-2 py-1">
-                                {{ auth()->user()->unreadMessages()->count() }}
-                            </span>
-                        @endif
-
-                    </x-nav-link>
-                @endauth
 
                 <button @click="open = ! open" aria-expanded="false" aria-label="Abrir Menu"
                     class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
@@ -195,7 +178,9 @@
             </div>
 
             @auth
+
                 <div class="pt-4 pb-1 border-b border-gray-200">
+
                     <div class="flex items-center px-4">
                         @if (Laravel\Jetstream\Jetstream::managesProfilePhotos())
                             <div class="shrink-0 me-3">
@@ -281,10 +266,9 @@
                     @endguest
                 </div>
 
-   
+
+            </div>
+
         </div>
-
-    </div>
-
 
 </nav>
