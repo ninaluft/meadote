@@ -71,17 +71,21 @@ class PetController extends Controller
             $query->where('is_neutered', $request->is_neutered);
         }
 
-        // Filtro por cidade, usando a relação com o User
         if ($request->filled('city')) {
             $query->whereHas('user', function ($query) use ($request) {
                 $query->where('city', 'like', '%' . $request->city . '%');
             });
         }
 
+        // Guarda a página atual na sessão
+        $currentPage = $request->get('page', 1);
+        session(['pets_list_page' => $currentPage]);
+
         $pets = $query->paginate(9);
 
         return view('pets.all-pets', compact('pets'));
     }
+
 
     public function create()
     {
@@ -94,14 +98,25 @@ class PetController extends Controller
 
     public function show(Pet $pet)
     {
-        // Tradução dos valores e criação de um campo auxiliar
+        // Calcular a posição do pet na listagem geral
+        $position = Pet::where('status', 'available')
+            ->where('id', '<=', $pet->id)
+            ->orderBy('id')
+            ->count();
+
+        // Calcular a página onde o pet aparece (considerando 9 pets por página)
+        $page = ceil($position / 9);
+
+        // Armazenar a página na sessão para redirecionamento
+        session(['pets_list_page' => $page]);
+
+        // Continuar com o restante do método show
         $pet->translated_species = __('pets.species_list.' . $pet->species);
         $pet->gender = __('pets.gender_list.' . $pet->gender);
         $pet->age = __('pets.age_list.' . $pet->age);
         $pet->size = __('pets.size_list.' . $pet->size);
         $pet->status = __('pets.status_list.' . $pet->status);
 
-        // Obter os pets anterior e próximo
         $previousPet = Pet::where('id', '<', $pet->id)
             ->where('status', 'available')
             ->orderBy('id', 'desc')
@@ -114,6 +129,7 @@ class PetController extends Controller
 
         return view('pets.show', compact('pet', 'previousPet', 'nextPet'));
     }
+
 
 
     public function edit(Pet $pet)

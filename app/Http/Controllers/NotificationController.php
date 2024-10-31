@@ -21,8 +21,12 @@ class NotificationController extends Controller
             $notification->markAsRead();
         }
 
-        return redirect()->back();
+        return
+
+        redirect()->back();
     }
+
+
 
     // Enviar notificação como mensagem do sistema
 

@@ -23,11 +23,16 @@
                     @else
                         <ul id="messages-list">
                             @foreach ($messages as $message)
-                                <li class="flex {{ $message->sender->id === auth()->id() ? 'justify-end' : 'justify-start' }} mb-4">
-                                    <div class="{{ $message->sender->id === auth()->id() ? 'bg-indigo-500 text-white' : 'bg-gray-300 text-gray-800' }} max-w-xs p-4 rounded-2xl shadow-md">
-                                        <p class="font-semibold">{{ $message->sender->id === auth()->id() ? 'Você' : $message->sender->name }}</p>
+                                <li
+                                    class="flex {{ $message->sender->id === auth()->id() ? 'justify-end' : 'justify-start' }} mb-4">
+                                    <div
+                                        class="{{ $message->sender->id === auth()->id() ? 'bg-indigo-500 text-white' : 'bg-gray-300 text-gray-800' }} max-w-xs p-4 rounded-2xl shadow-md">
+                                        <p class="font-semibold">
+                                            {{ $message->sender->id === auth()->id() ? 'Você' : $message->sender->name }}
+                                        </p>
                                         <p class="mt-1">{!! $message->content !!}</p>
-                                        <span class="text-xs block mt-2 {{ $message->sender->id === auth()->id() ? 'text-gray-200' : 'text-gray-600' }}">
+                                        <span
+                                            class="text-xs block mt-2 {{ $message->sender->id === auth()->id() ? 'text-gray-200' : 'text-gray-600' }}">
                                             {{ $message->created_at->diffForHumans() }}
                                         </span>
                                     </div>
@@ -43,16 +48,19 @@
                 <!-- Botão de Emoji fora da caixa de texto -->
                 <button type="button" id="emoji-btn" class="text-gray-500 hover:text-gray-700 text-2xl">😀</button>
 
-                <form id="sendMessageForm" action="{{ route('messages.send', $user->id) }}" method="POST" class="flex-grow flex items-center">
+                <form id="sendMessageForm" action="{{ route('messages.send', $user->id) }}" method="POST"
+                    class="flex-grow flex items-center">
                     @csrf
                     <textarea id="content" name="content" rows="1" maxlength="900"
                         class="block w-full resize-none rounded-full border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3"
                         placeholder="Escreva sua mensagem..." required></textarea>
                 </form>
 
-                <button type="submit" form="sendMessageForm" class="bg-indigo-500 hover:bg-indigo-600 text-white p-3 rounded-full shadow-md transition duration-150 ease-in-out">
+                <button type="submit" form="sendMessageForm" id="sendButton"
+                    class="bg-indigo-500 hover:bg-indigo-600 text-white p-3 rounded-full shadow-md transition duration-150 ease-in-out">
                     <i class="fas fa-paper-plane"></i>
                 </button>
+
             </div>
         </div>
     </div>
@@ -86,25 +94,44 @@
 
         document.querySelector('#sendMessageForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            const content = document.querySelector('#content').value;
-            const url = this.action;
+            const sendButton = document.getElementById('sendButton');
+            sendButton.disabled = true;
 
-            axios.post(url, {
+            const content = document.querySelector('#content').value;
+            const messageContainer = document.getElementById('messages-list');
+
+            // Exibe a mensagem localmente imediatamente
+            const messageElement = document.createElement('li');
+            messageElement.classList.add('flex', 'justify-end', 'mb-4');
+            messageElement.innerHTML = `
+        <div class="bg-indigo-500 text-white max-w-xs p-4 rounded-2xl shadow-md">
+            <p class="font-semibold">Você</p>
+            <p class="mt-1">${content}</p>
+            <span class="text-xs text-gray-200 block mt-2">Agora mesmo</span>
+        </div>`;
+            messageContainer.appendChild(messageElement);
+            scrollToBottom();
+
+            // Limpa a caixa de envio instantaneamente
+            document.querySelector('#content').value = '';
+
+            // Envia para o servidor
+            axios.post(this.action, {
                     content
                 })
                 .then(response => {
-                    document.querySelector('#content').value = '';
-                    const messageContainer = document.getElementById('messages-list');
-                    const messageElement = document.createElement('li');
-                    messageElement.classList.add('flex', 'justify-end', 'mb-4');
-                    messageElement.innerHTML =
-                        `<div class="bg-indigo-500 text-white max-w-xs p-4 rounded-2xl shadow-md"><p class="font-semibold">Você</p><p class="mt-1">${content}</p><span class="text-xs text-gray-200 block mt-2">Agora mesmo</span></div>`;
-                    messageContainer.appendChild(messageElement);
-                    scrollToBottom();
+                    // Confirmação de sucesso (opcional, aqui não faz nada)
                 })
                 .catch(error => {
+                    // Remove a mensagem localmente e exibe uma notificação de erro
+                    messageContainer.removeChild(messageElement);
                     console.error('Erro ao enviar mensagem:', error);
+                })
+                .finally(() => {
+                    sendButton.disabled = false;
                 });
         });
+
+        
     </script>
 </x-app-layout>

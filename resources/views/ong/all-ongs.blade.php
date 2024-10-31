@@ -86,8 +86,9 @@
                 @if ($ongs->isNotEmpty())
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                         @foreach ($ongs as $ong)
-                            <div class="bg-white shadow-md rounded-lg overflow-hidden flex p-4">
-                                <a href="{{ route('user.public-profile', $ong->user->id) }}" class="flex-shrink-0">
+                        <a href="{{ route('user.public-profile', $ong->user->id) }}" class="block bg-white shadow-md rounded-lg overflow-hidden p-4">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
                                     <div class="h-32 w-32 bg-gray-200 flex items-center justify-center rounded-full overflow-hidden">
                                         @if (!empty($ong->user->profile_photo))
                                             <!-- Displaying profile photo -->
@@ -98,20 +99,18 @@
                                             <x-initials-avatar :user="$ong->user" class="h-32 w-32 text-4xl" />
                                         @endif
                                     </div>
-                                </a>
+                                </div>
 
                                 <div class="ml-6 flex flex-col justify-center">
-                                    <h2 class="text-lg font-bold mb-2">
-                                        <a href="{{ route('user.public-profile', $ong->user->id) }}"
-                                            class="text-blue-600 hover:underline">
-                                            {{ $ong->ong_name }}
-                                        </a>
+                                    <h2 class="text-lg font-bold mb-2 text-blue-600 hover:underline">
+                                        {{ $ong->ong_name }}
                                     </h2>
                                     <p class="text-gray-600">
                                         {{ $ong->user->city }}, {{ $ong->user->state }}
                                     </p>
                                 </div>
                             </div>
+                        </a>
                         @endforeach
                     </div>
 

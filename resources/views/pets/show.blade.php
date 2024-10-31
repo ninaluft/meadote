@@ -2,7 +2,8 @@
     <x-slot name="header">
         <div class="flex flex-col sm:flex-row justify-between items-center max-w-4xl mx-auto px-4">
             <!-- Título -->
-            <h2 class="font-semibold text-2xl text-gray-800 leading-tight break-words break-all text-center sm:text-left mb-4 sm:mb-0">
+            <h2
+                class="font-semibold text-2xl text-gray-800 leading-tight break-words break-all text-center sm:text-left mb-4 sm:mb-0">
                 {{ __('pets.pet_profile') }} {{ $pet->name }}
             </h2>
 
@@ -38,9 +39,9 @@
                     <!-- Foto do Pet -->
                     <div class="md:w-1/3 mb-4 md:mb-0">
                         <img src="{{ Str::startsWith($pet->photo_path, 'http') ? $pet->photo_path : asset($pet->photo_path) }}"
-                        alt="{{ __('pets.description') }} {{ $pet->name }}"
-                        class="rounded-lg w-full h-auto shadow-sm cursor-pointer"
-                        onclick="openModal('{{ Str::startsWith($pet->photo_path, 'http') ? $pet->photo_path : asset($pet->photo_path) }}')">
+                            alt="{{ __('pets.description') }} {{ $pet->name }}"
+                            class="rounded-lg w-full h-auto shadow-sm cursor-pointer"
+                            onclick="openModal('{{ Str::startsWith($pet->photo_path, 'http') ? $pet->photo_path : asset($pet->photo_path) }}')">
 
 
                     </div>
@@ -152,7 +153,7 @@
                 </div>
             </div>
 
-            <!-- Navegação Anterior e Próxima -->
+            <!-- Navegação Anterior, Todos os Pets e Próxima -->
             <div class="flex justify-between mt-6">
                 @if ($previousPet)
                     <a href="{{ route('pets.show', $previousPet->id) }}"
@@ -160,13 +161,23 @@
                         &larr; {{ __('pets.previous_pet') }}
                     </a>
                 @endif
+
+                <!-- Botão de Ver Todos os Pets -->
+                <a href="{{ route('pets.all-pets', ['page' => session('pets_list_page', 1)]) }}"
+                    class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-2 px-4 rounded-full shadow-md text-lg mx-2">
+                    {{ __('Ver Todos os Pets') }}
+                </a>
+
+
+
                 @if ($nextPet)
                     <a href="{{ route('pets.show', $nextPet->id) }}"
-                        class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-2 px-4 rounded-full shadow-md ml-auto text-lg">
+                        class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-2 px-4 rounded-full shadow-md text-lg">
                         {{ __('pets.next_pet') }} &rarr;
                     </a>
                 @endif
             </div>
+
         </div>
     </div>
 

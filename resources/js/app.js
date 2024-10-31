@@ -49,7 +49,7 @@ document.addEventListener('touchstart', (e) => {
 document.addEventListener('touchend', (e) => {
     const endX = e.changedTouches[0].clientX;
     const endY = e.changedTouches[0].clientY;
-    const threshold = 250; // Distância mínima para ativar o gesto horizontal
+    const threshold = 200; // Distância mínima para ativar o gesto horizontal
     const verticalLimit = 30; // Limite de movimento vertical para não confundir gestos diagonais
 
     const horizontalDistance = endX - startX;

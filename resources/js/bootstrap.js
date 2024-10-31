@@ -47,19 +47,27 @@ if (window.userId) {
     console.log("User ID is not defined. Ensure the meta tag is present and has the correct value.");
 }
 
-
 // Define a função de atualização de contagem de notificações como global
 window.updateNotificationCount = function(newCount) {
     setTimeout(() => {
-        let notificationCounter = document.querySelector('#notification-count');
-        if (notificationCounter) {
-            console.log("Counter element found:", notificationCounter);
-            notificationCounter.innerHTML = newCount > 0 ? newCount : '';
-            console.log("Notification count updated to:", newCount);
+        // Atualiza o contador para o modo desktop
+        let notificationCounterDesktop = document.querySelector('#notification-count-desktop');
+        if (notificationCounterDesktop) {
+            console.log("Desktop counter element found:", notificationCounterDesktop);
+            notificationCounterDesktop.innerHTML = newCount > 0 ? newCount : '';
+            console.log("Desktop notification count updated to:", newCount);
         } else {
-            console.log("Notification counter element not found");
+            console.log("Desktop notification counter element not found");
+        }
+
+        // Atualiza o contador para o modo mobile
+        let notificationCounterMobile = document.querySelector('#notification-count-mobile');
+        if (notificationCounterMobile) {
+            console.log("Mobile counter element found:", notificationCounterMobile);
+            notificationCounterMobile.innerHTML = newCount > 0 ? newCount : '';
+            console.log("Mobile notification count updated to:", newCount);
+        } else {
+            console.log("Mobile notification counter element not found");
         }
     }, 100); // Ajuste o tempo, se necessário
 };
-
-

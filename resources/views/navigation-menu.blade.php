@@ -51,6 +51,25 @@
 
 
 
+                    <!-- Notificações no menu -->
+                    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex items-center">
+                        <x-nav-link :href="route('messages.inbox')" :active="request()->routeIs('messages.inbox')" aria-label="Mensagens">
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                class="h-6 w-6 text-teal-600 hover:text-teal-700 transition duration-150 ease-in-out"
+                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+
+                            <!-- Contador de notificações -->
+                            @if (auth()->user()->unreadMessages()->count() > 0)
+                                <span id="notification-count-desktop"
+                                    class="ml-1 inline-block bg-red-600 text-white text-xs rounded-full px-2 py-1">
+                                    {{ auth()->user()->unreadMessages()->count() }}
+                                </span>
+                            @endif
+                        </x-nav-link>
+                    </div>
 
 
                     <!-- Settings Dropdown -->
@@ -129,10 +148,12 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                         </svg>
-
-                        <span id="notification-count" class="ml-1 inline-block bg-red-600 text-white text-xs rounded-full px-2 py-1">
-                            {{ auth()->user()->unreadMessages()->count() > 0 ? auth()->user()->unreadMessages()->count() : '' }}
-                        </span>
+                        @if (auth()->user()->unreadMessages()->count() > 0)
+                            <span id="notification-count-mobile"
+                                class="ml-1 inline-block bg-red-600 text-white text-xs rounded-full px-2 py-1">
+                                {{ auth()->user()->unreadMessages()->count() }}
+                            </span>
+                        @endif
 
                     </x-nav-link>
                 @endauth
@@ -259,8 +280,10 @@
                         </x-responsive-nav-link>
                     @endguest
                 </div>
-            </div>
+
+   
         </div>
+
     </div>
 
 

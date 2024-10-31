@@ -24,7 +24,7 @@
     <link rel="manifest" href="{{ asset('manifest.json') }}">
     <link rel="manifest" href="/manifest.json">
     <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192x192.png">
-    <meta name="theme-color" content="#0000">
+    <meta name="theme-color" content="teal">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
 

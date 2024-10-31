@@ -55,13 +55,13 @@ class MessageController extends Controller
         // Obter as mensagens entre o usuário autenticado e o outro usuário
         $messages = Message::where(function ($query) use ($userId, $user) {
             $query->where('sender_id', $userId)
-                  ->where('recipient_id', $user->id);
+                ->where('recipient_id', $user->id);
         })->orWhere(function ($query) use ($userId, $user) {
             $query->where('sender_id', $user->id)
-                  ->where('recipient_id', $userId);
+                ->where('recipient_id', $userId);
         })->orderBy('created_at', 'asc')->get();
 
-        // Marcar as mensagens recebidas como lidas
+        // Marcar todas as mensagens recebidas como lidas
         Message::where('sender_id', $user->id)
             ->where('recipient_id', $userId)
             ->where('is_read', false)
@@ -69,6 +69,7 @@ class MessageController extends Controller
 
         return view('messages.conversation', compact('messages', 'user'));
     }
+
 
     public function inbox()
     {
@@ -103,5 +104,18 @@ class MessageController extends Controller
         return Message::where('recipient_id', $userId)
             ->where('is_read', false)
             ->count();
+    }
+
+    public function markAsReadForConversation(User $user)
+    {
+        $userId = Auth::id();
+
+        // Marcar todas as mensagens como lidas para a conversa com o usuário especificado
+        Message::where('sender_id', $user->id)
+            ->where('recipient_id', $userId)
+            ->where('is_read', false)
+            ->update(['is_read' => true]);
+
+        return response()->json(['status' => 'success']);
     }
 }
