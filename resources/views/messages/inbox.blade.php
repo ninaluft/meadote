@@ -62,7 +62,7 @@
                                                 </span>
                                             @endif
                                         </h3>
-                                        <p class="text-xs text-gray-600">{{ \Illuminate\Support\Str::limit($conversation->content, 50) }}</p>
+                                        <p class="text-xs text-gray-600">{{ \Illuminate\Support\Str::limit($conversation->content, 20) }}</p>
                                         <span class="text-xs text-gray-400">{{ $conversation->created_at->diffForHumans() }}</span>
                                     </a>
                                 </li>

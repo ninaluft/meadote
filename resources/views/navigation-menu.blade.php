@@ -124,17 +124,35 @@
 
                 @guest
                     <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                        <x-nav-link :href="route('posts.index')" :active="request()->routeIs('posts.index')" aria-label="Blog">
-                            {{ __('Blog') }}
+                        
+                        <x-nav-link href="{{ route('login') }}" :active="request()->routeIs('login')" aria-label="Fazer Login">
+                            {{ __('Login') }}
                         </x-nav-link>
+                        <x-nav-link href="{{ route('register') }}" :active="request()->routeIs('register')" aria-label="Registrar-se">
+                            {{ __('Registrar-se') }}
+                        </x-nav-link>
+
+                        <x-dropdown align="right" width="48">
+                            <x-slot name="trigger">
+                                <x-nav-link href="#" aria-label="Mais">
+                                    {{ __('Mais') }}
+                                </x-nav-link>
+                            </x-slot>
+
+                            <x-slot name="content">
+                                <x-dropdown-link :href="route('posts.index')" aria-label="Blog">
+                                    {{ __('Blog') }}
+                                </x-dropdown-link>
+                                <x-dropdown-link :href="route('faqs.show')" aria-label="FAQs">
+                                    {{ __('FAQs') }}
+                                </x-dropdown-link>
+                            </x-slot>
+                        </x-dropdown>
                     </div>
-                    <x-nav-link href="{{ route('login') }}" :active="request()->routeIs('login')" aria-label="Fazer Login">
-                        {{ __('Login') }}
-                    </x-nav-link>
-                    <x-nav-link href="{{ route('register') }}" :active="request()->routeIs('register')" aria-label="Registrar-se">
-                        {{ __('Registrar-se') }}
-                    </x-nav-link>
+
                 @endguest
+
+
             </div>
 
 

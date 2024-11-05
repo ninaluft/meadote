@@ -23,7 +23,7 @@ class NotificationController extends Controller
 
         return
 
-        redirect()->back();
+            redirect()->back();
     }
 
 
@@ -46,6 +46,15 @@ class NotificationController extends Controller
             'content' => $messageContent,
             'is_read' => false,
         ]);
+
+        // Envia o evento para notificação em tempo real
+        event(new NewNotification($userId, [
+            'type' => 'sistema',
+            'content' => $messageContent,
+            'sender_id' => $systemUser->id,
+            'link' => $conversationLink,
+        ]));
+
 
         return $message;
     }

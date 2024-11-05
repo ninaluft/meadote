@@ -124,7 +124,14 @@
     </div>
 
     <!-- Rodapé -->
-    <x-footer />
+
+
+    {{-- Exibe o rodapé apenas se a seção "hideFooter" não estiver definida --}}
+    @if (!$attributes->get('hideFooter'))
+        <x-footer />
+    @endif
+
+
 
     @stack('modals')
 

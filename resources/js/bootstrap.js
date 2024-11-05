@@ -84,7 +84,6 @@ if (window.userId) {
         });
 
     // Escuta o canal de notificações para atualizar a contagem no menu
-    // Escuta o canal de notificações para atualizar a contagem no menu
     window.Echo.channel('notifications-channel-' + window.userId)
         .listen('.NewNotification', (event) => {
             // Incrementa a contagem de notificações apenas se não for a conversa ativa
