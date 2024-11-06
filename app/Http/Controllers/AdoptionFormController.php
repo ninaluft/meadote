@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\MessageSent;
+use App\Events\NewNotification;
 use App\Http\Controllers\Controller;
 use App\Models\AdoptionForm;
 use App\Models\Message;
@@ -55,21 +57,15 @@ class AdoptionFormController extends Controller
         if ($user->user_type === 'ong') {
             $submitterName = $user->ong->ong_name ?? 'Nome não disponível';
             $submitterCpf = $user->ong->responsible_cpf ?? 'CPF não disponível';
-
         } elseif ($user->user_type === 'tutor') {
             $submitterName = $user->tutor->full_name ?? 'Nome não disponível';
             $submitterCpf = $user->tutor->cpf ?? 'CPF não disponível';
-
         } else {
             $submitterName = 'Usuário desconhecido';
             $submitterCpf = 'CPF não disponível';
-
         }
 
         return view('adoption-form.create', compact('pet', 'responsibleName',  'submitterName', 'submitterCpf'));
-
-
-
     }
 
     public function store(Request $request, Pet $pet)
@@ -170,6 +166,8 @@ class AdoptionFormController extends Controller
 
         // Send notification to the pet's owner
         $this->notifyAdoptionRequest($pet->user->id, $adoptionForm);
+        // Real-time broadcast
+        broadcast(new NewNotification($pet->user->id, Auth::id()))->toOthers();
 
         return redirect()->route('pets.show', $pet->id)->with('success', 'Seu formulário de adoção foi enviado.');
     }
@@ -204,6 +202,8 @@ class AdoptionFormController extends Controller
             'content' => $messageContent,
             'is_read' => false,
         ]);
+
+        broadcast(new MessageSent($message))->toOthers();
 
         return $message;
     }
@@ -280,11 +280,13 @@ class AdoptionFormController extends Controller
             $adoptionForm->pet->update(['status' => 'adopted']);
             // Notifica o solicitante de que a adoção foi aprovada
             $this->notifyAdoptionApproval($adoptionForm->submitter->id, $adoptionForm);
+            broadcast(new NewNotification($adoptionForm->submitter->id, Auth::id()))->toOthers();
         }
 
         // Se rejeitado, notifica o solicitante de que foi rejeitado
         if ($status === 'rejected') {
             $this->notifyAdoptionRejection($adoptionForm->submitter->id, $adoptionForm);
+            broadcast(new NewNotification($adoptionForm->submitter->id, Auth::id()))->toOthers();
         }
 
         // Traduz o status para exibição na mensagem
@@ -459,6 +461,7 @@ class AdoptionFormController extends Controller
         // Verifica se o responsável pelo pet ainda existe e notifica sobre o cancelamento
         if ($adoptionForm->pet && $adoptionForm->pet->user) {
             $this->notifyAdoptionCancellation($adoptionForm->pet->user->id, $adoptionForm);
+            broadcast(new NewNotification($adoptionForm->pet->user->id, Auth::id()))->toOthers();
         }
 
         // Exclui o formulário de adoção

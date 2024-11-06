@@ -131,10 +131,13 @@
 
 
                     <!-- Seção de Chamada para Ação -->
-                    <section class="text-center mt-10">
-                        <p class="text-lg text-gray-600 leading-relaxed">
+                    <section class="mt-10">
+                        <p class="text-center text-lg text-gray-600 leading-relaxed">
                             <strong> Fique à vontade para criar uma conta e explorar as funcionalidades
                                 oferecidas!<br></strong>
+                        </p>
+                        <p class="text-lg text-gray-600 leading-relaxed">
+
                             <br> Caso tenha alguma dúvida ou encontre algum erro, não hesite em me contatar:
                         </p>
                         <div class="mt-6 flex flex-wrap justify-center space-x-4">
@@ -165,7 +168,7 @@
         </div>
     </div>
 
-     <!-- Contêiner fixo para os emojis -->
+    <!-- Contêiner fixo para os emojis -->
     <div id="pets-container"></div>
 
     <!-- CSS adicional para estilos dos pets -->
@@ -192,9 +195,11 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            pointer-events: none; /* Evita interferência na interação do usuário */
+            pointer-events: none;
+            /* Evita interferência na interação do usuário */
             overflow: hidden;
-            z-index: 9999; /* Garante que os emojis fiquem no topo */
+            z-index: 9999;
+            /* Garante que os emojis fiquem no topo */
         }
 
         .pet {
@@ -268,7 +273,10 @@
                     y = screenHeight / 2;
             }
 
-            return { x, y };
+            return {
+                x,
+                y
+            };
         }
 
         function animatePet(pet, randomCoordinate) {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\MessageSent;
 use App\Events\NewNotification;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -37,7 +38,8 @@ class NotificationController extends Controller
 
         // Link para detalhes de suporte
         $conversationLink = route('support.show', $supportRequestId);
-        $messageContent .= " <a href='{$conversationLink}' class='...'>Ver</a>";
+        $messageContent .= " <a href='{$conversationLink}' class='inline-flex items-center px-4 py-2 bg-blue-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150'>Ver</a>";
+
 
         // Cria a mensagem
         $message = Message::create([
@@ -55,6 +57,7 @@ class NotificationController extends Controller
             'link' => $conversationLink,
         ]));
 
+        broadcast(new MessageSent($message))->toOthers();
 
         return $message;
     }
