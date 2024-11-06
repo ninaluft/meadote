@@ -82,7 +82,6 @@
 
     <!-- Estilos adicionais para mensagens enviadas e recebidas -->
     <style>
-
         .message.sent {
             background-color: #6b63f5;
             color: white;
@@ -123,6 +122,8 @@
 
     <!-- Scripts -->
     <script>
+        let activeConversationId = {{ $user->id }}; // Set this to the recipient's ID
+
         function scrollToBottom() {
             const messagesContainer = document.getElementById('messages-container');
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
@@ -143,24 +144,32 @@
 
             Echo.private(channelName)
                 .listen('MessageSent', (e) => {
-                    if (e.user.id === recipientId) {
-                        axios.post(`/conversations/${recipientId}/mark-as-read`)
-                            .then(response => console.log("Mensagem marcada como lida"))
-                            .catch(error => console.error("Erro ao marcar a mensagem como lida:", error));
-                    }
+                    const messagesList = document.getElementById('messages-list');
+                    if (messagesList) {
+                        // Adiciona a nova mensagem na lista
+                        const messageElement = document.createElement('li');
+                        messageElement.classList.add('flex', e.user.id === userId ? 'justify-end' :
+                            'justify-start', 'mb-4');
+                        messageElement.innerHTML = `
+                <div class="message ${e.user.id === userId ? 'sent' : 'received'} max-w-xs p-4 rounded-lg shadow-md">
+                    <p class="font-semibold">${e.user.id === userId ? 'Você' : e.user.name}</p>
+                    <p class="mt-1">${e.message}</p>
+                    <span class="text-xs block mt-2 ${e.user.id === userId ? 'text-gray-200' : 'text-gray-600'}">${e.created_at}</span>
+                </div>`;
+                        messagesList.appendChild(messageElement);
+                        scrollToBottom();
 
-                    const messageElement = document.createElement('li');
-                    messageElement.classList.add('flex', e.user.id === userId ? 'justify-end' : 'justify-start',
-                        'mb-4');
-                    messageElement.innerHTML = `
-                    <div class="message ${e.user.id === userId ? 'sent' : 'received'} max-w-xs p-4 rounded-lg shadow-md">
-                        <p class="font-semibold">${e.user.id === userId ? 'Você' : e.user.name}</p>
-                        <p class="mt-1">${e.message}</p>
-                        <span class="text-xs block mt-2 ${e.user.id === userId ? 'text-gray-200' : 'text-gray-600'}">${e.created_at}</span>
-                    </div>`;
-                    document.getElementById('messages-list').appendChild(messageElement);
-                    scrollToBottom();
+                        // Marcar como lida se a conversa estiver ativa
+                        if (e.user.id === recipientId) {
+                            axios.post(`/conversations/${recipientId}/mark-as-read`)
+                                .then(response => console.log("Mensagem marcada como lida"))
+                                .catch(error => console.error("Erro ao marcar mensagem como lida:", error));
+                        }
+                    } else {
+                        console.error("Elemento 'messages-list' não encontrado.");
+                    }
                 });
+
         });
 
         document.querySelector('#sendMessageForm').addEventListener('submit', function(e) {
@@ -171,16 +180,20 @@
             const content = document.querySelector('#content').value;
             const messageContainer = document.getElementById('messages-list');
 
-            const messageElement = document.createElement('li');
-            messageElement.classList.add('flex', 'justify-end', 'mb-4');
-            messageElement.innerHTML = `
-            <div class="message sent max-w-xs p-3 rounded-lg shadow-md">
-                <p class="font-semibold">Você</p>
-                <p class="mt-1">${content}</p>
-                <span class="text-xs text-gray-200 block mt-2">Agora mesmo</span>
-            </div>`;
-            messageContainer.appendChild(messageElement);
-            scrollToBottom();
+            if (messageContainer) {
+                const messageElement = document.createElement('li');
+                messageElement.classList.add('flex', 'justify-end', 'mb-4');
+                messageElement.innerHTML = `
+        <div class="message sent max-w-xs p-3 rounded-lg shadow-md">
+            <p class="font-semibold">Você</p>
+            <p class="mt-1">${content}</p>
+            <span class="text-xs text-gray-200 block mt-2">Agora mesmo</span>
+        </div>`;
+                messageContainer.appendChild(messageElement);
+                scrollToBottom();
+            } else {
+                console.error("Elemento 'messages-list' não encontrado.");
+            }
 
             document.querySelector('#content').value = '';
 
@@ -189,7 +202,9 @@
                 })
                 .then(response => {})
                 .catch(error => {
-                    messageContainer.removeChild(messageElement);
+                    if (messageContainer) {
+                        messageContainer.removeChild(messageElement);
+                    }
                     console.error('Erro ao enviar mensagem:', error);
                 })
                 .finally(() => sendButton.disabled = false);

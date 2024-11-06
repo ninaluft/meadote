@@ -22,12 +22,42 @@ class MessageController extends Controller
             'content' => $request->content,
         ]);
 
+        // Verifica se a conversa está ativa para evitar nova notificação
+        $isActiveConversation = ($user->id === session('active_conversation'));
+
         // Dispara eventos para atualizar a conversa e notificações em tempo real
         broadcast(new MessageSent($message))->toOthers();
-        broadcast(new NewNotification($user->id, Auth::id()))->toOthers();
+        broadcast(new NewNotification($user->id, Auth::id(), $isActiveConversation))->toOthers();
 
         return response()->json(['message' => $message], 200);
     }
+
+    public function refreshConversations()
+    {
+        $userId = Auth::id();
+        $conversations = Message::where('recipient_id', $userId)
+            ->orWhere('sender_id', $userId)
+            ->with(['sender', 'recipient'])
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->unique(function ($message) use ($userId) {
+                return $message->sender_id === $userId ? $message->recipient_id : $message->sender_id;
+            });
+
+        foreach ($conversations as $conversation) {
+            $otherUserId = $conversation->sender_id === $userId ? $conversation->recipient_id : $conversation->sender_id;
+            $conversation->unread_count = Message::where('sender_id', $otherUserId)
+                ->where('recipient_id', $userId)
+                ->where('is_read', false)
+                ->count();
+        }
+
+        return response()->json([
+            'conversations' => view('messages.partials.inbox-conversations', compact('conversations'))->render()
+        ]);
+    }
+
+
 
 
     public function store(Request $request, User $user)

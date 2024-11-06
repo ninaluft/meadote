@@ -12,7 +12,7 @@
 
                 @if (Auth::check())
                     <!-- Navigation Links -->
-                    <div class="space-x-2 sm:-my-px sm:ms-2 sm:flex mt-6 ml-2 mr-4 ">
+                    <div class="space-x-2 sm:-my-px sm:ms-2 sm:flex mt-6 ml-2 mr-2 ">
                         <x-nav-link href="{{ route('dashboard') }}" :active="request()->is(['admin/dashboard*', 'ong/dashboard*', 'tutor/dashboard*'])" aria-label="Painel">
                             {{ __('Meu Painel') }}
                         </x-nav-link>
@@ -44,27 +44,27 @@
             <div class="hidden sm:flex sm:items-center sm:ms-4">
                 @auth
                     <!-- All Pets -->
-                    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                    <div class="hidden space-x-8 sm:-my-px sm:ml-7 sm:flex">
                         <x-nav-link :href="route('pets.all-pets')" :active="request()->routeIs('pets.all-pets')" aria-label="Todos os Pets">
                             {{ __('Pets para adoção') }}
                         </x-nav-link>
                     </div>
 
                     <!-- Visualizar Todas as ONGs -->
-                    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                    <div class="hidden space-x-8 sm:-my-px sm:ml-7 sm:flex">
                         <x-nav-link :href="route('ongs.index')" :active="request()->routeIs('ongs.index')" aria-label="ONGs">
                             {{ __('ONGs') }}
                         </x-nav-link>
                     </div>
 
                     <!-- View Events -->
-                    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                    <div class="hidden space-x-8 sm:-my-px sm:ml-7 sm:flex">
                         <x-nav-link :href="route('ong-events.index')" :active="request()->routeIs('ong-events.index')" aria-label="Ver Eventos">
                             {{ __('Eventos') }}
                         </x-nav-link>
                     </div>
 
-                    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                    <div class="hidden space-x-8 sm:-my-px sm:ml-7 sm:flex">
                         <x-nav-link :href="route('posts.index')" :active="request()->routeIs('posts.index')" aria-label="Blog">
                             {{ __('Blog') }}
                         </x-nav-link>
@@ -124,7 +124,7 @@
 
                 @guest
                     <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                        
+
                         <x-nav-link href="{{ route('login') }}" :active="request()->routeIs('login')" aria-label="Fazer Login">
                             {{ __('Login') }}
                         </x-nav-link>

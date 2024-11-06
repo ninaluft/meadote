@@ -114,9 +114,12 @@ Route::middleware('auth')->group(function () {
     Route::post('/messages/send/{user}', [MessageController::class, 'send'])->name('messages.send');
     Route::post('/messages/{user}', [MessageController::class, 'store'])->name('messages.store');
 
+
     // Rotas de Notificações e Leitura de Mensagens
     Route::post('/notifications/{id}/mark-as-read', [UserController::class, 'markNotificationAsRead'])->name('notifications.markAsRead');
     Route::post('/conversations/{user}/mark-as-read', [MessageController::class, 'markAsReadForConversation'])->name('conversations.markAsRead');
+    Route::get('/inbox/conversations', [MessageController::class, 'refreshConversations'])->name('inbox.conversations');
+
 });
 
 

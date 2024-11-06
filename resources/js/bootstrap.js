@@ -89,6 +89,7 @@ if (window.userId) {
             // Incrementa a contagem de notificações apenas se não for a conversa ativa
             if (window.activeConversationUserId !== event.senderId) {
                 updateNotificationCount(event.newCount);
+                refreshInboxConversations();
             }
         });
 
@@ -98,3 +99,18 @@ if (window.userId) {
 window.onload = () => {
     initializeNotificationCount();
 };
+
+
+// Função para atualizar a lista de conversas no inbox
+function refreshInboxConversations() {
+    axios.get('/inbox/conversations')
+        .then(response => {
+            const inboxContainer = document.querySelector('#inbox-conversations');
+            if (inboxContainer) {
+                inboxContainer.innerHTML = response.data.conversations;
+            }
+        })
+        .catch(error => {
+            console.error('Erro ao atualizar conversas no inbox:', error);
+        });
+}
