@@ -9,6 +9,7 @@
 - [📦 Instalação](#instalação)
 - [⚙️ Configuração](#configuração)
 - [☁️ Armazenamento de Imagens com Cloudinary e Verificação com Clarifai](#armazenamento-de-imagens-com-cloudinary-e-verificação-com-clarifai)
+- [💬 Configuração do Pusher para Mensagens em Tempo Real](#configuração-do-pusher-para-mensagens-em-tempo-real)
 - [🚀 Como Executar](#como-executar)
 - [🛠️ Rodando as Migrações](#rodando-as-migrações)
 
@@ -101,6 +102,27 @@ O **MeAdote** utiliza o **Cloudinary** para armazenamento e gerenciamento de ima
    ```
 
 Com essa configuração, todas as imagens são carregadas diretamente para o Cloudinary. O Clarifai é utilizado automaticamente para avaliar o conteúdo das imagens antes de finalizarem o upload, removendo imagens que não estejam em conformidade com as diretrizes de segurança.
+
+## 💬 Configuração do Pusher para Mensagens em Tempo Real
+
+O **MeAdote** usa o **Pusher** para funcionalidades de mensagens e notificações em tempo real, proporcionando uma comunicação instantânea entre os usuários.
+
+### Configuração do Pusher
+
+1. **Crie uma conta no [Pusher](https://pusher.com/) e crie um novo aplicativo no painel de controle.**
+2. **No arquivo `.env`, adicione as credenciais do Pusher:**
+
+   ```env
+   BROADCAST_DRIVER=pusher
+   BROADCAST_CONNECTION=pusher
+
+   PUSHER_APP_ID=your_pusher_app_id
+   PUSHER_APP_KEY=your_pusher_app_key
+   PUSHER_APP_SECRET=your_pusher_app_secret
+   PUSHER_APP_CLUSTER=your_pusher_cluster
+   ```
+
+Com essas configurações, a plataforma estará pronta para enviar e receber notificações e mensagens em tempo real.
 
 ## 🚀 Como Executar
 
