@@ -77,7 +77,7 @@
                         <div>
                             <h3 class="text-lg font-semibold mb-2">{{ __('Lar Temporário') }}</h3>
                             <p class="text-sm text-gray-600 mb-4">
-                                {{ __('Procure por usuaários que oferecem lar temporário perto de você.') }}
+                                {{ __('Procure por usuários que oferecem lar temporário perto de você.') }}
                             </p>
                         </div>
                         <a href="{{ route('temporary-housing.index') }}"
