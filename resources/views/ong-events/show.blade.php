@@ -41,10 +41,6 @@
                 <div class="space-y-2 sm:space-y-4 text-center sm:text-left text-gray-600">
                     <p><strong>{{ __('Data do Evento: ') }}</strong> {{ \Carbon\Carbon::parse($event->event_date)->format('d/m/Y') }}</p>
 
-                    @if ($event->event_time)
-                        <p><strong>{{ __('Horário do Evento: ') }}</strong> {{ $event->event_time }}</p>
-                    @endif
-
                     <p><strong>{{ __('Local: ') }}</strong> {{ $event->location }}</p>
                     <p><strong>{{ __('Cidade: ') }}</strong> {{ $event->city }}, {{ $event->state }}</p>
                     <p><strong>{{ __('CEP: ') }}</strong> {{ $event->cep }}</p>
