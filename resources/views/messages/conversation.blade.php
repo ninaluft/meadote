@@ -23,28 +23,26 @@
             <!-- Contêiner de mensagens, com altura ajustada para ocupar o espaço restante -->
             <div id="messages-container" class="flex-grow overflow-y-auto bg-gray-50 p-4 rounded-t-lg shadow-md ">
                 <div class="space-y-4">
-                    @if ($messages->isEmpty())
-                        <p class="text-gray-500 text-center">{{ __('Você ainda não tem mensagens.') }}</p>
-                    @else
-                        <ul id="messages-list" class="space-y-2 sm:space-y-3">
+                    <ul id="messages-list" class="space-y-2 sm:space-y-3">
+                        @if ($messages->isEmpty())
+                            <p class="text-gray-500 text-center">{{ __('Você ainda não tem mensagens.') }}</p>
+                        @else
                             @foreach ($messages as $message)
-                                <li
-                                    class="flex {{ $message->sender->id === auth()->id() ? 'justify-end' : 'justify-start' }}">
-                                    <div
-                                        class="message {{ $message->sender->id === auth()->id() ? 'sent' : 'received' }} max-w-[85%] sm:max-w-md p-3 rounded-lg shadow-md text-sm sm:text-base">
+                                <li class="flex {{ $message->sender->id === auth()->id() ? 'justify-end' : 'justify-start' }}">
+                                    <div class="message {{ $message->sender->id === auth()->id() ? 'sent' : 'received' }} max-w-[85%] sm:max-w-md p-3 rounded-lg shadow-md text-sm sm:text-base">
                                         <p class="font-semibold">
                                             {{ $message->sender->id === auth()->id() ? 'Você' : $message->sender->name }}
                                         </p>
                                         <p class="mt-1 break-words">{!! $message->content !!}</p>
-                                        <span
-                                            class="text-xs block mt-1 {{ $message->sender->id === auth()->id() ? 'text-gray-200' : 'text-gray-600' }}">
+                                        <span class="text-xs block mt-1 {{ $message->sender->id === auth()->id() ? 'text-gray-200' : 'text-gray-600' }}">
                                             {{ $message->created_at->diffForHumans() }}
                                         </span>
                                     </div>
                                 </li>
                             @endforeach
-                        </ul>
-                    @endif
+                        @endif
+                    </ul>
+
                 </div>
             </div>
 
