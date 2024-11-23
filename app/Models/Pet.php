@@ -58,8 +58,19 @@ class Pet extends Model
 
 
     public function adoptedForms()
-{
-    return $this->adoptionForms()->where('status', 'approved');
-}
+    {
+        return $this->adoptionForms()->where('status', 'approved');
+    }
 
+     // Accessor para foto do pet
+     public function getPhotoPathAttribute($value)
+     {
+         // Verifica se o valor já é uma URL (Cloudinary)
+         if (filter_var($value, FILTER_VALIDATE_URL)) {
+             return $value; // Retorna a URL do Cloudinary
+         }
+
+         // Caso contrário, assume que é um caminho local
+         return $value ? asset('storage/' . $value) : asset('images/default-pet.jpg');
+     }
 }

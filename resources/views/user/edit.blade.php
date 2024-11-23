@@ -253,6 +253,7 @@
                             <span class="text-sm text-red-600">{{ $message }}</span>
                         @enderror
                     </div>
+
                     <!-- Campo para adicionar links de redes sociais -->
                     <div class="mb-6">
                         <x-label for="social_links" :value="__('Links de Redes Sociais')" />
@@ -395,23 +396,33 @@
     <!-- Scripts -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const socialLinks = document.querySelectorAll('input[type="url"]');
+            const form = document.querySelector('form');
+            const socialLinks = document.querySelectorAll(
+                'input[name^="social_links"], input[name^="new_social_links"]');
 
-            socialLinks.forEach((input) => {
-                input.addEventListener('blur', function() {
-                    if (this.value && !/^https?:\/\//i.test(this.value)) {
-                        this.value = `http://${this.value}`;
+            // Formata URLs antes de enviar o formulário
+            form.addEventListener('submit', function() {
+                socialLinks.forEach((input) => {
+                    let value = input.value.trim();
+
+                    if (value && !/^https?:\/\//i.test(value)) {
+                        if (value.startsWith('www.')) {
+                            input.value = `https://${value}`;
+                        } else {
+                            input.value = `http://${value}`;
+                        }
                     }
                 });
             });
         });
+
 
         function addNewSocialLink() {
             const container = document.getElementById('social-links-container');
             const inputDiv = document.createElement('div');
             inputDiv.className = 'flex items-center space-x-2';
             inputDiv.innerHTML = `
-            <x-input type="url" name="new_social_links[]" class="w-full" placeholder="Cole o link completo da rede social aqui" />
+            <x-input type="text" name="new_social_links[]" class="w-full" placeholder="Cole o link completo da rede social aqui" />
             <button type="button" onclick="removeNewSocialLink(this)" class="bg-red-500 text-white px-2 rounded">X</button>
         `;
             container.appendChild(inputDiv);
@@ -481,14 +492,6 @@
                 updateOngCharacterCount();
             }
         });
-
-
-
-
-
-
-
-
 
 
 

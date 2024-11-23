@@ -33,6 +33,16 @@ class ProfileEditController extends Controller
     {
         $user = auth()->user();
 
+        // Formatar as URLs para garantir que possuem o prefixo correto
+        $request->merge([
+            'social_links' => array_map(function ($url) {
+                return $this->formatUrl($url);
+            }, $request->input('social_links', [])),
+            'new_social_links' => array_map(function ($url) {
+                return $this->formatUrl($url);
+            }, $request->input('new_social_links', [])),
+        ]);
+
         // Base validation rules
         $rules = [
             'name' => ['required', 'string', 'max:255'],
@@ -85,28 +95,21 @@ class ProfileEditController extends Controller
 
         // Handle profile photo removal
         if ($request->has('remove_photo') && $request->input('remove_photo') == 1) {
-            // Excluir a imagem do Cloudinary
             if ($user->profile_photo_public_id) {
                 $this->imageService->deleteImage($user->profile_photo_public_id);
             }
-            // Limpar o campo de imagem no banco de dados
             $user->update(['profile_photo' => null, 'profile_photo_public_id' => null]);
         }
 
         // Handle profile photo upload
-        // Handle profile photo upload
         if ($request->hasFile('profile_photo')) {
-            // Excluir a imagem antiga antes de fazer o upload da nova
             if ($user->profile_photo_public_id) {
                 $this->imageService->deleteImage($user->profile_photo_public_id);
             }
 
-            // Fazer o upload da nova imagem usando o ImageService
             $imageData = $this->imageService->uploadImage($request->file('profile_photo')->getRealPath(), 'profile_photos');
 
-            // Verifique se a imagem foi considerada imprópria
             if (isset($imageData['secure_url']) && isset($imageData['public_id'])) {
-                // Atualizar o caminho da imagem e o public_id no banco de dados
                 $user->update([
                     'profile_photo' => $imageData['secure_url'],
                     'profile_photo_public_id' => $imageData['public_id'],
@@ -115,7 +118,6 @@ class ProfileEditController extends Controller
                 return redirect()->back()->with('error', 'A imagem foi detectada como imprópria.');
             }
         }
-
 
         // Update base user profile fields
         $user->update([
@@ -181,6 +183,31 @@ class ProfileEditController extends Controller
         return redirect()->route('user.public-profile', ['id' => Auth::id()])->with('success', 'Perfil atualizado com sucesso!');
     }
 
+    /**
+     * Format a URL to include the correct protocol.
+     */
+    private function formatUrl($url)
+    {
+        if (!$url) return null;
+
+        // Remove espaços em branco no início e fim
+        $url = trim($url);
+
+        // Adiciona o protocolo se não existir
+        if (!preg_match('/^https?:\/\//', $url)) {
+            $url = 'https://' . ltrim($url, '/');
+        }
+
+        // Sanitiza a URL para garantir segurança
+        return filter_var($url, FILTER_SANITIZE_URL);
+    }
+
+    
+
+
+    /**
+     * Detect the platform name from a URL.
+     */
     private function getPlatformName($url)
     {
         if (str_contains($url, 'facebook.com')) {

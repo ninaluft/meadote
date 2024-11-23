@@ -2,7 +2,7 @@
     aria-label="Visualizar perfil de {{ $pet->name }}">
     <img src="{{ $pet->photo_path ? $pet->photo_path : asset('images/default-pet.jpg') }}"
         class="card-img-top object-cover h-48 w-full" alt="Foto do pet {{ $pet->name }}">
-        
+
 
 
     <div class="card-body break-words break-all overflow-hidden">
