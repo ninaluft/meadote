@@ -27,7 +27,6 @@
                     @method('PUT')
 
                     <!-- Foto de Perfil -->
-                    <!-- Foto de Perfil -->
                     <div class="mb-6">
                         <x-label for="profile_photo" :value="__('Foto de Perfil')" />
                         <div class="flex items-center space-x-6 mt-2">
@@ -44,7 +43,7 @@
                         @if ($user->profile_photo)
                             <div class="mt-2">
                                 <x-checkbox id="remove_photo" name="remove_photo" value="1" />
-                                <x-label for="remove_photo" :value="__('Remover a foto de perfil atual')" />
+                                <x-label for="remove_photo" :value="__('Não exibir foto de perfil')" />
                             </div>
                         @endif
 
@@ -274,13 +273,9 @@
                             class="mt-2 bg-blue-500 text-white px-2 py-2 rounded">+ Adicionar Rede Social</button>
                     </div>
 
-
-
                     <div class="flex items-center justify-end mt-4">
                         <x-button class="ml-4">{{ __('Salvar') }}</x-button>
                     </div>
-
-
 
                 </form>
             </div>
@@ -399,6 +394,18 @@
 
     <!-- Scripts -->
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const socialLinks = document.querySelectorAll('input[type="url"]');
+
+            socialLinks.forEach((input) => {
+                input.addEventListener('blur', function() {
+                    if (this.value && !/^https?:\/\//i.test(this.value)) {
+                        this.value = `http://${this.value}`;
+                    }
+                });
+            });
+        });
+
         function addNewSocialLink() {
             const container = document.getElementById('social-links-container');
             const inputDiv = document.createElement('div');
