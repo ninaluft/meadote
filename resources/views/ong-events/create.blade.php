@@ -74,10 +74,13 @@
                     <!-- Foto do Evento -->
                     <div class="mb-4">
                         <x-label for="photo" value="{{ __('Foto do Evento') }}" />
-                        <input type="file" name="photo" id="photo" class="block mt-1 w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
+                        <input type="file" name="photo" id="photo" class="block mt-1 w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm" onchange="previewPhoto(event)">
                         @error('photo')
                             <p class="text-red-500 text-xs mt-2">{{ $message }}</p>
                         @enderror
+
+                        <!-- Pré-visualização da Foto -->
+                        <img id="photo-preview" class="mt-4 max-w-xs rounded-lg shadow-lg" style="display: none;">
                     </div>
 
                     <!-- Botão Criar Evento -->
@@ -109,6 +112,22 @@
                 alert('Por favor, insira um CEP válido.');
             }
         });
+
+        // Função para pré-visualizar a foto do evento
+        function previewPhoto(event) {
+            const input = event.target;
+            const reader = new FileReader();
+
+            reader.onload = function() {
+                const preview = document.getElementById('photo-preview');
+                preview.src = reader.result;
+                preview.style.display = 'block'; // Mostra a imagem de pré-visualização
+            };
+
+            if (input.files && input.files[0]) {
+                reader.readAsDataURL(input.files[0]); // Lê o arquivo da foto
+            }
+        }
     </script>
 
 </x-app-layout>

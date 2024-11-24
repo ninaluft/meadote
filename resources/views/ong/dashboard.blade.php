@@ -42,32 +42,33 @@
                         </a>
                     </div>
 
-                    <!-- Criar Evento -->
+                    <!-- Pets Favoritos -->
                     <div class="bg-purple-100 p-4 rounded-lg shadow-md flex flex-col justify-between">
                         <div>
-                            <h3 class="text-lg font-semibold mb-2">{{ __('Criar Evento') }}</h3>
+                            <h3 class="text-lg font-semibold mb-2">{{ __('Pets Favoritos') }}</h3>
                             <p class="text-sm text-gray-600 mb-4">
-                                {{ __('Crie eventos para promover adoções e envolvimento da comunidade.') }}
+                                {{ __('Veja os pets que você adicionou à sua lista de favoritos.') }}
                             </p>
                         </div>
-                        <a href="{{ route('events.criar') }}"
+                        <a href="{{ route('pets.favorites') }}"
                             class="inline-block bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 mt-auto text-center"
-                            aria-label="Criar um novo evento">
-                            {{ __('Criar Evento') }}
+                            aria-label="Ver seus pets favoritos">
+                            {{ __('Ver Favoritos') }}
                         </a>
                     </div>
+
 
                     <!-- Ver Eventos -->
                     <div class="bg-yellow-100 p-4 rounded-lg shadow-md flex flex-col justify-between">
                         <div>
                             <h3 class="text-lg font-semibold mb-2">{{ __('Ver Eventos') }}</h3>
                             <p class="text-sm text-gray-600 mb-4">
-                                {{ __('Veja os eventos já criados pela sua ONG.') }}
+                                {{ __('Gerencie seus eventos.') }}
                             </p>
                         </div>
                         <a href="{{ route('ong-events.my-events') }}"
                             class="inline-block bg-yellow-500 text-white py-2 px-4 rounded-lg hover:bg-yellow-600 mt-auto text-center"
-                            aria-label="Ver eventos criados pela ONG">
+                            aria-label="Ver eventos ">
                             {{ __('Ver Eventos') }}
                         </a>
                     </div>

@@ -2,14 +2,24 @@
 
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Meus Eventos') }}
-        </h2>
+        <div class="flex justify-between items-center">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                {{ __('Meus Eventos') }}
+            </h2>
+
+            <!-- Botão Adicionar Novo Evento -->
+            <x-button href="{{ route('events.create') }}" class="bg-green-500 text-white font-bold px-2 py-2 rounded hover:bg-green-600">
+                {{ __('Novo Evento') }}
+            </x-button>
+           
+        </div>
     </x-slot>
+
 
     <div class="py-6">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white shadow-sm rounded-lg p-6">
+
 
                 <!-- Eventos Futuros -->
                 <h3 class="text-lg font-semibold mb-4">{{ __('Eventos Futuros') }}</h3>

@@ -290,7 +290,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 
     <!-- Script para visualizar a imagem selecionada -->
-    <!-- Script para visualizar a imagem selecionada com Croppie -->
     <script>
         var croppie;
 

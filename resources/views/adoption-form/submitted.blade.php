@@ -1,8 +1,15 @@
 <x-app-layout>
+
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Formulários de adoção enviados por mim') }} ({{ $adoptionForms->count() }})
-        </h2>
+        <div class="flex justify-between items-center">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                {{ __('Formulários de adoção enviados por mim') }}
+            </h2>
+            <!-- Texto clicável para Formulários Enviados -->
+            <a href="{{ route('adoption-form.received') }}" class="text-teal-700 hover:underline">
+                {{ __('Ver Formulários Recebidos') }}
+            </a>
+        </div>
     </x-slot>
 
     <div class="py-8">

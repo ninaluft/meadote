@@ -1,8 +1,14 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Formulários de Adoção Recebidos') }}
-        </h2>
+        <div class="flex justify-between items-center">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                {{ __('Formulários de Adoção Recebidos') }}
+            </h2>
+            <!-- Texto clicável para Formulários Enviados -->
+            <a href="{{ route('adoption-form.submitted') }}" class="text-teal-700 hover:underline">
+                {{ __('Ver Formulários Enviados') }}
+            </a>
+        </div>
     </x-slot>
 
     <div class="py-8">
@@ -15,16 +21,21 @@
                         {{ __('Formulários de Adoção Pendentes') }} ({{ $pendingForms->count() }})
                     </h3>
                 </div>
-                @if($pendingForms->isEmpty())
+                @if ($pendingForms->isEmpty())
                     <p class="text-gray-600">Nenhum formulário de adoção pendente.</p>
                 @else
                     <ul class="space-y-6">
-                        @foreach($pendingForms as $form)
+                        @foreach ($pendingForms as $form)
                             <li class="p-4 bg-white shadow rounded-lg">
-                                <h4 class="text-md font-bold">{{ $form->submitter_name }} aplicou para adotar {{ $form->pet->name }}</h4>
-                                <p class="text-sm text-gray-600 mt-2"><strong>Motivação:</strong> {{ $form->adoption_reason }}</p>
-                                <p class="text-sm text-gray-600"><strong>Status:</strong> {{ ucfirst($form->status) }}</p>
-                                <a href="{{ route('adoption-form.show', $form->id) }}" class="text-indigo-600 hover:underline mt-2 inline-block">Ver Formulário</a>
+                                <h4 class="text-md font-bold">{{ $form->submitter_name }} aplicou para adotar
+                                    {{ $form->pet->name }}</h4>
+                                <p class="text-sm text-gray-600 mt-2"><strong>Motivação:</strong>
+                                    {{ $form->adoption_reason }}</p>
+                                <p class="text-sm text-gray-600"><strong>Status:</strong> {{ ucfirst($form->status) }}
+                                </p>
+                                <a href="{{ route('adoption-form.show', $form->id) }}" class="text-indigo-600 hover:underline mt-2 inline-block">
+                                    {{ __('Ver Formulário') }}
+                                </a>
                             </li>
                         @endforeach
                     </ul>
@@ -36,16 +47,21 @@
                         {{ __('Formulários de Adoção Avaliados') }} ({{ $evaluatedForms->count() }})
                     </h3>
                 </div>
-                @if($evaluatedForms->isEmpty())
+                @if ($evaluatedForms->isEmpty())
                     <p class="text-gray-600">Nenhum formulário de adoção avaliado.</p>
                 @else
                     <ul class="space-y-6">
-                        @foreach($evaluatedForms as $form)
+                        @foreach ($evaluatedForms as $form)
                             <li class="p-4 bg-white shadow rounded-lg">
-                                <h4 class="text-md font-bold">{{ $form->submitter_name }} aplicou para adotar {{ $form->pet->name }}</h4>
-                                <p class="text-sm text-gray-600 mt-2"><strong>Motivação:</strong> {{ $form->adoption_reason }}</p>
-                                <p class="text-sm text-gray-600"><strong>Status:</strong> {{ ucfirst($form->status) }}</p>
-                                <a href="{{ route('adoption-form.show', $form->id) }}" class="text-indigo-600 hover:underline mt-2 inline-block">Ver Formulário</a>
+                                <h4 class="text-md font-bold">{{ $form->submitter_name }} aplicou para adotar
+                                    {{ $form->pet->name }}</h4>
+                                <p class="text-sm text-gray-600 mt-2"><strong>Motivação:</strong>
+                                    {{ $form->adoption_reason }}</p>
+                                <p class="text-sm text-gray-600"><strong>Status:</strong> {{ ucfirst($form->status) }}
+                                </p>
+                                <a href="{{ route('adoption-form.show', $form->id) }}" class="text-indigo-600 hover:underline mt-2 inline-block">
+                                    {{ __('Ver Formulário') }}
+                                </a>
                             </li>
                         @endforeach
                     </ul>

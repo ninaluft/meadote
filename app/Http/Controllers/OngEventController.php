@@ -23,10 +23,7 @@ class OngEventController extends Controller
         return view('ong-events.create');
     }
 
-    public function criar()
-    {
-        return view('ong-events.criar');
-    }
+
 
     public function store(Request $request)
     {

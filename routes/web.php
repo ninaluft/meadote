@@ -4,7 +4,6 @@ use App\Http\Controllers\AboutController;
 use App\Http\Controllers\AdoptionFormController;
 use App\Http\Controllers\OngController;
 use App\Http\Controllers\PublicProfileController;
-use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
@@ -20,15 +19,11 @@ use App\Http\Controllers\AdminFaqController;
 use App\Http\Controllers\AdminFooterController;
 use App\Http\Controllers\AdminPolicyController;
 use App\Http\Controllers\AdminTermsController;
-use App\Http\Controllers\FaqController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\SupportRequestController;
 use App\Models\OngEvent;
-use App\Models\Message;
 use Illuminate\Http\Request;
-
-use Illuminate\Support\Facades\Broadcast;
 
 use App\Http\Controllers\CommentController;
 
@@ -91,7 +86,6 @@ Route::get('/privacy-policy', [AdminPolicyController::class, 'show'])->name('pol
 
 
 
-
 // Adoption Form Routes
 Route::middleware('auth')->group(function () {
     Route::resource('adoption-form', AdoptionFormController::class)->only(['create', 'store']);
@@ -121,7 +115,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/inbox/conversations', [MessageController::class, 'refreshConversations'])->name('inbox.conversations');
 
 });
-
 
 
 // Profile Editing Routes
@@ -209,8 +202,7 @@ Route::middleware(['auth', 'user_type:ong'])->group(function () {
         $events = OngEvent::where('ong_id', Auth::user()->ong->id)->get();
         return view('ong.dashboard', compact('events'));
     })->name('ong.dashboard');
-    Route::get('/ong-events/create', [OngEventController::class, 'create'])->name('events.create');
-    Route::get('/events/criar', [OngEventController::class, 'criar'])->name('events.criar');
+    Route::get('/events/create', [OngEventController::class, 'create'])->name('events.create');
     Route::post('/ong-events', action: [OngEventController::class, 'store'])->name('events.store');
     Route::get('/my-events', [OngEventController::class, 'myEvents'])->name('ong-events.my-events');
     Route::put('/ong-events/{id}', [OngEventController::class, 'update'])->name('events.update');

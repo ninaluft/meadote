@@ -21,7 +21,6 @@
     </x-slot>
 
 
-
     <div class="py-8">
         <div class="max-w-4xl mx-auto sm:px-4 lg:px-6">
             <div class="bg-white shadow-md rounded-lg p-6">
@@ -124,8 +123,6 @@
                             ariaLabel="Compartilhar o perfil de {{ $user->name }}">
                             {{ __('Compartilhar Perfil') }}
                         </x-button-share>
-
-
 
                         <x-button icon="fas fa-envelope" color="green"
                             href="{{ Auth::check() ? route('messages.conversation', $user->id) : route('login', ['redirectTo' => route('messages.conversation', $user->id)]) }}"
