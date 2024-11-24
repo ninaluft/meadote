@@ -1,9 +1,22 @@
 <x-app-layout>
+
     <x-slot name="header">
-        <h2 class="font-semibold text-2xl text-gray-900 leading-tight">
-            {{ __('Formulário de Adoção para ') . $adoptionForm->pet_name }}
-        </h2>
+        <div class="flex justify-between items-center">
+            <h2 class="font-semibold text-2xl text-gray-900 leading-tight">
+                {{ __('Formulário de Adoção para ') . $adoptionForm->pet_name }}
+            </h2>
+
+            <!-- Botão de Conversar -->
+            <form
+                action="{{ route('messages.conversation', ['user' => $adoptionForm->submitter_user_id === Auth::id() ? $adoptionForm->pet->user_id : $adoptionForm->submitter_user_id]) }}"
+                method="GET">
+                <x-button type="submit" class="bg-blue-500 hover:bg-blue-600 flex justify-center items-center">
+                    {{ __('Iniciar conversa') }}
+                </x-button>
+            </form>
+        </div>
     </x-slot>
+
 
     <div class="py-8">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-8">
@@ -142,17 +155,6 @@
 
 
 
-            <div class="bg-white shadow-md rounded-lg overflow-hidden p-6 space-y-4">
-
-                <!-- Botão de Enviar Mensagem para o Solicitante -->
-                <form action="{{ route('messages.conversation', ['user' => $adoptionForm->submitter_user_id]) }}"
-                    method="GET">
-                    <x-button type="submit"
-                        class="bg-blue-500 hover:bg-blue-600 w-full flex justify-center items-center">
-                        {{ __('Enviar Mensagem ao Solicitante') }}
-                    </x-button>
-                </form>
-            </div>
 
 
         </div>

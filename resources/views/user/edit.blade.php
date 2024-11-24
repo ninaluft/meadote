@@ -416,16 +416,18 @@
         });
 
 
+
         function addNewSocialLink() {
             const container = document.getElementById('social-links-container');
             const inputDiv = document.createElement('div');
             inputDiv.className = 'flex items-center space-x-2';
             inputDiv.innerHTML = `
-            <x-input type="text" name="new_social_links[]" class="w-full" placeholder="Cole o link completo da rede social aqui" />
-            <button type="button" onclick="removeNewSocialLink(this)" class="bg-red-500 text-white px-2 rounded">X</button>
-        `;
+        <input type="text" name="new_social_links[]" class="w-full" placeholder="Cole o link completo da rede social aqui" />
+        <button type="button" onclick="removeNewSocialLink(this)" class="bg-red-500 text-white px-2 rounded">X</button>
+    `;
             container.appendChild(inputDiv);
         }
+
 
         function removeNewSocialLink(button) {
             const inputDiv = button.parentNode;
