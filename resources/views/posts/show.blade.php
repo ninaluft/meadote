@@ -8,13 +8,15 @@
                 <div class="flex justify-end mb-4 space-x-4">
                     @if (Auth::check() && Auth::user()->user_type === 'admin')
                         <!-- Botão de Editar -->
-                        <x-button-edit href="{{ route('posts.edit', $post->id) }}" aria-label="Editar o post {{ $post->title }}">
+                        <x-button-edit href="{{ route('posts.edit', $post->id) }}"
+                            aria-label="Editar o post {{ $post->title }}">
                             {{ __('Editar') }}
                         </x-button-edit>
 
                         <!-- Botão de Excluir -->
                         <x-button-delete action="{{ route('posts.destroy', $post->id) }}"
-                            confirmMessage="Tem certeza de que deseja excluir este post?" aria-label="Excluir o post {{ $post->title }}">
+                            confirmMessage="Tem certeza de que deseja excluir este post?"
+                            aria-label="Excluir o post {{ $post->title }}">
                             {{ __('Excluir') }}
                         </x-button-delete>
                     @endif
@@ -23,13 +25,15 @@
                 <!-- Título do Post e Autor -->
                 <div class="mb-4">
                     <h3 class="text-2xl font-bold">{{ $post->title }}</h3>
-                    <p class="text-gray-600">Por {{ $post->author->name }} em {{ $post->created_at->format('d/m/Y') }}</p>
+                    <p class="text-gray-600">Por {{ $post->author->name }} em {{ $post->created_at->format('d/m/Y') }}
+                    </p>
                 </div>
 
                 <!-- Imagem do Post -->
                 @if ($post->image_path)
-                    <x-image :src="Str::startsWith($post->image_path, 'http') ? $post->image_path : asset($post->image_path)"
-                        alt="{{ $post->title }}" class="w-full h-auto rounded-lg" />
+                    <x-image :src="Str::startsWith($post->image_path, 'http')
+                        ? $post->image_path
+                        : asset($post->image_path)" alt="{{ $post->title }}" class="w-full h-auto rounded-lg" />
                 @endif
 
                 <!-- Renderizando o conteúdo HTML do Quill -->
@@ -42,7 +46,8 @@
                 <!-- Botão de Compartilhar -->
                 <div class="mt-6">
                     <x-button-share id="sharePostButton" title="{{ $post->title }}" text="Confira esse post: "
-                        url="{{ route('posts.show', $post->id) }}" aria-label="Compartilhar o post {{ $post->title }}">
+                        url="{{ route('posts.show', $post->id) }}"
+                        aria-label="Compartilhar o post {{ $post->title }}">
                         {{ __('Compartilhar') }}
                     </x-button-share>
                 </div>
@@ -88,8 +93,8 @@
                                     @csrf
                                     <div class="relative">
                                         <textarea id="content" name="content" class="w-full border-gray-300 rounded-lg p-2 pr-10"
-                                            placeholder="Escreva seu comentário..." aria-describedby="commentHelper"
-                                            oninput="updateCharacterCount()" maxlength="500"></textarea>
+                                            placeholder="Escreva seu comentário..." aria-describedby="commentHelper" oninput="updateCharacterCount()"
+                                            maxlength="500"></textarea>
                                         <button type="button" id="emoji-btn"
                                             class="absolute right-2 bottom-2 text-gray-500 hover:text-gray-700">
                                             😀
@@ -100,8 +105,10 @@
                                         <p class="text-red-500 text-sm mt-1" id="commentHelper">{{ $message }}</p>
                                     @enderror
 
-                                    <button type="submit"
-                                        class="mt-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">Comentar</button>
+                                    <!-- Botão de Comentar -->
+                                    <x-button color="blue" size="md" icon="fas fa-comment" ariaLabel="Comentar">
+                                        Comentar
+                                    </x-button>
                                 </form>
                             </div>
                         @else

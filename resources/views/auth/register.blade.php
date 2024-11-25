@@ -221,7 +221,7 @@
                     {{ __('Já registrado?') }}
                 </a>
 
-                <x-button class="ml-4">
+                <x-button class="ml-4" submit="true">
                     {{ __('Registrar') }}
                 </x-button>
             </div>

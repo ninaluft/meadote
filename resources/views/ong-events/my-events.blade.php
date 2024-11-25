@@ -11,7 +11,7 @@
             <x-button href="{{ route('events.create') }}" class="bg-green-500 text-white font-bold px-2 py-2 rounded hover:bg-green-600">
                 {{ __('Novo Evento') }}
             </x-button>
-           
+
         </div>
     </x-slot>
 
