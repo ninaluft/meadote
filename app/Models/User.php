@@ -167,10 +167,12 @@ class User extends Authenticatable
         parent::boot();
 
         static::deleting(function ($user) {
-            // Arquivar formulários associados
-            \App\Models\AdoptionForm::where('submitter_user_id', $user->id)
-                ->orWhere('responsible_user_id', $user->id)
-                ->update(['status' => 'archived']);
+            // Atualizar formulários onde o status é 'pending'
+            \App\Models\AdoptionForm::where(function ($query) use ($user) {
+                $query->where('submitter_user_id', $user->id)
+                      ->orWhere('responsible_user_id', $user->id);
+            })->where('status', 'pending')
+              ->update(['status' => 'archived']);
         });
     }
 }
