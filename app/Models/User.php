@@ -161,4 +161,16 @@ class User extends Authenticatable
     {
         return $this->attributes['profile_photo'] ?? asset('images/default-profile.jpg');
     }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($user) {
+            // Arquivar formulários associados
+            \App\Models\AdoptionForm::where('submitter_user_id', $user->id)
+                ->orWhere('responsible_user_id', $user->id)
+                ->update(['status' => 'archived']);
+        });
+    }
 }

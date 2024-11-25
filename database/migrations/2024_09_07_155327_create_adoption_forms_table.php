@@ -63,7 +63,8 @@ return new class extends Migration
 
 
             // Status and Additional Info
-            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
+
+            $table->enum('status', ['pending', 'approved', 'rejected', 'archived'])->default('pending');
             $table->text('rejection_reason')->nullable();
             $table->boolean('is_read')->default(false);
 
