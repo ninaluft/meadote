@@ -6,16 +6,22 @@
                 {{ __('Formulário de Adoção para ') . $adoptionForm->pet_name }}
             </h2>
 
-            <!-- Botão de Conversar -->
-            <form
-                action="{{ route('messages.conversation', ['user' => $adoptionForm->submitter_user_id === Auth::id() ? $adoptionForm->pet->user_id : $adoptionForm->submitter_user_id]) }}"
-                method="GET">
-                <x-button type="submit" class="bg-blue-500 hover:bg-blue-600 flex justify-center items-center">
-                    {{ __('Iniciar conversa') }}
-                </x-button>
-            </form>
+            @if ($adoptionForm->submitter && $adoptionForm->pet && $adoptionForm->pet->user)
+                <form
+                    action="{{ route('messages.conversation', ['user' => $adoptionForm->submitter_user_id === Auth::id() ? $adoptionForm->pet->user_id : $adoptionForm->submitter_user_id]) }}"
+                    method="GET">
+                    <x-button type="submit" class="bg-blue-500 hover:bg-blue-600 flex justify-center items-center">
+                        {{ __('Iniciar conversa') }}
+                    </x-button>
+                </form>
+            @else
+                <p class="text-red-500 font-semibold">
+                    {{ __('O usuário associado a este formulário não está mais disponível.') }}
+                </p>
+            @endif
         </div>
     </x-slot>
+
 
 
     <div class="py-8">
