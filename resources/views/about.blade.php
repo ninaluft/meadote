@@ -52,23 +52,13 @@
                         <p class="text-lg text-gray-600 leading-relaxed text-indent">
                             A plataforma foi desenvolvida com <strong>PHP</strong> e <strong>Laravel</strong>,
                             utilizando
-                            <strong> Blade</strong> para o frontend, e <strong>MySQL</strong> como banco de dados.
+                            <strong> Inertia.js e Tailwind CSS</strong> para o frontend, e <strong>MySQL</strong> como banco de dados.
 
                             Para gerenciamento de imagens, integrei a API do <strong>Cloudinary</strong>, garantindo
                             armazenamento seguro e acessível para fotos dos pets e eventos. Isso permite uma experiência
                             otimizada, com carregamento rápido de imagens e manutenção da performance do site.
                         </p>
-                        <p class="text-lg text-gray-600 leading-relaxed text-indent">
-                            O <strong>MeAdote</strong> foi desenvolvido como uma <strong>Progressive Web App
-                                (PWA)</strong>. Isso significa
-                            que
-                            a aplicação se adapta automaticamente a diferentes tamanhos de tela,
-                            permitindo que os usuários acessem todas as funcionalidades a partir de qualquer
-                            dispositivo,
-                            como smartphones, tablets ou desktops, de forma prática e intuitiva.
-                            (Infelizmente, como esse servidor de hospedagem é um serviço gratuito, não é possivel tornar
-                            testar essa funcionalidade a partir daqui).
-                        </p>
+
                     </section>
 
                     <!-- Seção Segurança e Verificação de Imagens -->
@@ -85,48 +75,6 @@
                             contra conteúdos indesejados.
                         </p>
                     </section>
-                    {{--
-                    <!-- Seção Sobre Mim -->
-                    <section class="mb-10">
-                        <h3 class="text-2xl font-semibold text-gray-900 mb-4">Sobre Mim</h3>
-                        <p class="text-lg text-gray-600 leading-relaxed text-indent">
-                            Desde sempre, tive um grande amor por animais. Atualmente, sou tutora de 7 pets adotados,
-                            que
-                            foram minha maior inspiração para criar esta plataforma e contribuir para que outros animais
-                            encontrem lares amorosos.
-                        </p>
-                    </section>
-
-
-                    <!-- Carrossel de Imagens dos Pets -->
-                    <section class="mb-10">
-                        <h3 class="text-2xl font-semibold text-gray-900 mb-4 text-center"></h3>
-                        <div id="image-carousel" class="splide">
-                            <div class="splide__track">
-                                <ul class="splide__list">
-                                    <!-- Slide 1 -->
-                                    <li
-                                        class="splide__slide flex flex-col items-center bg-white rounded-md p-4 shadow-lg hover:shadow-2xl">
-                                        <img src="https://res.cloudinary.com/dq7y3bfzb/image/upload/v1730426399/antigas1_izjqhe.jpg"
-                                            alt="Pet 1"
-                                            class="max-w-[60%] max-h-[300px] object-cover rounded-md mb-4">
-                                        <p class="text-center text-gray-800 font-semibold text-lg"></p>
-                                    </li>
-                                    <!-- Slide 2 -->
-                                    <li
-                                        class="splide__slide flex flex-col items-center bg-white rounded-md p-4 shadow-lg hover:shadow-2xl">
-                                        <img src="https://res.cloudinary.com/dq7y3bfzb/image/upload/v1729864068/pets/szq60psz7tdbhy1nblpe.jpg"
-                                            alt="Pet 2"
-                                            class="max-w-[60%] max-h-[300px] object-cover rounded-md mb-4">
-                                        <p class="text-center text-gray-800 font-semibold text-lg"></p>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </section> --}}
-
-
-
 
 
 
