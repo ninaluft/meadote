@@ -164,6 +164,9 @@ Para popular o banco de dados:
 php artisan db:seed 
 ```
 
+
+http://ForTheBadge.com/images/badges/built-with-love.svg
+
 ---
 
 Se tiver qualquer dúvida ou encontrar problemas, fique à vontade para entrar em contato!
